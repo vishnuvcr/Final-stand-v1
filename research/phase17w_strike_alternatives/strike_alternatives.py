@@ -389,7 +389,7 @@ def build_variants(
     cycle_df = pl.DataFrame([asdict(x) for x in cycles])
 
     # Performance guard: filter each source option file once across all strikes needed
-    # by the 32 registered variants, then attach variant labels to the small selected slice.
+    # by the 224 registered variants, then attach variant labels to the small selected slice.
     # This avoids scanning every full expiry parquet 32 times.
     selected_rows: list[pl.DataFrame] = []
     for expiry, source_path in expiry_files:
