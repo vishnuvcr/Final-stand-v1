@@ -97,3 +97,11 @@
 - Holdout observations are not read during parameter selection.
 - Added manual and push-triggered GitHub Actions execution.
 - No holdout result has been claimed until the workflow output is actually observed.
+
+
+## 2026-09-29 — Phase 13W execution failure and correction
+- Run 36595701035 reached data ingestion successfully: 100 expiry candidates, 63 USABLE_OHLC cycles, 37 incomplete cycles.
+- The candidate-generation step nevertheless produced zero trades for all seven stop-loss candidates because the committed workflow omitted the explicit Phase 9 manifest/options/spot paths.
+- The holdout selector then failed on missing zero-trade metrics. This is a pipeline defect, not an empirical result.
+- Corrective workflow patch: pass all three Phase 9 output paths explicitly to Phase 11 for every candidate run.
+- Phase 13 remains pending re-execution; no profitability or holdout conclusion is admitted.
