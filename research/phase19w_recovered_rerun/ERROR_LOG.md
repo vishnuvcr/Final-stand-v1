@@ -30,3 +30,9 @@ Phase 17W maximum usable coverage was 39/63 for the registered family. This rema
 - **Impact:** The strategy code could not resolve the frozen 63-cycle baseline interface; no empirical result was produced.
 - **Correction:** Phase 19 now rebuilds the frozen Phase 9 interface from the admitted HF-03 revision before the 224-variant rerun, validates exactly 63 usable cycles and nonempty frozen spot bars, and then runs the existing strategy unchanged.
 - **Prevention:** Phase 19 no longer assumes generated Phase 9 artifacts are permanently present in the Git tree.
+
+
+## E19-005 — 2026-09-30
+- **Issue:** The Phase-9 frozen cycle manifest is generated output and is not present in the historical branches available to the Phase-19 runner.
+- **Impact:** The exact 63-cycle calendar could not be consumed by the script, despite the frozen expiry list being present and independently versioned.
+- **Correction:** Restoring a deterministic two-column manifest directly from the versioned `FROZEN_63_EXPIRIES.csv`, preserving its exact 63-expiry order. No synthetic market observations are created; this file is only the frozen calendar control input.
