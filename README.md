@@ -61,3 +61,11 @@ All phases remain on separate branches. Empirical workflows have manual dispatch
 - [Phase 15W execution-data status](research/phase15w_execution_data/STATUS.md)
 - [Phase 15W expanded free-source audit](research/phase15w_execution_data/FREE_SOURCE_AUDIT_EXPANDED.md)
 - [Phase 15W paid-source shortlist](research/phase15w_execution_data/PAID_SOURCE_SHORTLIST.md)
+### Phase 16W — capital/margin validation
+- Closed with a quantified historical-margin data gap.
+- Frozen 63-cycle interface preserved; 193 unique required dates identified.
+- 18 static NSE SPAN URL candidates tested for 2024–2026; 0 dated SPAN members recovered.
+- Therefore no historical capital-normalized result is admitted.
+- [Phase 16W status](research/phase16w_capital_validation/STATUS.md)
+- [Phase 16W results](research/phase16w_capital_validation/RESULTS.md)
+- [Phase 16W source protocol](research/phase16w_capital_validation/SOURCE_PROTOCOL.md)
