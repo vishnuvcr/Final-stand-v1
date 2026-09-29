@@ -95,9 +95,17 @@ def exit_locked_cf(p1: float, p3: float, slip: float) -> float:
     return -(p1 - slip) + (p3 + slip)
 
 
+def _timestamp_key(timestamp: str) -> str:
+    return str(timestamp).replace(" ", "T")[:19]
+
+
+def _timestamp_key_expr(column: str = "timestamp") -> pl.Expr:
+    return pl.col(column).cast(pl.String).str.replace(r" ", "T").str.slice(0, 19)
+
+
 def marks_at(df: pl.DataFrame, timestamp: str, strikes: list[float]) -> dict[float, float]:
     rows = df.filter(
-        (pl.col("timestamp").cast(pl.String) == timestamp)
+        (_timestamp_key_expr() == _timestamp_key(timestamp))
         & pl.col("strike").is_in(strikes)
     )
     return {float(r["strike"]): float(r["open"]) for r in rows.iter_rows(named=True)}
@@ -123,8 +131,8 @@ def backtest_cycle(cycle: dict, options: pl.DataFrame, spot: pl.DataFrame, stop_
     orders = 3
 
     pre = options.filter(
-        (pl.col("timestamp").cast(pl.String) > entry_ts)
-        & (pl.col("timestamp").cast(pl.String) < lock_ts)
+        (_timestamp_key_expr() > _timestamp_key(entry_ts))
+        & (_timestamp_key_expr() < _timestamp_key(lock_ts))
         & pl.col("strike").is_in([k1, k2, k3])
     ).select(["timestamp", "strike", "open"]).sort("timestamp")
 
@@ -137,7 +145,7 @@ def backtest_cycle(cycle: dict, options: pl.DataFrame, spot: pl.DataFrame, stop_
             mtm = net_cf + m[k1] - m[k2] - m[k3]
             if mtm <= -abs(stop_loss):
                 later = options.filter(
-                    (pl.col("timestamp").cast(pl.String) > ts)
+                    (_timestamp_key_expr() > _timestamp_key(ts))
                     & pl.col("strike").is_in([k1, k2, k3])
                 ).select(["timestamp", "strike", "open"]).sort("timestamp")
                 if later.height:
@@ -168,7 +176,7 @@ def backtest_cycle(cycle: dict, options: pl.DataFrame, spot: pl.DataFrame, stop_
     orders += 1
 
     post = options.filter(
-        (pl.col("timestamp").cast(pl.String) > lock_ts)
+        (_timestamp_key_expr() > _timestamp_key(lock_ts))
         & pl.col("strike").is_in([k1, k3])
     ).select(["timestamp", "strike", "open"]).sort("timestamp")
 
