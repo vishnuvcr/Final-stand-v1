@@ -78,3 +78,9 @@ Phase 17W maximum usable coverage was 39/63 for the registered family. This rema
 - **Issue:** The complete 224-variant empirical run finished successfully, but GitHub rejected the commit because `variant_option_bars.parquet` is 344.80 MB, above the 100 MB repository-file limit.
 - **Impact:** The empirical outputs were generated but not persisted to the branch by that run; no statistical result was discarded conceptually, and no strategy calculation failed.
 - **Correction:** Store the large parquet as a GitHub Actions artifact and commit the reproducible CSV/JSON summaries, trade files, manifests, and provenance to the Phase-19 branch. This avoids Git LFS dependency while retaining the large derived dataset for the run.
+
+
+## E19-008 — 2026-09-30
+- **Issue:** The full 224-variant Phase 19 computation completed successfully, but the final push was rejected because the Phase 19 branch advanced concurrently during execution.
+- **Impact:** Empirical outputs existed on the runner but were not committed to the branch; no statistical conclusion was admitted from the unpublished run.
+- **Correction:** Serialize the issue-trigger bridge with a concurrency group and rebase the result commit onto the latest Phase 19 branch before pushing. Research parameters remain unchanged.
