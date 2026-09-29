@@ -192,7 +192,7 @@ def backtest_cycle(cycle: dict, options: pl.DataFrame, spot: pl.DataFrame, stop_
                         orders += 2
                         buy_turn = entry_buy + (lock[k2] + slip) * lot + (nm[k3] + slip) * lot
                         sell_turn = entry_sell + (nm[k1] - slip) * lot
-                        costs = cost_rupees(buy_turn, sell_turn, orders, cfg)
+                        costs = cost_rupees(buy_turn, sell_turn, orders, cfg, nt[:10])
                         gross = net_cf
                         return TradeResult(
                             expiry, entry_ts, lock_ts, nt, k1, k2, k3,
@@ -253,7 +253,9 @@ def main():
 
     out = Path(args.output)
     out.parent.mkdir(parents=True, exist_ok=True)
-    pl.DataFrame(results).write_csv(out)
+    result_columns = [f.name for f in TradeResult.__dataclass_fields__.values()]
+    result_df = pl.DataFrame(results, schema=result_columns) if results else pl.DataFrame({c: [] for c in result_columns})
+    result_df.write_csv(out)
 
     summary = {
         "trades": len(results),
