@@ -82,7 +82,7 @@ def list_nifty_expiry_files(api: HfApi, revision: str) -> list[tuple[date, str]]
         repo_id=DATASET_REPO,
         repo_type=DATASET_TYPE,
         revision=revision,
-        path="options/NIFTY",
+        path_in_repo="options/NIFTY",
         recursive=False,
     ):
         path = getattr(item, "path", None)
