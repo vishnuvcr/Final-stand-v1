@@ -99,3 +99,9 @@
 - Impact: Local execution of the updated unit tests could not be performed in this environment.
 - Resolution: Repository changes were made through the GitHub connector and the workflow remains the execution authority. No empirical result was claimed.
 - Prevention: Keep deterministic unit tests in the repository and rely on GitHub Actions for networked data execution; verify workflow artifacts before admitting results.
+
+### E-0022 — GitHub Actions pip cache expected dependency manifest
+- Observation: GitHub Actions failed at actions/setup-python because cache: pip was enabled without requirements.txt or pyproject.toml.
+- Impact: The Phase 13 job stopped before dependency installation; no empirical data were processed.
+- Resolution: Removed pip caching from the Phase 9/11/12/13 workflows. Hugging Face data caching remains enabled.
+- Prevention: Do not enable setup-python dependency caching unless the repository contains a supported dependency lock/manifest file.
