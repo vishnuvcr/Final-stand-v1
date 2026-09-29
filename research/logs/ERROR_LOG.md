@@ -80,3 +80,9 @@
 - Impact: No partial repository mutation occurred.
 - Resolution: Reissued the patch using quoted strings; the workflow update then succeeded.
 - Prevention: For GitHub Actions files, use non-template string literals whenever the payload contains GitHub Actions expressions.
+
+### E-0020 — Historical SPAN reconstruction not yet executed
+- Observation: The repository has not yet ingested the full dated SPAN risk-array and margin-report series required for portfolio-level historical margin reconstruction.
+- Impact: The creator's margin-drop claim remains untested.
+- Resolution: Formalized the required Phase 10 protocol and kept margin conclusions pending.
+- Prevention: Do not substitute generic margin percentages for dated exchange risk arrays.
