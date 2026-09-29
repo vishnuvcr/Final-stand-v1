@@ -1,0 +1,59 @@
+name: Phase 16W - Capital and Margin Validation
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "research/phase16w_capital_validation/**"
+      - ".github/workflows/phase-16w-capital-validation.yml"
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Create phase directories
+        run: |
+          mkdir -p research/phase16w_capital_validation/output
+          mkdir -p research/phase16w_capital_validation/cache
+
+      - name: Run deterministic phase gate
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path("research/phase16w_capital_validation/STATUS.md")
+          text = p.read_text()
+          assert "CAPITAL/MARGIN DATA: PENDING ACQUISITION AND MAPPING" in text
+          assert "No parameter tuning." in text
+          print("Phase 16W initialization gate passed.")
+          PY
+
+      - name: Write run metadata
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          out = Path("research/phase16w_capital_validation/output/run_metadata.json")
+          out.write_text(json.dumps({
+              "phase": "16W",
+              "purpose": "capital_and_margin_validation",
+              "strategy_frozen": True,
+              "holdout_locked": True,
+              "historical_bbo_free_gate": "not_qualified",
+              "github_run_id": os.environ.get("GITHUB_RUN_ID"),
+          }, indent=2))
+          print(out)
+          PY
+
+      - name: Upload phase metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase16w-capital-validation-metadata
+          path: research/phase16w_capital_validation/output/
