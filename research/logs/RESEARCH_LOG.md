@@ -18,3 +18,14 @@
 - Confirmed the monthly research plan is not copied into the active weekly branch.
 - Added branch-local status and error logging.
 - Weekly branch status remains design gate passed / data gate pending.
+
+
+## 2026-09-29 — Weekly data and mechanics gate
+- Official NSE sources were audited. NSE provides historical F&O framework, daily contract-wise price/volume data, daily reports, SPAN risk-parameter files and margin-report infrastructure. citeturn0search31turn0search6turn6search0turn6search5
+- Public GitHub research repositories demonstrate that 1-minute NIFTY weekly option datasets exist, including a pipeline covering 39 Tuesday-expiry weeks from Sep 2025 to May 2026 and other datasets covering weekly options. These sources are useful for data discovery/prototyping but are not treated as authoritative execution data without source/licence/quote-quality validation. citeturn2search1turn2search2
+- The empirical gate remains blocked because the final study requires point-in-time bid/ask or sufficiently conservative executable-price reconstruction for K1/K2/K3 at entry and K2/K1/K3 at lock.
+- Implemented deterministic weekly mechanics engine and local unit checks.
+- Implemented dated brokerage/statutory/slippage/margin framework.
+- Paytm Money currently states ₹10 brokerage per unique executed F&O order. citeturn6search8
+- NSE's SPAN documentation confirms portfolio-based scenario margining and daily risk-parameter files; exact historical margin requires the relevant dated files. citeturn6search3turn6search1
+- Phase status: 9W blocked pending qualified intraday data; 10W active and mechanics framework implemented.
