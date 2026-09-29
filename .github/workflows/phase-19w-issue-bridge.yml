@@ -37,7 +37,6 @@ jobs:
           ISSUE_TITLE: ${{ github.event.issue.title }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_REVISION: 0f4800e43e6f96cec0794369d78eb4d3c4211ef5
-          POLARS_IGNORE_TIMEZONE_PARSE_ERROR: '1'
           PYTHONPATH: ${{ github.workspace }}
         run: |
           if [ "$ISSUE_TITLE" != "RUN PHASE 19W" ]; then
@@ -45,7 +44,6 @@ jobs:
             exit 0
           fi
           pip install -q huggingface_hub polars numpy pandas pyarrow
-          HF_CACHE=~/.cache/huggingface python research/phase19w_recovered_rerun/restore_phase9_spot.py
           python research/phase17w_strike_alternatives/strike_alternatives.py             --variant-start 0             --variant-end 224             --hf-cache ~/.cache/huggingface             --baseline-manifest research/phase9_weekly/output/weekly_cycle_manifest.csv             --expiry-start 0             --expiry-end 63             --output-dir research/phase19w_recovered_rerun/output
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
