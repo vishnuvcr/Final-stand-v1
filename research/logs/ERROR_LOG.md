@@ -261,3 +261,11 @@
 - Impact: Continuing with the 32-configuration run would not satisfy the requested experimental scope.
 - Resolution: Expanded the preregistered family to 224 configurations (8 K1 × 4 K2 × 7 K3 multipliers) before admitting any empirical alternative result. The historical Phase 13 control remains unchanged.
 - Prevention: Register the complete strategy-definition dimension set before evaluating or promoting any alternative.
+
+
+## E-0055 — Phase 17W 224-variant runner cancellation
+- Observation: Phase 17W run 36617633312 passed dependency installation, cached-data verification, Phase 9 interface construction and smoke tests, but the 224-variant computation step was cancelled by the GitHub runner before results were produced.
+- Impact: No Phase 17W empirical result was generated or admitted; downstream audit/upload/commit steps did not run.
+- Diagnosis: The variant engine repeatedly invoked the general Phase 11 Polars filtering/group-by backtest for each variant/cycle, creating a large Python-level timestamp loop across roughly 14,000 candidate cycle evaluations.
+- Resolution: Replaced the Phase 17 execution path with a vectorized NumPy MTM/stop evaluator over a Polars pivot for each three-leg slice. The frozen 50-point stop, 0.50-point slippage, costs, lock/exit semantics and OHLC reconstruction are unchanged.
+- Prevention: Keep the optimized evaluator under deterministic tests and require the baseline-control audit to verify the frozen control before accepting empirical results.
