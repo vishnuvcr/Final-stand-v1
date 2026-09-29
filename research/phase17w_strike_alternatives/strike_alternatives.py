@@ -759,10 +759,13 @@ def main() -> None:
     if args.build_only:
         raise SystemExit(0)
 
-    baseline_manifest_path = Path("research/phase9_weekly/output/weekly_cycle_manifest.csv")
-    spot_path = Path("research/phase9_weekly/output/selected_weekly_spot_bars.parquet")
+    baseline_interface_dir = Path("research/phase9_weekly/output")
+    if not (baseline_interface_dir / "weekly_cycle_manifest.csv").exists():
+        baseline_interface_dir = Path("prepared/phase9")
+    baseline_manifest_path = baseline_interface_dir / "weekly_cycle_manifest.csv"
+    spot_path = baseline_interface_dir / "selected_weekly_spot_bars.parquet"
     if not spot_path.exists():
-        raise RuntimeError("Missing Phase 9 selected spot bars. Build the frozen Phase 9 data interface first.")
+        raise RuntimeError("Missing Phase 9 selected spot bars. Build or restore the frozen Phase 9 data interface first.")
     spot_df = pl.read_parquet(spot_path)
 
     baseline_manifest = pl.read_csv(baseline_manifest_path)
