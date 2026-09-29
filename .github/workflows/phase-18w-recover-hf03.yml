@@ -1,7 +1,7 @@
 name: Phase 18W - Recover HF03 Full Weekly Chains
 
 concurrency:
-  group: phase18w-hf03-recovery
+  group: phase18w-hf03-recovery-v2
   cancel-in-progress: true
 
 on:
