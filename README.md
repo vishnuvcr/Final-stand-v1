@@ -13,6 +13,7 @@
 - Phase 12W — robustness: ✅
 - Phase 13W — frozen stop + untouched holdout: ✅
 - Phase 14W — final manuscript: ✅
+- Phase 15W — execution-data discovery/validation: 🔄 active (frozen strategy; holdout remains locked)
 
 ### Key results
 
@@ -23,6 +24,12 @@
 - Holm-adjusted bootstrap p-value for the frozen cell across 30 candidate cells: 0.006.
 - CSCV-style PBO proxy: 0.00 across 20 paths.
 - DSR-style probability: 0.9892, explicitly treated as an implementation-specific approximation.
+
+### Phase 15W current status
+
+Public TickBytes and OptionVault samples contain NIFTY option Level-1/Level-2 bid/ask fields, but their documentation distinguishes these evaluation samples from subscription/licensed historical archives. A free complete historical quote archive has not yet been qualified. Phase 15W is therefore auditing public sources before any paid data purchase is considered.
+
+[Phase 15W execution-data discovery branch](../phase-15w-execution-data-discovery)
 
 ### Critical limitations
 
