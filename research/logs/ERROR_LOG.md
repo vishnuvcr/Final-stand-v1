@@ -200,3 +200,9 @@
 ### E-0036 — Diagnostic retained obsolete typed datetime comparison
 - Observation: Phase 13 diagnostic itself still compared Asia/Kolkata timestamps with Python datetime literals, reproducing the UTC schema error after the backtest had been converted to local keys.
 - Resolution: Diagnostic now uses the same second-precision local timestamp key as Phase 11.
+
+## E-0044 — Public sample versus historical archive distinction
+- Observation: TickBytes and OptionVault expose public Level-2 samples containing bid/ask fields, but their documentation identifies complete historical archives as subscription/licensed datasets.
+- Impact: It would be invalid to treat the public samples as evidence that the full 63-cycle historical bid/ask archive is freely available.
+- Resolution: Classify the sources as schema-qualified but archive-unqualified; do not alter the frozen backtest or claim quote-validated historical performance.
+- Prevention: Require date coverage, exact-contract coverage, completeness and licensing checks before admitting an execution dataset into Phase 15W.
