@@ -27,7 +27,7 @@ from research.phase9_weekly.hf_weekly_ingest import (
     require_columns,
     trading_dates,
 )
-from research.phase11_weekly.weekly_backtest import CostConfig, backtest_cycle
+from research.phase11_weekly.weekly_backtest import (\n    CostConfig,\n    TradeResult,\n    cost_rupees,\n    entry_cf,\n    exit_locked_cf,\n    exit_prelock_cf,\n    intrinsic,\n    lock_cf,\n    lot_size_for_expiry,\n)
 
 IST = ZoneInfo("Asia/Kolkata")
 K1_RULES = ["OTM1", "OTM2", "OTM3", "ATM_NEAREST", "ATM_UP", "ITM1", "ITM2", "ITM3"]
@@ -447,6 +447,151 @@ def build_variants(
     return cycle_df, option_df, sorted(set(baseline_expiries))
 
 
+def _fast_backtest_cycle(
+    cycle: dict,
+    options: pl.DataFrame,
+    expiry_spot_close: float | None,
+    cfg: CostConfig,
+    stop_loss: float = 50.0,
+):
+    """Vectorized equivalent of Phase 11 backtest_cycle for one 3-leg slice.
+
+    The original implementation repeatedly filters/group-bys Polars frames inside
+    every timestamp loop. This preserves its timestamp/next-bar execution semantics
+    but moves the MTM path to NumPy arrays. No strategy rule, cost, slippage or stop
+    parameter is changed.
+    """
+    if cycle["status"] != "USABLE_OHLC" or expiry_spot_close is None:
+        return None
+
+    expiry = cycle["target_expiry"]
+    k1, k2, k3 = float(cycle["k1"]), float(cycle["k2"]), float(cycle["k3"])
+    lot = lot_size_for_expiry(expiry, cfg)
+    slip = cfg.slippage_points_per_leg
+    entry_ts, lock_ts = cycle["entry_timestamp"], cycle["lock_timestamp"]
+
+    base = options.select(["timestamp", "strike", "open"]).with_columns(
+        pl.col("timestamp").cast(pl.String).str.replace(r" ", "T").str.slice(0, 19)
+    )
+    wide = (
+        base.pivot(
+            on="strike",
+            on_columns=[k1, k2, k3],
+            index="timestamp",
+            values="open",
+            aggregate_function="first",
+        )
+        .sort("timestamp")
+    )
+    if wide.height == 0:
+        return None
+
+    strike_cols = {}
+    for col in wide.columns:
+        if col == "timestamp":
+            continue
+        try:
+            strike_cols[float(col)] = col
+        except (TypeError, ValueError):
+            pass
+    if not all(k in strike_cols for k in (k1, k2, k3)):
+        return None
+
+    ts = np.asarray(wide["timestamp"].to_list(), dtype=str)
+    a1 = wide[strike_cols[k1]].to_numpy()
+    a2 = wide[strike_cols[k2]].to_numpy()
+    a3 = wide[strike_cols[k3]].to_numpy()
+
+    entry_key = str(entry_ts).replace(" ", "T")[:19]
+    lock_key = str(lock_ts).replace(" ", "T")[:19]
+    entry_idx = int(np.searchsorted(ts, entry_key, side="left"))
+    lock_idx = int(np.searchsorted(ts, lock_key, side="left"))
+    if entry_idx >= len(ts) or ts[entry_idx] != entry_key:
+        return None
+    if lock_idx >= len(ts) or ts[lock_idx] != lock_key:
+        return None
+
+    p1, p2, p3 = float(a1[entry_idx]), float(a2[entry_idx]), float(a3[entry_idx])
+    if not (np.isfinite(p1) and np.isfinite(p2) and np.isfinite(p3)):
+        return None
+
+    net_cf = entry_cf(p1, p2, p3, slip)
+    entry_buy = (p1 + slip) * lot
+    entry_sell = ((p2 - slip) + (p3 - slip)) * lot
+    orders = 3
+
+    finite3 = np.isfinite(a1) & np.isfinite(a2) & np.isfinite(a3)
+    pre_idx = np.arange(entry_idx + 1, lock_idx)[finite3[entry_idx + 1:lock_idx]]
+    if stop_loss is not None and len(pre_idx):
+        mtm = net_cf + a1[pre_idx] - a2[pre_idx] - a3[pre_idx]
+        breach_positions = np.flatnonzero(mtm <= -abs(stop_loss))
+        if len(breach_positions):
+            breach_idx = int(pre_idx[breach_positions[0]])
+            later_idx = breach_idx + 1
+            if later_idx < len(ts) and finite3[later_idx]:
+                nt = ts[later_idx]
+                nm1, nm2, nm3 = float(a1[later_idx]), float(a2[later_idx]), float(a3[later_idx])
+                net_cf += exit_prelock_cf(nm1, nm2, nm3, slip)
+                orders += 3
+                buy_turn = entry_buy + (nm2 + slip) * lot + (nm3 + slip) * lot
+                sell_turn = entry_sell + (nm1 - slip) * lot
+                costs = cost_rupees(buy_turn, sell_turn, orders, cfg, nt[:10])
+                gross = net_cf
+                return TradeResult(
+                    expiry, entry_ts, lock_ts, nt, k1, k2, k3,
+                    float(cycle["entry_spot"]), float(cycle["p1"]) - float(cycle["p2"]),
+                    float(cycle["target_premium"]),
+                    float(cycle["target_error"]) if cycle["target_error"] is not None else None,
+                    lot, stop_loss, "stop_prelock", gross, costs / lot,
+                    gross - costs / lot, gross * lot, costs, gross * lot - costs,
+                    orders, False, "OHLC_RECONSTRUCTION",
+                )
+
+    net_cf += lock_cf(float(a2[lock_idx]), slip)
+    orders += 1
+
+    finite13 = np.isfinite(a1) & np.isfinite(a3)
+    post_idx = np.arange(lock_idx + 1, len(ts))[finite13[lock_idx + 1:]]
+    if stop_loss is not None and len(post_idx):
+        mtm = net_cf + a1[post_idx] - a3[post_idx]
+        breach_positions = np.flatnonzero(mtm <= -abs(stop_loss))
+        if len(breach_positions):
+            breach_idx = int(post_idx[breach_positions[0]])
+            later_idx = breach_idx + 1
+            if later_idx < len(ts) and finite13[later_idx]:
+                nt = ts[later_idx]
+                nm1, nm3 = float(a1[later_idx]), float(a3[later_idx])
+                net_cf += exit_locked_cf(nm1, nm3, slip)
+                orders += 2
+                buy_turn = entry_buy + (float(a2[lock_idx]) + slip) * lot + (nm3 + slip) * lot
+                sell_turn = entry_sell + (nm1 - slip) * lot
+                costs = cost_rupees(buy_turn, sell_turn, orders, cfg, nt[:10])
+                gross = net_cf
+                return TradeResult(
+                    expiry, entry_ts, lock_ts, nt, k1, k2, k3,
+                    float(cycle["entry_spot"]), float(cycle["p1"]) - float(cycle["p2"]),
+                    float(cycle["target_premium"]),
+                    float(cycle["target_error"]) if cycle["target_error"] is not None else None,
+                    lot, stop_loss, "stop_postlock", gross, costs / lot,
+                    gross - costs / lot, gross * lot, costs, gross * lot - costs,
+                    orders, True, "OHLC_RECONSTRUCTION",
+                )
+
+    gross = net_cf + intrinsic(float(expiry_spot_close), k1) - intrinsic(float(expiry_spot_close), k3)
+    buy_turn = entry_buy + (float(a2[lock_idx]) + slip) * lot
+    sell_turn = entry_sell
+    costs = cost_rupees(buy_turn, sell_turn, orders, cfg, expiry)
+    return TradeResult(
+        expiry, entry_ts, lock_ts, f"{expiry}T15:30:00+05:30", k1, k2, k3,
+        float(cycle["entry_spot"]), float(cycle["p1"]) - float(cycle["p2"]),
+        float(cycle["target_premium"]),
+        float(cycle["target_error"]) if cycle["target_error"] is not None else None,
+        lot, stop_loss, "expiry", gross, costs / lot,
+        gross - costs / lot, gross * lot, costs, gross * lot - costs,
+        orders, True, "OHLC_RECONSTRUCTION",
+    )
+
+
 def run_variants(
     cycle_df: pl.DataFrame,
     option_df: pl.DataFrame,
@@ -461,6 +606,19 @@ def run_variants(
         as_dict=True,
     ) if option_df.height else {}
 
+    spot_keyed = (
+        spot_df
+        .sort("timestamp")
+        .with_columns(pl.col("timestamp").cast(pl.String).str.slice(0, 10).alias("_expiry"))
+        .group_by("_expiry", maintain_order=True)
+        .agg(pl.col("close").last())
+    )
+    spot_close = {
+        str(r["_expiry"]): float(r["close"])
+        for r in spot_keyed.iter_rows(named=True)
+        if r["close"] is not None
+    }
+
     for variant in VARIANT_IDS:
         cycles = usable.filter(pl.col("variant_id") == variant).sort("target_expiry")
         local_results: list[dict] = []
@@ -468,7 +626,13 @@ def run_variants(
             option_slice = option_partitions.get((variant, row["target_expiry"]))
             if option_slice is None or option_slice.height == 0:
                 continue
-            result = backtest_cycle(row, option_slice, spot_df, stop_loss=50.0, cfg=cfg)
+            result = _fast_backtest_cycle(
+                row,
+                option_slice,
+                spot_close.get(row["target_expiry"]),
+                cfg,
+                stop_loss=50.0,
+            )
             if result is None:
                 continue
             record = asdict(result)
