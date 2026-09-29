@@ -39,6 +39,8 @@ NSE currently documents four weekly NIFTY 50 option expiries excluding the month
 - [Weekly research protocol](research/phase8_weekly/RESEARCH_PROTOCOL.md)
 - [Weekly literature review](research/phase8_weekly/LITERATURE_REVIEW.md)
 - [Weekly data-source manifest](research/phase8_weekly/DATA_SOURCE_MANIFEST.md)
+- [Weekly cost/margin model](research/phase8_weekly/COST_MARGIN_MODEL.md)
+- [Analytical weekly stress test](research/phase8_weekly/ANALYTICAL_WEEKLY_STRESS.md)
 - [Weekly phase status](research/phase8_weekly/STATUS.md)
 - [Research log](research/logs/RESEARCH_LOG.md)
 - [Error log](research/logs/ERROR_LOG.md)
