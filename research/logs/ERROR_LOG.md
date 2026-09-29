@@ -129,3 +129,9 @@
 - Impact: Data ingestion stopped after reaching cycle processing; no backtest result was produced.
 - Resolution: Explicitly derive lock_p1, lock_p2 and lock_p3 from the validated lock rows before building the cycle record.
 - Prevention: Keep manifest fields covered by executable integration tests that exercise at least one complete cycle.
+
+### E-0026 — Phase 13 workflow invoked Phase 11 backtest with the wrong working-data defaults
+- Observation: Phase 9 ingestion produced 63 USABLE_OHLC cycles, but every Phase 13 backtest reported zero trades because the backtest defaults point to research/phase9_weekly/output while the workflow execution context/path handling was not explicit.
+- Impact: Holdout candidate files were empty; no strategy performance was measured.
+- Resolution: Phase 13 and Phase 12 workflows now pass manifest/options/spot paths explicitly. The holdout reader now fails with a diagnostic rather than silently reading an empty CSV.
+- Prevention: Workflows must pass data-interface paths explicitly across phase boundaries; zero-trade runs are treated as pipeline failures, not valid results.
