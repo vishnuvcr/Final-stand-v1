@@ -77,10 +77,11 @@ jobs:
           usable = m.filter(pl.col("status")=="USABLE_OHLC")
           for row in usable.head(5).iter_rows(named=True):
               ets=str(row["entry_timestamp"]); lts=str(row["lock_timestamp"]); strikes=[float(row["k1"]),float(row["k2"]),float(row["k3"])]
-              from datetime import datetime
-              etv=datetime.fromisoformat(ets); ltv=datetime.fromisoformat(lts)
-              er_all=o.filter(pl.col("timestamp")==pl.lit(etv))
-              lr_all=o.filter(pl.col("timestamp")==pl.lit(ltv))
+              key_e=ets[:19]
+              key_l=lts[:19]
+              ts_key=o.select(pl.col("timestamp").cast(pl.String).str.replace(r" ", "T").str.slice(0,19)).to_series()
+              er_all=o.filter(ts_key==key_e)
+              lr_all=o.filter(ts_key==key_l)
               er=er_all.filter(pl.col("strike").is_in(strikes)).height
               lr=lr_all.filter(pl.col("strike").is_in(strikes)).height
               se=s.filter(pl.col("timestamp").cast(pl.String).str.starts_with(str(row["target_expiry"]))).height
