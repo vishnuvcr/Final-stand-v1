@@ -1,6 +1,8 @@
 # Phase 17W Variant Registry
 
-All 32 configurations are registered before empirical results are read.
+All **224** configurations are registered before empirical results are read.
+
+## K1 rules
 
 | K1 rule | Definition |
 |---|---|
@@ -13,6 +15,8 @@ All 32 configurations are registered before empirical results are read.
 | ITM2 | second-highest strike < spot |
 | ITM3 | third-highest strike < spot |
 
+## K2 rules
+
 | K2 rule | Definition |
 |---|---|
 | NEXT1 | first strike > K1 |
@@ -20,39 +24,82 @@ All 32 configurations are registered before empirical results are read.
 | NEXT3 | third strike > K1 |
 | MIRROR_GAP | strike > K1 with spacing closest to abs(spot-K1); tie lower |
 
-## Configuration IDs
+## K3 target multipliers
 
-- OTM1_NEXT1 (frozen baseline)
-- OTM1_NEXT2
-- OTM1_NEXT3
-- OTM1_MIRROR_GAP
-- OTM2_NEXT1
-- OTM2_NEXT2
-- OTM2_NEXT3
-- OTM2_MIRROR_GAP
-- OTM3_NEXT1
-- OTM3_NEXT2
-- OTM3_NEXT3
-- OTM3_MIRROR_GAP
-- ATM_NEAREST_NEXT1
-- ATM_NEAREST_NEXT2
-- ATM_NEAREST_NEXT3
-- ATM_NEAREST_MIRROR_GAP
-- ATM_UP_NEXT1
-- ATM_UP_NEXT2
-- ATM_UP_NEXT3
-- ATM_UP_MIRROR_GAP
-- ITM1_NEXT1
-- ITM1_NEXT2
-- ITM1_NEXT3
-- ITM1_MIRROR_GAP
-- ITM2_NEXT1
-- ITM2_NEXT2
-- ITM2_NEXT3
-- ITM2_MIRROR_GAP
-- ITM3_NEXT1
-- ITM3_NEXT2
-- ITM3_NEXT3
-- ITM3_MIRROR_GAP
+For each K1/K2 pair:
 
-The baseline is a control, not a newly selected winner.
+**target K3 premium = M × (P1 − P2)**
+
+The registered multipliers are:
+
+| K3 multiplier | Interpretation |
+|---:|---|
+| 0.5 | target = 0.5D |
+| 1.0 | target = 1.0D |
+| 1.5 | target = 1.5D |
+| 2.0 | target = 2.0D — frozen baseline |
+| 2.5 | target = 2.5D |
+| 3.0 | target = 3.0D |
+| 4.0 | target = 4.0D |
+
+K3 is always selected as the listed call strike **above K2** whose entry premium is closest to the target premium. Ties are resolved by the lower strike.
+
+## Configuration ID format
+
+<K1>_<K2>_K3M<multiplier>
+
+Examples:
+- OTM1_NEXT1_K3M2 — exact current frozen configuration.
+- ATM_NEAREST_NEXT2_K3M1.5
+- ITM2_MIRROR_GAP_K3M4
+
+## Registered family size
+
+8 K1 rules × 4 K2 rules × 7 K3 multipliers = **224 configurations**.
+
+## Full K1/K2 family
+
+For each of the eight K1 rules and four K2 rules below, all seven K3 multipliers are tested.
+
+| K1 | K2 |
+|---|---|
+| OTM1 | NEXT1 |
+| OTM1 | NEXT2 |
+| OTM1 | NEXT3 |
+| OTM1 | MIRROR_GAP |
+| OTM2 | NEXT1 |
+| OTM2 | NEXT2 |
+| OTM2 | NEXT3 |
+| OTM2 | MIRROR_GAP |
+| OTM3 | NEXT1 |
+| OTM3 | NEXT2 |
+| OTM3 | NEXT3 |
+| OTM3 | MIRROR_GAP |
+| ATM_NEAREST | NEXT1 |
+| ATM_NEAREST | NEXT2 |
+| ATM_NEAREST | NEXT3 |
+| ATM_NEAREST | MIRROR_GAP |
+| ATM_UP | NEXT1 |
+| ATM_UP | NEXT2 |
+| ATM_UP | NEXT3 |
+| ATM_UP | MIRROR_GAP |
+| ITM1 | NEXT1 |
+| ITM1 | NEXT2 |
+| ITM1 | NEXT3 |
+| ITM1 | MIRROR_GAP |
+| ITM2 | NEXT1 |
+| ITM2 | NEXT2 |
+| ITM2 | NEXT3 |
+| ITM2 | MIRROR_GAP |
+| ITM3 | NEXT1 |
+| ITM3 | NEXT2 |
+| ITM3 | NEXT3 |
+| ITM3 | MIRROR_GAP |
+
+Every row above is crossed with all seven multipliers.
+
+## Baseline control
+
+OTM1_NEXT1_K3M2 is the historical frozen control.
+
+The Phase 13W historical results remain unchanged. Phase 17W alternative results are not substituted into the earlier evidence.
