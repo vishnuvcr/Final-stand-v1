@@ -25,8 +25,8 @@ permissions:
 jobs:
   alternatives:
     runs-on: ubuntu-latest
-    # Vectorized evaluator rerun trigger; strategy parameters remain frozen.
-timeout-minutes: 300
+        # Vectorized evaluator rerun trigger; strategy parameters remain frozen.
+    timeout-minutes: 300
     steps:
       - uses: actions/checkout@v4
         with:
