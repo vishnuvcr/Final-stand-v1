@@ -189,3 +189,9 @@
 - Impact: Typed timestamp diagnostics failed before evaluating entry/lock rows.
 - Resolution: Convert parsed timestamps to ZoneInfo(Asia/Kolkata) before constructing Polars literals.
 - Prevention: Cross-phase timestamp tests must assert timezone metadata as well as instant equality.
+
+
+### E-0035 — Polars timezone-aware literal conversion remained unsuitable
+- Observation: Even ZoneInfo Asia/Kolkata Python datetimes were materialized as UTC literals by the Polars comparison path.
+- Resolution: Compare normalized local bar-time keys to second precision (`YYYY-MM-DDTHH:MM:SS`). All source bars and manifest timestamps are explicitly Asia/Kolkata, so no cross-timezone conversion is introduced.
+- Prevention: Keep cross-phase comparison keys timezone-local and separately validate timezone metadata at ingestion.
