@@ -20,9 +20,6 @@ concurrency:
   group: phase-17w-strike-alternatives
   cancel-in-progress: true
 
-permissions:
-  contents: write
-
 env:
   MAX_EXPIRIES: ${{ inputs.max_expiries || '104' }}
 
@@ -32,8 +29,6 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -45,12 +40,12 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/huggingface
-          key: hf-phase17w-v2-${{ env.MAX_EXPIRIES }}
+          key: hf-phase17w-v4-${{ env.MAX_EXPIRIES }}
       - name: Verify token
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: test -n "$HF_TOKEN"
-      - name: Build frozen Phase 9 data interface
+      - name: Build frozen Phase 9 interface
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_REVISION: main
@@ -58,40 +53,119 @@ jobs:
         run: |
           rm -rf research/phase9_weekly/output
           python research/phase9_weekly/hf_weekly_ingest.py --max-expiries "$MAX_EXPIRIES" --start-date "2024-01-01" --end-date "2026-12-31" --output-dir research/phase9_weekly/output --hf-cache ~/.cache/huggingface
-      - name: Verify frozen interface
+      - name: Validate frozen interface and tests
         run: |
+          python -m py_compile research/phase17w_strike_alternatives/strike_alternatives.py
+          python -m pytest -q research/phase17w_strike_alternatives/test_strike_alternatives.py
           python - <<'PY'
           import polars as pl
-          m = pl.read_csv("research/phase9_weekly/output/weekly_cycle_manifest.csv")
-          u = m.filter(pl.col("status")=="USABLE_OHLC")
-          assert u.height == 63, f"Expected 63 usable cycles, got {u.height}"
-          print("Phase 9 usable cycles:", u.height)
+          m=pl.read_csv("research/phase9_weekly/output/weekly_cycle_manifest.csv")
+          assert m.filter(pl.col("status")=="USABLE_OHLC").height == 63
           PY
-      - name: Build reusable variant inputs
+      - name: Upload frozen Phase 9 interface
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase17w-phase9-interface
+          path: research/phase9_weekly/output
+          retention-days: 60
+
+  build_inputs:
+    needs: prepare
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        include:
+          - {chunk: 0, start: 0, end: 8}
+          - {chunk: 1, start: 8, end: 16}
+          - {chunk: 2, start: 16, end: 24}
+          - {chunk: 3, start: 24, end: 32}
+          - {chunk: 4, start: 32, end: 40}
+          - {chunk: 5, start: 40, end: 48}
+          - {chunk: 6, start: 48, end: 56}
+          - {chunk: 7, start: 56, end: 63}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install stack
+        run: |
+          pip install "huggingface_hub>=0.36,<0.37" "polars>=1.20,<2" "pyarrow>=18,<23" "numpy>=2,<3"
+      - name: Restore Phase 9 interface
+        uses: actions/download-artifact@v4
+        with:
+          name: phase17w-phase9-interface
+          path: research/phase9_weekly/output
+      - name: Restore Hugging Face cache
+        uses: actions/cache/restore@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-phase17w-v4-${{ env.MAX_EXPIRIES }}
+      - name: Build expiry input shard
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_REVISION: main
           HF_HOME: ~/.cache/huggingface
         run: |
-          rm -rf research/phase17w_strike_alternatives/built
-          python -m research.phase17w_strike_alternatives.strike_alternatives \
-            --max-expiries "$MAX_EXPIRIES" \
-            --start-date "2024-01-01" \
-            --end-date "2026-12-31" \
-            --hf-cache ~/.cache/huggingface \
-            --output-dir research/phase17w_strike_alternatives/built \
-            --baseline-manifest research/phase9_weekly/output/weekly_cycle_manifest.csv \
-            --build-only
-      - name: Cache prepared inputs
-        uses: actions/cache@v4
+          rm -rf "build_${{ matrix.chunk }}"
+          python -m research.phase17w_strike_alternatives.strike_alternatives             --max-expiries "$MAX_EXPIRIES"             --start-date "2024-01-01"             --end-date "2026-12-31"             --hf-cache ~/.cache/huggingface             --baseline-manifest research/phase9_weekly/output/weekly_cycle_manifest.csv             --expiry-start "${{ matrix.start }}"             --expiry-end "${{ matrix.end }}"             --output-dir "build_${{ matrix.chunk }}"             --build-only
+      - name: Upload expiry input shard
+        uses: actions/upload-artifact@v4
         with:
-          path: |
-            research/phase9_weekly/output
-            research/phase17w_strike_alternatives/built
-          key: phase17w-prepared-v3-${{ env.MAX_EXPIRIES }}
+          name: phase17w-build-${{ matrix.chunk }}
+          path: build_${{ matrix.chunk }}
+          retention-days: 60
+
+  merge_inputs:
+    needs: build_inputs
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install stack
+        run: pip install "polars>=1.20,<2" "pyarrow>=18,<23" "numpy>=2,<3"
+      - name: Download expiry shards
+        uses: actions/download-artifact@v4
+        with:
+          pattern: phase17w-build-*
+          path: build_shards
+          merge-multiple: false
+      - name: Download Phase 9 interface
+        uses: actions/download-artifact@v4
+        with:
+          name: phase17w-phase9-interface
+          path: prepared/phase9
+      - name: Merge frozen variant inputs
+        run: |
+          python - <<'PY'
+          import pathlib, polars as pl
+          root=pathlib.Path("build_shards")
+          cycles=sorted(root.glob("**/variant_cycle_manifest.csv"))
+          opts=sorted(root.glob("**/variant_option_bars.parquet"))
+          assert len(cycles)==8 and len(opts)==8
+          c=pl.concat([pl.read_csv(x) for x in cycles],how="vertical_relaxed")
+          o=pl.concat([pl.read_parquet(x) for x in opts],how="vertical_relaxed")
+          assert c.height > 0 and o.height > 0
+          pathlib.Path("prepared/built").mkdir(parents=True,exist_ok=True)
+          c.write_csv("prepared/built/variant_cycle_manifest.csv")
+          o.write_parquet("prepared/built/variant_option_bars.parquet")
+          print("cycle rows",c.height,"option rows",o.height)
+          PY
+      - name: Upload merged inputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase17w-merged-inputs
+          path: prepared
+          retention-days: 60
 
   variants:
-    needs: prepare
+    needs: merge_inputs
     strategy:
       fail-fast: false
       max-parallel: 8
@@ -109,50 +183,40 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Install stack
-        run: |
-          python -m pip install --upgrade pip
-          pip install "huggingface_hub>=0.36,<0.37" "polars>=1.20,<2" "pyarrow>=18,<23" "numpy>=2,<3" pytest
-      - name: Restore prepared inputs
-        uses: actions/cache/restore@v4
+        run: pip install "polars>=1.20,<2" "pyarrow>=18,<23" "numpy>=2,<3" pytest
+      - name: Download merged inputs
+        uses: actions/download-artifact@v4
         with:
-          path: |
-            research/phase9_weekly/output
-            research/phase17w_strike_alternatives/built
-          key: phase17w-prepared-v3-${{ env.MAX_EXPIRIES }}
-      - name: Compile tests
+          name: phase17w-merged-inputs
+          path: prepared
+      - name: Verify tests and 63-cycle interface
         run: |
           python -m py_compile research/phase17w_strike_alternatives/strike_alternatives.py
           python -m pytest -q research/phase17w_strike_alternatives/test_strike_alternatives.py
-      - name: Verify 63-cycle interface
-        run: |
           python - <<'PY'
           import polars as pl
-          m=pl.read_csv("research/phase9_weekly/output/weekly_cycle_manifest.csv")
+          m=pl.read_csv("prepared/phase9/weekly_cycle_manifest.csv")
           assert m.filter(pl.col("status")=="USABLE_OHLC").height == 63
           PY
       - name: Run deterministic variant chunk
         run: |
-          python -m research.phase17w_strike_alternatives.strike_alternatives             --max-expiries "$MAX_EXPIRIES"             --start-date "2024-01-01"             --end-date "2026-12-31"             --hf-cache ~/.cache/huggingface             --output-dir "research/phase17w_strike_alternatives/output/chunk_${{ matrix.chunk }}"             --variant-start "${{ matrix.start }}"             --variant-end "${{ matrix.end }}"
+          python -m research.phase17w_strike_alternatives.strike_alternatives             --max-expiries "$MAX_EXPIRIES"             --start-date "2024-01-01"             --end-date "2026-12-31"             --built-input-dir prepared/built             --output-dir "research/phase17w_strike_alternatives/output/chunk_${{ matrix.chunk }}"             --variant-start "${{ matrix.start }}"             --variant-end "${{ matrix.end }}"
       - name: Audit chunk
         run: |
           python - <<'PY'
-          import json, pathlib
-          p=pathlib.Path("research/phase17w_strike_alternatives/output/chunk_${{ matrix.chunk }}/variant_summary.json")
-          rows=json.loads(p.read_text())
-          assert len(rows)==28
-          assert len({r["variant_id"] for r in rows})==28
-          print("chunk", "${{ matrix.chunk }}", "variants", len(rows))
+          import json
+          p="research/phase17w_strike_alternatives/output/chunk_${{ matrix.chunk }}/variant_summary.json"
+          rows=json.load(open(p))
+          assert len(rows)==28 and len({x["variant_id"] for x in rows})==28
           PY
-      - name: Upload chunk
+      - name: Upload variant chunk
         uses: actions/upload-artifact@v4
         with:
-          name: phase17w-chunk-${{ matrix.chunk }}
+          name: phase17w-variant-${{ matrix.chunk }}
           path: research/phase17w_strike_alternatives/output/chunk_${{ matrix.chunk }}
           retention-days: 60
 
@@ -162,78 +226,59 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Install stack
-        run: |
-          pip install "polars>=1.20,<2" "pyarrow>=18,<23" "numpy>=2,<3"
-      - name: Download all chunks
+        run: pip install "polars>=1.20,<2" "pyarrow>=18,<23" "numpy>=2,<3"
+      - name: Download variant chunks
         uses: actions/download-artifact@v4
         with:
-          pattern: phase17w-chunk-*
+          pattern: phase17w-variant-*
           path: chunks
           merge-multiple: false
-      - name: Aggregate and apply global Holm gate
+      - name: Download Phase 9 interface
+        uses: actions/download-artifact@v4
+        with:
+          name: phase17w-phase9-interface
+          path: phase9
+      - name: Aggregate globally and apply Holm gate
         run: |
           python - <<'PY'
-          import csv, json, pathlib, shutil
-          import polars as pl
+          import json, pathlib, polars as pl
           from research.phase17w_strike_alternatives.strike_alternatives import VARIANT_IDS, holm_adjust
-
           root=pathlib.Path("chunks")
           files=sorted(root.glob("**/variant_summary.json"))
-          assert len(files)==8, f"Expected 8 chunk summaries, got {len(files)}"
+          assert len(files)==8
           rows=[]
-          for f in files:
-              rows.extend(json.loads(f.read_text()))
-          assert len(rows)==224, f"Expected 224 variant rows, got {len(rows)}"
-          ids=[r["variant_id"] for r in rows]
-          assert len(set(ids))==224
-          assert set(ids)==set(VARIANT_IDS)
-
-          pvals=[(r["variant_id"], r.get("training_bootstrap_p_value")) for r in rows]
-          adjusted=holm_adjust(pvals)
+          for f in files: rows.extend(json.loads(f.read_text()))
+          assert len(rows)==224 and {r["variant_id"] for r in rows}==set(VARIANT_IDS)
+          adjusted=holm_adjust([(r["variant_id"],r.get("training_bootstrap_p_value")) for r in rows])
           for r in rows:
               r["training_holm_adjusted_p"]=adjusted.get(r["variant_id"])
-              tr=r["training"]; va=r["validation"]
+              tr,va=r["training"],r["validation"]
               r["promotable_to_capital_phase"]=bool(
-                  r.get("valid_rate_all_63") is not None
-                  and r["valid_rate_all_63"] >= (50.0/63.0)
-                  and tr.get("n",0) >= 30
-                  and tr.get("mean_net_rupees",-1e99) > 0
-                  and va.get("n",0) >= 8
-                  and va.get("mean_net_rupees",-1e99) > 0
-                  and r["training_holm_adjusted_p"] is not None
-                  and r["training_holm_adjusted_p"] < 0.05
-              )
-
+                r.get("valid_rate_all_63") is not None and r["valid_rate_all_63"] >= 50/63
+                and tr.get("n",0)>=30 and tr.get("mean_net_rupees",-1e99)>0
+                and va.get("n",0)>=8 and va.get("mean_net_rupees",-1e99)>0
+                and r["training_holm_adjusted_p"] is not None
+                and r["training_holm_adjusted_p"]<0.05)
           out=pathlib.Path("research/phase17w_strike_alternatives/output")
           out.mkdir(parents=True,exist_ok=True)
           (out/"variant_summary.json").write_text(json.dumps(rows,indent=2))
           (out/"variant_registry.json").write_text(json.dumps({
-              "k1_rules":["OTM1","OTM2","OTM3","ATM_NEAREST","ATM_UP","ITM1","ITM2","ITM3"],
-              "k2_rules":["NEXT1","NEXT2","NEXT3","MIRROR_GAP"],
-              "k3_multipliers":[0.5,1.0,1.5,2.0,2.5,3.0,4.0],
-              "variant_ids":VARIANT_IDS
-          },indent=2))
-          cal_files=sorted(root.glob("**/baseline_calendar.json"))
-          assert len(cal_files)==8
-          calendars=[json.loads(f.read_text()) for f in cal_files]
-          assert all(c==calendars[0] for c in calendars)
-          assert len(calendars[0])==63
-          (out/"baseline_calendar.json").write_text(json.dumps(calendars[0],indent=2))
-
-          trade_files=sorted(root.glob("**/all_variant_trades.csv"))
-          frames=[pl.read_csv(f) for f in trade_files]
-          trades=pl.concat(frames,how="vertical_relaxed")
+            "k1_rules":["OTM1","OTM2","OTM3","ATM_NEAREST","ATM_UP","ITM1","ITM2","ITM3"],
+            "k2_rules":["NEXT1","NEXT2","NEXT3","MIRROR_GAP"],
+            "k3_multipliers":[0.5,1.0,1.5,2.0,2.5,3.0,4.0],
+            "variant_ids":VARIANT_IDS},indent=2))
+          cal=pl.read_csv("phase9/weekly_cycle_manifest.csv").filter(pl.col("status")=="USABLE_OHLC").sort("target_expiry")["target_expiry"].cast(pl.String).to_list()
+          assert len(cal)==63
+          (out/"baseline_calendar.json").write_text(json.dumps(cal,indent=2))
+          trades=pl.concat([pl.read_csv(f) for f in sorted(root.glob("**/all_variant_trades.csv"))],how="vertical_relaxed")
           assert trades["variant_id"].n_unique()==224
           trades.write_csv(out/"all_variant_trades.csv")
-          print("GLOBAL VARIANTS:",len(rows))
-          print("GLOBAL TRADES:",trades.height)
-          print("PROMOTABLE:",[r["variant_id"] for r in rows if r["promotable_to_capital_phase"]])
+          print("GLOBAL VARIANTS",len(rows),"GLOBAL TRADES",trades.height)
+          print("PROMOTABLE",[r["variant_id"] for r in rows if r["promotable_to_capital_phase"]])
           PY
       - name: Upload final results
         uses: actions/upload-artifact@v4
