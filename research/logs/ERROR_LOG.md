@@ -269,3 +269,10 @@
 - Diagnosis: The variant engine repeatedly invoked the general Phase 11 Polars filtering/group-by backtest for each variant/cycle, creating a large Python-level timestamp loop across roughly 14,000 candidate cycle evaluations.
 - Resolution: Replaced the Phase 17 execution path with a vectorized NumPy MTM/stop evaluator over a Polars pivot for each three-leg slice. The frozen 50-point stop, 0.50-point slippage, costs, lock/exit semantics and OHLC reconstruction are unchanged.
 - Prevention: Keep the optimized evaluator under deterministic tests and require the baseline-control audit to verify the frozen control before accepting empirical results.
+
+
+## E-0056 — Phase 17W workflow trigger indentation defect
+- Observation: The harmless workflow-change commit intended to trigger the optimized rerun inserted the timeout line without its required job-level indentation.
+- Impact: The workflow file became syntactically invalid for Actions; no empirical result was generated.
+- Resolution: Restored the exact job-level indentation and committed the correction. The research code and registered parameters were unchanged.
+- Prevention: Validate YAML indentation whenever workflow files are modified, even for trigger-only changes.
