@@ -18,6 +18,7 @@ permissions:
 
 jobs:
   recover:
+    if: github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'phase18w: bridge Phase19')
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -46,3 +47,46 @@ jobs:
           git add research/phase18w_data_recovery/output/hf03_variant_coverage.* research/phase18w_data_recovery/output/hf03_control_crosscheck.csv
           git diff --cached --quiet || git commit -m 'phase18w: recover HF03 weekly chains and measure variant coverage'
           git push
+  phase19_bridge:
+    if: github.event_name == 'push' && startsWith(github.event.head_commit.message, 'phase18w: bridge Phase19')
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Checkout Phase 19 branch
+        uses: actions/checkout@v4
+        with:
+          ref: phase-19w-recovered-rerun
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: phase19w-hf03-0f480e43-${{ hashFiles('research/phase17w_strike_alternatives/VARIANT_REGISTRY.md') }}
+      - run: pip install -q huggingface_hub polars numpy pandas pyarrow
+      - name: Run frozen Phase 19 empirical rerun
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_REVISION: 0f4800e43e6f96cec0794369d78eb4d3c4211ef5
+        run: |
+          python research/phase17w_strike_alternatives/strike_alternatives.py \
+            --variant-start 0 \
+            --variant-end 224 \
+            --hf-cache ~/.cache/huggingface \
+            --baseline-manifest research/phase9_weekly/output/weekly_cycle_manifest.csv \
+            --expiry-start 0 \
+            --expiry-end 63 \
+            --output-dir research/phase19w_recovered_rerun/output
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase19w-recovered-results-bridge
+          path: research/phase19w_recovered_rerun/output/
+          if-no-files-found: error
+      - name: Commit Phase 19 empirical results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/phase19w_recovered_rerun/output research/phase19w_recovered_rerun/STATUS.md
+          git diff --cached --quiet || git commit -m 'phase19w: record recovered-data empirical rerun'
+          git push origin HEAD:phase-19w-recovered-rerun
