@@ -17,3 +17,10 @@ Run:
 .github/workflows/phase-9w-hf-data-gate.yml
 
 The workflow produces a pilot cycle manifest and selected option bars. Large third-party source files remain in the HF/Actions cache rather than being redistributed into this public repository.
+
+
+## Phase 9W data-calendar controls
+- Monthly NIFTY expiry files are excluded from the serial weekly sample.
+- The first selected weekly cycle is linked to the prior weekly expiry from the full catalog, preventing a pilot-window boundary error.
+- Historical expiry-day regime is recorded for each cycle and reconciled to NSE circulars.
+- A second Hugging Face source is used for 2025 price-series/coverage cross-checking.
