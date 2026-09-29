@@ -217,3 +217,10 @@
 - Impact: An empirical historical-BBO probe cannot be honestly executed yet.
 - Resolution: Added a credential-safe probe protocol and scaffold. No credentials are fabricated or requested in repository files.
 - Prevention: Treat missing authentication as a blocking data-access condition, not as evidence of data absence; do not substitute OHLC for BBO.
+
+
+### E-0048 — Phase 16W begins with unresolved historical BBO limitation
+- Observation: no free historical NIFTY weekly-options BBO archive was qualified in Phase 15W.
+- Impact: capital validation cannot be presented as executable-fill validation.
+- Resolution: carry the BBO limitation forward explicitly; use Phase 16W only for capital/margin reconstruction and risk normalization.
+- Prevention: keep BBO and capital evidence as separate evidence classes in the manuscript.
