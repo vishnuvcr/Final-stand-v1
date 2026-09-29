@@ -18,6 +18,13 @@ The prior monthly-expiry Phase 8 is retained for auditability but has been super
 | 13W — Final holdout | ⏳ Pending | Depends on frozen methodology |
 | 14W — Manuscript | ⏳ Pending | Depends on completed empirical results |
 
+## Phase 10W findings
+- Deterministic mechanics engine implemented and locally checked.
+- K2 buyback is confirmed to cancel the middle short exactly.
+- Pre-lock payoff remains a bull call ladder with unbounded upside loss.
+- Weekly discrete strikes introduce a mandatory target-error diagnostic.
+- Exact historical margin remains dependent on dated SPAN inputs.
+
 ## Current weekly finding
 NSE currently documents four weekly NIFTY 50 option expiries excluding monthly contracts, with Tuesday weekly expiry and a new weekly series introduced after expiry. citeturn642743search0turn642743search1
 
