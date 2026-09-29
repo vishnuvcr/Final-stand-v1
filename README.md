@@ -59,3 +59,9 @@ No profitability conclusion or live-trading recommendation has been established.
 - Phase 13W untouched holdout branch created with a pre-registered mandatory stop selection rule using training data only and fixed 0.50-point per-leg slippage.
 - Current active research phase: Phase 13W — untouched holdout.
 - No empirical profitability conclusion has been admitted because GitHub Actions outputs have not yet been independently observed.
+
+## Execution update — 2026-09-29
+- Phase 13 CI has now successfully passed Python setup, dependency installation, repository tests, HF_TOKEN verification, and the HF ingestion compatibility fixes through the latest run.
+- The latest Phase 13 run is currently executing the weekly data-ingestion stage after fixing three observed CI/data-interface defects: missing pip-cache manifest, Hugging Face Hub API argument drift, and fixed-offset parquet timezone metadata.
+- A further manifest-field assignment defect (lock_p1/lock_p2/lock_p3) was found by the live run and corrected; the replacement run is active.
+- No P&L, Sharpe, drawdown, or holdout result has been admitted yet.
