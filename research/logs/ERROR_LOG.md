@@ -129,3 +129,9 @@
 - Impact: Holdout candidate files were empty; no strategy performance was measured.
 - Resolution: Phase 13 and Phase 12 workflows now pass manifest/options/spot paths explicitly. The holdout reader now fails with a diagnostic rather than silently reading an empty CSV.
 - Prevention: Workflows must pass data-interface paths explicitly across phase boundaries; zero-trade runs are treated as pipeline failures, not valid results.
+
+### E-0027 — Historical-rate unit test was defined after its __main__ invocation
+- Observation: The Phase 11 test file called test_historical_rate_schedule() before its definition.
+- Impact: Direct execution of the Phase 11 unit-test script would raise NameError.
+- Resolution: Moved the function definition before the __main__ block.
+- Prevention: Keep executable test definitions above the entrypoint and run the repository test script in CI.
