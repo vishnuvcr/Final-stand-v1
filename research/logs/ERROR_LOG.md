@@ -176,3 +176,9 @@
 - Impact: Exact entry/lock matching remained zero despite prior separator/offset normalization.
 - Resolution: Normalize zero fractional seconds before comparisons.
 - Prevention: Prefer typed datetime joins in future cross-phase interfaces and retain this string normalization only as compatibility logic.
+
+
+### E-0033 — String timestamp matching remained non-reproducible
+- Observation: Multiple string-normalization attempts still yielded zero matched option rows despite typed Datetime source data.
+- Resolution: Replaced cross-phase timestamp string comparisons with timezone-aware Python datetime values compared directly against the typed Polars timestamp column.
+- Rationale: This removes representation ambiguity without changing trade timestamps.
