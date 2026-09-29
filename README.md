@@ -25,8 +25,8 @@ NSE currently documents four weekly NIFTY 50 option expiries excluding the month
 
 ## Weekly research status
 - Phase 8W — weekly strategy definition: ✅
-- Phase 9W — PIT weekly data: 🟡 pending
-- Phase 10W — mechanics/margin/costs: pending
+- Phase 9W — HF weekly data gate: 🟡 active
+- Phase 10W — mechanics/margin/costs: 🟡 active
 - Phase 11W — weekly backtest: pending
 - Phase 12W — robustness: pending
 - Phase 13W — untouched holdout: pending
