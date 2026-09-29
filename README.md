@@ -48,3 +48,10 @@ The study does not establish live-trading profitability.
 - [Phase 14W — final manuscript](../phase-14w-manuscript)
 
 Canonical files are maintained inside the respective phase branches. The research plan, execution log and error log remain the governing audit trail.
+
+### Phase 15W expanded free-source audit — 2026-09-30
+- Searched Hugging Face, Kaggle, Zenodo, GitHub and broker/API routes for historical NIFTY weekly-option BBO/depth.
+- No new free historical BBO archive was qualified.
+- Free OHLC sources remain useful for cross-validation; public BBO schemas/samples remain schema-qualified but archive-unqualified.
+- New audit: [Phase 15W expanded free-source audit](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-15w-execution-data-discovery/research/phase15w_execution_data/FREE_SOURCE_AUDIT_EXPANDED.md)
+- Next zero-cost gate: empirical coverage probe of any user-authorized free API credentials for expired NIFTY contracts.
