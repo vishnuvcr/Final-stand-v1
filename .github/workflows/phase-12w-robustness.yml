@@ -17,7 +17,6 @@ permissions:
 
 jobs:
   robustness:
-    if: github.event_name == 'workflow_dispatch' || !startsWith(github.event.head_commit.message, 'research: record phase 12W robustness output')
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
