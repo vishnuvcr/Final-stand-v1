@@ -110,3 +110,9 @@
 - Impact: Data ingestion stopped after reaching cycle processing; no backtest result was produced.
 - Resolution: Explicitly derive lock_p1, lock_p2 and lock_p3 from the validated lock rows before building the cycle record.
 - Prevention: Keep manifest fields covered by executable integration tests that exercise at least one complete cycle.
+
+### E-0027 — Historical-rate unit test was defined after its __main__ invocation
+- Observation: The Phase 11 test file called test_historical_rate_schedule() before its definition.
+- Impact: Direct execution of the Phase 11 unit-test script would raise NameError.
+- Resolution: Moved the function definition before the __main__ block.
+- Prevention: Keep executable test definitions above the entrypoint and run the repository test script in CI.
