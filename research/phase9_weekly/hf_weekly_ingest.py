@@ -26,6 +26,8 @@ IST = ZoneInfo("Asia/Kolkata")
 class CycleRecord:
     target_expiry: str
     prior_expiry: str | None
+    excluded_monthly_expiry: str | None
+    historical_expiry_regime: str
     entry_day: str | None
     entry_timestamp: str
     lock_day: str | None
@@ -112,6 +114,24 @@ def prior_trading_day(dates: list[date], expiry: date) -> date | None:
     return candidates[-1] if candidates else None
 
 
+def monthly_expiry_dates(expiry_files: list[tuple[date, str]]) -> set[date]:
+    latest_by_month: dict[tuple[int, int], date] = {}
+    for d, _ in expiry_files:
+        key = (d.year, d.month)
+        latest_by_month[key] = max(d, latest_by_month.get(key, d))
+    return set(latest_by_month.values())
+
+
+def historical_expiry_regime(d: date) -> str:
+    return "THURSDAY_ERA" if d <= date(2025, 8, 28) else "TUESDAY_ERA"
+
+
+def require_columns(df: pl.DataFrame, required: set[str], label: str) -> None:
+    missing = sorted(required.difference(df.columns))
+    if missing:
+        raise RuntimeError(f"{label}: missing required columns: {missing}")
+
+
 def exact_row(df: pl.DataFrame, ts: datetime) -> pl.DataFrame:
     return df.filter(pl.col("timestamp") == ts)
 
@@ -170,16 +190,22 @@ def main() -> None:
     resolved_revision = getattr(repo_info, "sha", None) or revision
 
     all_expiry_files = list_nifty_expiry_files(api, resolved_revision)
+    if not all_expiry_files:
+        raise RuntimeError("No NIFTY expiry files were found in the NIFTY options folder.")
+
+    monthly_dates = monthly_expiry_dates(all_expiry_files)
+    weekly_expiry_catalog = [(d, p) for d, p in all_expiry_files if d not in monthly_dates]
+
     start = date.fromisoformat(args.start_date)
     end = date.fromisoformat(args.end_date)
-    window_files = [(d, p) for d, p in all_expiry_files if start <= d <= end]
+    window_files = [(d, p) for d, p in weekly_expiry_catalog if start <= d <= end]
 
     if not window_files:
-        raise RuntimeError("No NIFTY expiry files matched the requested window.")
+        raise RuntimeError("No weekly NIFTY expiry files matched the requested window.")
 
     expiry_files = window_files[-args.max_expiries :]
     first_selected_expiry = expiry_files[0][0]
-    prior_candidates = [d for d, _ in all_expiry_files if d < first_selected_expiry]
+    prior_candidates = [d for d, _ in weekly_expiry_catalog if d < first_selected_expiry]
     initial_prior_expiry = prior_candidates[-1] if prior_candidates else None
 
     index_local = hf_hub_download(
@@ -190,7 +216,9 @@ def main() -> None:
         token=token,
         cache_dir=str(cache_dir) if cache_dir else None,
     )
-    index_df = pl.read_parquet(index_local).with_columns(
+    index_df = pl.read_parquet(index_local)
+    require_columns(index_df, {"timestamp", "open"}, "NIFTY index file")
+    index_df = index_df.with_columns(
         pl.col("timestamp").cast(pl.Datetime(time_zone="Asia/Kolkata"))
     )
     dates = trading_dates(index_df)
@@ -202,6 +230,9 @@ def main() -> None:
         "resolved_revision": resolved_revision,
         "token_configured": bool(token),
         "expiry_count": len(expiry_files),
+        "all_expiry_file_count": len(all_expiry_files),
+        "monthly_expiry_count_excluded": len(monthly_dates),
+        "excluded_monthly_expiries": sorted(d.isoformat() for d in monthly_dates),
         "expiry_files": [],
         "index_file": {
             "path": "index/NIFTY.parquet",
@@ -232,7 +263,13 @@ def main() -> None:
             }
         )
 
-        opt = pl.read_parquet(local).with_columns(
+        opt = pl.read_parquet(local)
+        require_columns(
+            opt,
+            {"timestamp", "open", "volume", "strike", "option_type", "expiry"},
+            f"option file {source_path}",
+        )
+        opt = opt.with_columns(
             pl.col("timestamp").cast(pl.Datetime(time_zone="Asia/Kolkata"))
         )
 
@@ -244,6 +281,13 @@ def main() -> None:
                 CycleRecord(
                     expiry.isoformat(),
                     prior_expiry.isoformat() if prior_expiry else None,
+                    max(
+                        (d for d in monthly_dates if d.year == expiry.year and d.month == expiry.month),
+                        default=None,
+                    ).isoformat() if any(
+                        d.year == expiry.year and d.month == expiry.month for d in monthly_dates
+                    ) else None,
+                    historical_expiry_regime(expiry),
                     entry_day.isoformat() if entry_day else None,
                     "",
                     lock_day.isoformat() if lock_day else None,
@@ -304,6 +348,7 @@ def main() -> None:
                 pl.lit(expiry.isoformat()).alias("target_expiry"),
                 pl.lit(entry_ts.isoformat()).alias("entry_timestamp"),
                 pl.lit(lock_ts.isoformat()).alias("lock_timestamp"),
+                pl.lit(historical_expiry_regime(expiry)).alias("historical_expiry_regime"),
             )
             selected_frames.append(chosen)
 
@@ -311,6 +356,13 @@ def main() -> None:
             CycleRecord(
                 expiry.isoformat(),
                 prior_expiry.isoformat() if prior_expiry else None,
+                max(
+                    (d for d in monthly_dates if d.year == expiry.year and d.month == expiry.month),
+                    default=None,
+                ).isoformat() if any(
+                    d.year == expiry.year and d.month == expiry.month for d in monthly_dates
+                ) else None,
+                historical_expiry_regime(expiry),
                 entry_day.isoformat(),
                 entry_ts.isoformat(),
                 lock_day.isoformat(),
