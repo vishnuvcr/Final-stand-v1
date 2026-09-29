@@ -15,13 +15,17 @@ on:
         required: true
         default: "104"
 
+concurrency:
+  group: phase-17w-strike-alternatives
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
 jobs:
   alternatives:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 300
     steps:
       - uses: actions/checkout@v4
         with:
@@ -72,7 +76,7 @@ jobs:
           print("Phase 9 spot rows:", s.height)
           assert u.height == 63, f"Expected 63 usable baseline cycles, got {u.height}"
           PY
-      - name: Run 32 K1/K2 variants
+      - name: Run 224 K1/K2/K3 variants
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_REVISION: main
@@ -85,7 +89,7 @@ jobs:
           import json
           p="research/phase17w_strike_alternatives/output/variant_summary.json"
           rows=json.load(open(p))
-          assert len(rows) == 32
+          assert len(rows) == 224
           b=next(x for x in rows if x["variant_id"]=="OTM1_NEXT1")
           print(json.dumps(b,indent=2))
           assert b["training"]["n"] > 0
