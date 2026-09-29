@@ -32,7 +32,23 @@ from research.phase11_weekly.weekly_backtest import CostConfig, backtest_cycle
 IST = ZoneInfo("Asia/Kolkata")
 K1_RULES = ["OTM1", "OTM2", "OTM3", "ATM_NEAREST", "ATM_UP", "ITM1", "ITM2", "ITM3"]
 K2_RULES = ["NEXT1", "NEXT2", "NEXT3", "MIRROR_GAP"]
-VARIANT_IDS = [f"{k1}_{k2}" for k1 in K1_RULES for k2 in K2_RULES]
+K3_MULTIPLIERS = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 4.0]
+
+
+def k3_tag(multiplier: float) -> str:
+    return f"K3M{multiplier:g}"
+
+
+def make_variant_id(k1_rule: str, k2_rule: str, k3_multiplier: float) -> str:
+    return f"{k1_rule}_{k2_rule}_{k3_tag(k3_multiplier)}"
+
+
+VARIANT_IDS = [
+    make_variant_id(k1, k2, m)
+    for k1 in K1_RULES
+    for k2 in K2_RULES
+    for m in K3_MULTIPLIERS
+]
 
 
 @dataclass
@@ -52,6 +68,7 @@ class VariantCycle:
     p1: float | None
     p2: float | None
     target_premium: float | None
+    k3_multiplier: float | None
     p3: float | None
     target_error: float | None
     status: str
@@ -218,7 +235,9 @@ def build_variants(
     dates = trading_dates(index_df)
 
     cycles: list[VariantCycle] = []
-    selected_specs: list[tuple[str, str, str, float, float, float, str, str, str]] = []
+    selected_specs: list[
+        tuple[str, str, str, float, float, float, str, str, str, str]
+    ] = []
     baseline_expiries: list[str] = []
 
     for expiry, source_path in expiry_files:
@@ -271,7 +290,8 @@ def build_variants(
         for k1_rule in K1_RULES:
             k1 = choose_k1(strikes, spot_float, k1_rule)
             for k2_rule in K2_RULES:
-                variant_id = f"{k1_rule}_{k2_rule}"
+                for k3_multiplier in K3_MULTIPLIERS:
+                    variant_id = make_variant_id(k1_rule, k2_rule, k3_multiplier)
                 if k1 is None:
                     cycles.append(
                         VariantCycle(
@@ -279,7 +299,7 @@ def build_variants(
                             prior_expiry.isoformat() if prior_expiry else None,
                             historical_expiry_regime(expiry),
                             entry_ts.isoformat(), lock_ts.isoformat(), source_path, source_sha,
-                            spot_float, None, None, None, None, None, None, None, None,
+                            spot_float, None, None, None, None, None, None, k3_multiplier, None,
                             "INCOMPLETE",
                         )
                     )
@@ -294,7 +314,7 @@ def build_variants(
                             prior_expiry.isoformat() if prior_expiry else None,
                             historical_expiry_regime(expiry),
                             entry_ts.isoformat(), lock_ts.isoformat(), source_path, source_sha,
-                            spot_float, k1, None, None, p1, None, None, None, None,
+                            spot_float, k1, None, None, p1, None, None, k3_multiplier, None,
                             "INCOMPLETE",
                         )
                     )
@@ -308,7 +328,7 @@ def build_variants(
                             prior_expiry.isoformat() if prior_expiry else None,
                             historical_expiry_regime(expiry),
                             entry_ts.isoformat(), lock_ts.isoformat(), source_path, source_sha,
-                            spot_float, k1, k2, None, p1, p2, None, None, None,
+                            spot_float, k1, k2, None, p1, p2, None, k3_multiplier, None,
                             "INCOMPLETE",
                         )
                     )
@@ -322,13 +342,13 @@ def build_variants(
                             prior_expiry.isoformat() if prior_expiry else None,
                             historical_expiry_regime(expiry),
                             entry_ts.isoformat(), lock_ts.isoformat(), source_path, source_sha,
-                            spot_float, k1, k2, None, p1, p2, 2.0 * d, None, None,
+                            spot_float, k1, k2, None, p1, p2, k3_multiplier * d, k3_multiplier, None,
                             "INCOMPLETE_D_NONPOSITIVE",
                         )
                     )
                     continue
 
-                target = 2.0 * d
+                target = k3_multiplier * d
                 k3, p3 = select_k3(entry_calls, k2, target)
                 status = "USABLE_OHLC" if k3 is not None and p3 is not None else "INCOMPLETE"
                 target_error = abs(p3 - target) / target if p3 is not None and target > 0 else None
@@ -339,7 +359,7 @@ def build_variants(
                         prior_expiry.isoformat() if prior_expiry else None,
                         historical_expiry_regime(expiry),
                         entry_ts.isoformat(), lock_ts.isoformat(), source_path, source_sha,
-                        spot_float, k1, k2, k3, p1, p2, target, p3, target_error, status,
+                        spot_float, k1, k2, k3, p1, p2, target, k3_multiplier, p3, target_error, status,
                     )
                 )
 
@@ -350,6 +370,7 @@ def build_variants(
                             str(k1),
                             str(k2),
                             float(k3),
+                            float(k3_multiplier),
                             expiry.isoformat(),
                             entry_ts.isoformat(),
                             lock_ts.isoformat(),
@@ -367,7 +388,7 @@ def build_variants(
     # This avoids scanning every full expiry parquet 32 times.
     selected_rows: list[pl.DataFrame] = []
     for expiry, source_path in expiry_files:
-        source_specs = [s for s in selected_specs if s[8] == expiry.isoformat()]
+        source_specs = [s for s in selected_specs if s[9] == expiry.isoformat()]
         if not source_specs:
             continue
         local = hf_hub_download(
@@ -386,7 +407,7 @@ def build_variants(
             pl.col("strike").cast(pl.Float64).is_in(needed_strikes)
             & pl.col("option_type").str.to_uppercase().is_in(["CE", "CALL"])
         )
-        for variant_id, sk1, sk2, sk3, expiry_s, entry_s, lock_s, _, _ in source_specs:
+        for variant_id, sk1, sk2, sk3, k3_multiplier, expiry_s, entry_s, lock_s, _, _ in source_specs:
             strikes = [float(sk1), float(sk2), float(sk3)]
             selected_rows.append(
                 base.filter(pl.col("strike").is_in(strikes)).with_columns(
@@ -394,6 +415,7 @@ def build_variants(
                     pl.lit(expiry_s).alias("target_expiry"),
                     pl.lit(entry_s).alias("entry_timestamp"),
                     pl.lit(lock_s).alias("lock_timestamp"),
+                    pl.lit(float(k3_multiplier)).alias("k3_multiplier"),
                 )
             )
 
@@ -406,7 +428,15 @@ def build_variants(
         encoding="utf-8",
     )
     (out_dir / "variant_registry.json").write_text(
-        json.dumps({"k1_rules": K1_RULES, "k2_rules": K2_RULES, "variant_ids": VARIANT_IDS}, indent=2),
+        json.dumps(
+            {
+                "k1_rules": K1_RULES,
+                "k2_rules": K2_RULES,
+                "k3_multipliers": K3_MULTIPLIERS,
+                "variant_ids": VARIANT_IDS,
+            },
+            indent=2,
+        ),
         encoding="utf-8",
     )
     return cycle_df, option_df, sorted(set(baseline_expiries))
