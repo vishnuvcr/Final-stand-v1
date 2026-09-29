@@ -135,3 +135,21 @@
 - Impact: Direct execution of the Phase 11 unit-test script would raise NameError.
 - Resolution: Moved the function definition before the __main__ block.
 - Prevention: Keep executable test definitions above the entrypoint and run the repository test script in CI.
+
+### E-0037 — Phase 12 live job-log endpoint was unavailable during an in-progress run
+- Observation: Fetching the live GitHub Actions job-log blob while run 81 was still executing returned HTTP 404 BlobNotFound.
+- Impact: None on the research result; step summaries and the completed workflow artifact remained available.
+- Resolution: Continued monitoring through workflow-run/job-step APIs and verified the final artifact after completion.
+- Prevention: Prefer step summaries/artifacts for live monitoring and fetch full logs after the job has completed.
+
+### E-0038 — Duplicate Phase 12 runs raced at the commit/push step
+- Observation: Two near-simultaneous Phase 12 pushes launched runs 80 and 81. Both completed the data build, 30-cell stress grid and robustness analysis. Run 80 failed only when its git push was rejected as non-fast-forward after run 81 had already advanced the branch.
+- Impact: Duplicate compute and one workflow marked failed despite a valid analytical artifact; no statistical result was altered.
+- Resolution: Treat run 81 as the canonical completed execution. Added a workflow concurrency group with no in-progress cancellation so future Phase 12 executions serialize.
+- Prevention: Do not allow overlapping pushes to execute the same robustness workflow concurrently.
+
+### E-0039 — Phase 13 holdout was observed before the full Phase 12 robustness supplement
+- Observation: The frozen Phase 13 holdout result was produced before the subsequent Phase 12 supplemental CSCV/PBO, multiple-testing and DSR-style audit.
+- Impact: The holdout was not used to select the stop rule, but it was no longer untouched with respect to all later diagnostic inspection.
+- Resolution: The frozen stop remains unchanged and no post-holdout tuning is permitted. The observed holdout is treated as a locked out-of-sample result for descriptive reporting only; all remaining analyses are non-tuning diagnostics.
+- Prevention: Complete Phase 12 robustness diagnostics before opening any future final holdout whenever the data schedule permits.
