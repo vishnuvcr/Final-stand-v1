@@ -171,3 +171,9 @@
 - Impact: The optimized grid did not execute; no empirical result was produced or changed.
 - Resolution: Replaced the multiline invocation with one explicit command line and will verify the next Actions log before accepting the run.
 - Prevention: Avoid generating shell line continuations through nested string escaping; use a single command line for long immutable path arguments when reliability is more important than formatting.
+
+### E-0043 — Optimized Phase 12 run completed analysis but output push lost a race
+- Observation: The optimized run completed the full stress grid, robustness analysis and supplemental audit, uploaded artifact `phase-12w-robustness-93`, then its generated-output commit was rejected as non-fast-forward because the branch advanced during execution.
+- Impact: Analytical outputs existed in the immutable workflow artifact but were not committed to the research branch by that run.
+- Resolution: Added a fetch/rebase step before pushing generated outputs. The optimized workflow will rerun and publish the same protocol outputs onto the latest branch tip.
+- Prevention: Long-running research workflows must rebase generated result commits immediately before push; output-only paths remain ignored by the workflow trigger to avoid self-runs.
