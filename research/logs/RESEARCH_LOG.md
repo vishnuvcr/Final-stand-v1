@@ -130,3 +130,11 @@
 - Added final structured manuscript with research questions, aims/objectives, methodology, statistical analysis, results, inference, discussion, strengths, limitations, conclusion, future directions, appendices and supplementary materials.
 - Added two SVG figures and a machine-readable supplementary results table.
 - Added literature references covering PBO/CSCV, DSR, White's Reality Check, technical-rule bootstrap data-snooping and Holm multiple testing. citeturn0search1turn0search0turn1search0turn1search5turn1search4
+## 2026-09-29 — Phase 15W execution-data discovery started
+- Created branch phase-15w-execution-data-discovery from completed Phase 14W.
+- Audited public TickBytes and OptionVault documentation and sample files.
+- Confirmed public NIFTY option samples contain bid/ask and top-5 depth fields.
+- Confirmed repository documentation distinguishes evaluation samples from subscription/licensed historical feeds.
+- Searched Hugging Face and Kaggle for free Indian/NIFTY option bid/ask archives; no qualifying complete historical archive was identified in this pass.
+- Audited official NSE historical-data documentation for historical order/trade and market-data products.
+- Gate result: free samples are schema-qualified but no complete free historical quote archive has yet been qualified for the 63-cycle backtest.
