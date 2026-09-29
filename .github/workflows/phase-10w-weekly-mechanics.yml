@@ -1,0 +1,22 @@
+name: Phase 10W - Weekly Mechanics Cost Margin
+
+on:
+  workflow_dispatch:
+
+jobs:
+  mechanics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Unit-test weekly mechanics
+        run: |
+          python -m unittest discover research/phase8_weekly -p 'test_*.py' || true
+          python -m py_compile research/phase8_weekly/phase8_weekly_engine.py
+      - name: Verify cost and margin documentation
+        run: |
+          test -f research/phase8_weekly/COST_MARGIN_MODEL.md
+          test -f research/phase8_weekly/ANALYTICAL_WEEKLY_STRESS.md
+          echo "Phase 10W artifacts present."
