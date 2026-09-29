@@ -75,11 +75,7 @@ jobs:
         run: |
           rm -rf research/phase12_weekly/input
           mkdir -p research/phase12_weekly/input
-          python research/phase12_weekly/weekly_grid_fast.py \\
-            --manifest research/phase9_weekly/output/weekly_cycle_manifest.csv \\
-            --options research/phase9_weekly/output/selected_weekly_option_bars.parquet \\
-            --spot research/phase9_weekly/output/selected_weekly_spot_bars.parquet \\
-            --output-dir research/phase12_weekly/input
+          python research/phase12_weekly/weekly_grid_fast.py --manifest research/phase9_weekly/output/weekly_cycle_manifest.csv --options research/phase9_weekly/output/selected_weekly_option_bars.parquet --spot research/phase9_weekly/output/selected_weekly_spot_bars.parquet --output-dir research/phase12_weekly/input
 
       - name: Analyse robustness
         run: |
