@@ -3,7 +3,7 @@
 ## Active research reset
 **The active strategy research has been reset from monthly to weekly NIFTY expiries.**
 
-Active branch: `phase-8-weekly-expiry-restart`
+Active branch: `phase-9w-hf-data-gate`
 
 Archived/superseded branch: `phase-8-video-call-ladder` — monthly-expiry design, retained for auditability only.
 
@@ -13,7 +13,7 @@ Test the same core video-derived call-ladder-to-spread strategy as a **weekly tr
 NSE currently documents four weekly NIFTY 50 index-option expiry contracts excluding monthly contracts, with weekly expiry on Tuesday or the previous trading day if Tuesday is a holiday, and a new serial weekly contract introduced after expiry.
 
 Research branch:
-https://github.com/vishnuvcr/Final-stand-v1/tree/phase-8-weekly-expiry-restart
+https://github.com/vishnuvcr/Final-stand-v1/tree/phase-9w-hf-data-gate
 
 ## Reset decision
 The monthly experiment is not being mechanically converted into weekly data. The weekly branch has a new:
@@ -27,7 +27,7 @@ The monthly experiment is not being mechanically converted into weekly data. The
 
 ## Active weekly phase map
 - 8W — Weekly strategy definition ✅
-- 9W — Weekly point-in-time data 🟡 pending
+- 9W — Weekly Hugging Face point-in-time data 🟡 active
 - 10W — Mechanics, margin and costs
 - 11W — Weekly backtest
 - 12W — Robustness / CPCV / PBO / DSR
@@ -36,6 +36,11 @@ The monthly experiment is not being mechanically converted into weekly data. The
 
 ## Research governance
 The repository remains the canonical research-state record. Research steps, errors, phase status, methodology changes and final results are committed as auditable artifacts.
+
+## Phase 9W data status
+Hugging Face now provides a usable primary research source with expiry-partitioned 1-minute NIFTY options and a separate NIFTY index file. The source is OHLC-based rather than historical bid/ask, so Phase 9 distinguishes conservative OHLC execution reconstruction from true order-book evidence. A second Hugging Face source is wired in for 2025 cross-validation.
+
+The active branch contains a manual GitHub Actions workflow using HF_TOKEN and the Hugging Face cache. Empirical results are not yet admitted because the workflow run itself has not yet been executed/verified.
 
 ## No trading conclusion
 No profitability conclusion or live-trading recommendation has been established. The weekly strategy must survive realistic execution costs, tail-risk testing, chronological robustness and an untouched holdout.
