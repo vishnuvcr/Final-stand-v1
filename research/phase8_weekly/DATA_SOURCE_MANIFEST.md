@@ -50,6 +50,17 @@ Pass only if pilot data can demonstrate:
 
 NIFTY weekly expiry specifications are date-dependent. Current NSE documentation says weekly contracts expire every Tuesday, or the previous trading day if Tuesday is a holiday, and currently provides four weekly contracts excluding monthly contracts. Historical periods must be joined to the effective exchange rules for that period. citeturn642743search0turn642743search1
 
+## Hugging Face data admission
+Primary source: https://huggingface.co/datasets/thetrademarkk/india-index-options-1m
+
+Secondary cross-check: https://huggingface.co/datasets/rissin/nse-options-intraday
+
+Secondary IV/spot diagnostics: https://huggingface.co/datasets/artist-23/nifty-options-data
+
+The primary source has expiry-partitioned 1-minute NIFTY option data and a separate NIFTY index file. The documented option schema contains OHLC, volume and open interest, but not historical bid/ask. Therefore the pilot must label all P&L as OHLC-reconstruction research until a true quote source is admitted.
+
+Large third-party source files remain in Hugging Face/Actions cache rather than being redistributed into the public repository. Source revisions and SHA-256 hashes are committed in the Phase 9 output metadata.
+
 ## Critical weekly execution issue
 
 Because the strategy is now repeated every week, turnover and friction become structurally larger. The study therefore reports:
