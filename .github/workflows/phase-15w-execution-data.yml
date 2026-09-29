@@ -1,0 +1,21 @@
+name: Phase 15W — Execution Data Discovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_audit:
+        description: Run the public-source schema audit
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate source-audit artifact
+        if: ${{ inputs.source_audit }}
+        run: test -s research/phase15w_execution_data/FREE_SOURCE_AUDIT.md
+      - name: Print phase status
+        run: cat research/phase15w_execution_data/STATUS.md
