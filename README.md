@@ -78,13 +78,13 @@ Canonical files are maintained inside the respective phase branches. The researc
 Capital/margin reconstruction is a separate evidence layer from execution validation. Until a qualified historical bid/ask archive is obtained, all performance results remain **OHLC-reconstructed**, even if historical capital requirements are successfully reconstructed.
 
 
-### Phase 17W — K1/K2 strike-definition validation — 2026-09-30
-- **Phase 17W — K1/K2 alternatives: 🔄 active** on a separate branch.
-- The user requested explicit testing of alternative K1/K2 selection rules because the current OTM1/NEXT1 definition materially affects K3 and risk.
-- Registered family: **32 configurations (8 K1 rules × 4 K2 rules)**.
-- The Phase 13W untouched holdout remains locked; Phase 17W holdout observations are descriptive only.
-- **Phase 16W capital/margin validation is paused at the strategy-definition gate** until K1/K2 validation is closed.
+### Phase 17W — K1/K2/K3 strike-definition validation — 2026-09-30
+- **Phase 17W — K1/K2/K3 alternatives: 🔄 active** on a separate branch.
+- The experiment now tests **224 preregistered configurations**: 8 K1 rules × 4 K2 rules × 7 K3 premium multipliers.
+- K3 target is `M × (P1 − P2)` with M ∈ {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 4.0}; the historical frozen control is OTM1 + NEXT1 + M=2.0.
+- Phase 13W's untouched holdout and all previous results remain locked and unchanged.
+- The 224-variant family uses one Holm multiple-testing family and no post-observation expansion.
 - [Phase 17W branch](https://github.com/vishnuvcr/Final-stand-v1/tree/phase-17w-strike-alternatives)
 - [Phase 17W plan](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-17w-strike-alternatives/research/phase17w_strike_alternatives/PHASE_PLAN.md)
-- [Variant registry](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-17w-strike-alternatives/research/phase17w_strike_alternatives/VARIANT_REGISTRY.md)
-- Latest empirical workflow has reached the 63-cycle Phase 9 data gate and is evaluating the 32 registered variants.
+- [Phase 17W variant registry](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-17w-strike-alternatives/research/phase17w_strike_alternatives/VARIANT_REGISTRY.md)
+
