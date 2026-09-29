@@ -33,6 +33,7 @@ These are payoff identities, not evidence of profitability.
 - [Phase 8 research protocol](research/phase8/RESEARCH_PROTOCOL.md)
 - [Phase 8 research questions](research/phase8/RESEARCH_QUESTIONS.md)
 - [Phase 8 literature review](research/phase8/LITERATURE_REVIEW.md)
+- [Phase 8 data-source manifest](research/phase8/DATA_SOURCE_MANIFEST.md)
 - [Research log](research/logs/RESEARCH_LOG.md)
 - [Error log](research/logs/ERROR_LOG.md)
 - [Manual Phase 8 workflow](.github/workflows/phase-8-video-call-ladder.yml)
