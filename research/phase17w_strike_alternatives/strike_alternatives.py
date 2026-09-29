@@ -771,6 +771,7 @@ def main() -> None:
             args.expiry_start,
             args.expiry_end,
         )
+        option_source = out_dir / "variant_option_bars.parquet"
     if args.build_only:
         raise SystemExit(0)
 
