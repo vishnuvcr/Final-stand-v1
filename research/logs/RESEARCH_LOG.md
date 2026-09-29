@@ -160,3 +160,11 @@
 - TrueData documentation remains the most directly aligned candidate because historical tick retrieval can include bid/ask and expired symbols, but exact old-date coverage must be verified with authenticated access.
 - Added an API probe protocol and credential-safe scaffold. No credentials were stored and no strategy/holdout data were accessed.
 - Phase 15W remains blocked only at the authenticated historical-BBO access gate; free archive discovery is complete for the current search scope.
+
+
+## 2026-09-30 — Phase 15W closure / transition
+- Completed the planned free historical-BBO discovery scope.
+- Decision: no qualifying free historical BBO archive was found; do not continue an open-ended source hunt.
+- Angel One SmartAPI was added to the audit as a free OHLC/OI cross-check route, but it does not resolve historical BBO/expired-contract execution validation.
+- No purchase, credential collection, strategy change, parameter tuning, or holdout access occurred.
+- Transitioned to Phase 16W Capital and Margin Validation.
