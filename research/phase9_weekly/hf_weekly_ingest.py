@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import os
+os.environ.setdefault("POLARS_IGNORE_TIMEZONE_PARSE_ERROR", "1")
 import re
 from dataclasses import asdict, dataclass
 from datetime import date, datetime
