@@ -37,7 +37,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/huggingface
-          key: hf-phase17w-v1-\${{ inputs.max_expiries || '104' }}
+          key: hf-phase17w-v1-${{ inputs.max_expiries || '104' }}
           restore-keys: |
             hf-phase17w-v1-
             hf-phase16w-v1-
@@ -46,7 +46,7 @@ jobs:
             hf-phase9w-v2-
       - name: Verify token
         env:
-          HF_TOKEN: \${{ secrets.HF_TOKEN }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: test -n "$HF_TOKEN"
       - name: Compile tests
         run: |
@@ -54,12 +54,12 @@ jobs:
           python -m pytest -q research/phase17w_strike_alternatives/test_strike_alternatives.py
       - name: Build frozen Phase 9 data interface
         env:
-          HF_TOKEN: \${{ secrets.HF_TOKEN }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_REVISION: main
           HF_HOME: ~/.cache/huggingface
         run: |
           rm -rf research/phase9_weekly/output
-          python research/phase9_weekly/hf_weekly_ingest.py --max-expiries "\${{ inputs.max_expiries || '104' }}" --start-date "2024-01-01" --end-date "2026-12-31" --output-dir research/phase9_weekly/output --hf-cache ~/.cache/huggingface
+          python research/phase9_weekly/hf_weekly_ingest.py --max-expiries "${{ inputs.max_expiries || '104' }}" --start-date "2024-01-01" --end-date "2026-12-31" --output-dir research/phase9_weekly/output --hf-cache ~/.cache/huggingface
       - name: Interface smoke checks
         run: |
           python - <<'PY'
@@ -74,11 +74,11 @@ jobs:
           PY
       - name: Run 32 K1/K2 variants
         env:
-          HF_TOKEN: \${{ secrets.HF_TOKEN }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_REVISION: main
           HF_HOME: ~/.cache/huggingface
         run: |
-          python research/phase17w_strike_alternatives/strike_alternatives.py --max-expiries "\${{ inputs.max_expiries || '104' }}" --start-date "2024-01-01" --end-date "2026-12-31" --hf-cache ~/.cache/huggingface --output-dir research/phase17w_strike_alternatives/output
+          python research/phase17w_strike_alternatives/strike_alternatives.py --max-expiries "${{ inputs.max_expiries || '104' }}" --start-date "2024-01-01" --end-date "2026-12-31" --hf-cache ~/.cache/huggingface --output-dir research/phase17w_strike_alternatives/output
       - name: Audit baseline control
         run: |
           python - <<'PY'
@@ -94,7 +94,7 @@ jobs:
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:
-          name: phase-17w-k1-k2-alternatives-\${{ github.run_number }}
+          name: phase-17w-k1-k2-alternatives-${{ github.run_number }}
           path: |
             research/phase17w_strike_alternatives/output/variant_summary.json
             research/phase17w_strike_alternatives/output/variant_registry.json
