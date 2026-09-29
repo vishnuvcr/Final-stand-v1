@@ -53,3 +53,11 @@ No live-trading profitability claim is established.
 ## Research governance
 
 All phases remain on separate branches. Empirical workflows have manual dispatch controls, cached Hugging Face data, reproducible artifacts and explicit error logging. The Phase 13 holdout is locked against any subsequent parameter tuning.
+
+### Phase 15W — expanded free-source audit (active)
+- Expanded search across Hugging Face, Kaggle, Zenodo, GitHub and broker/API routes.
+- Free OHLC archives are available, including Hugging Face and Zenodo, but no free historical NIFTY weekly-options best-bid/ask archive has been qualified.
+- Public GitHub projects prove BBO/L2 schemas exist, but complete historical archives are licensed, subscription-based, private, or not tracked in the public repository.
+- [Phase 15W execution-data status](research/phase15w_execution_data/STATUS.md)
+- [Phase 15W expanded free-source audit](research/phase15w_execution_data/FREE_SOURCE_AUDIT_EXPANDED.md)
+- [Phase 15W paid-source shortlist](research/phase15w_execution_data/PAID_SOURCE_SHORTLIST.md)
