@@ -20,6 +20,18 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Restore frozen Phase 9 interface artifact
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p research/phase9_weekly/output
+          curl -L --fail --retry 3 -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_TOKEN" -H "X-GitHub-Api-Version: 2026-03-10" \
+            https://api.github.com/repos/vishnuvcr/Final-stand-v1/actions/artifacts/11060261904/zip \
+            -o /tmp/phase9-baseline.zip
+          unzip -o /tmp/phase9-baseline.zip -d research/phase9_weekly/output
+          test -f research/phase9_weekly/output/weekly_cycle_manifest.csv
+          test -f research/phase9_weekly/output/selected_weekly_spot_bars.parquet
+
       - name: Execute frozen Phase 19 rerun
         env:
           ISSUE_TITLE: ${{ github.event.issue.title }}
