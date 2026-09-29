@@ -57,6 +57,25 @@ jobs:
           HF_HOME: ~/.cache/huggingface
         run: |
           python research/phase9_weekly/hf_weekly_ingest.py --max-expiries "${{ inputs.max_expiries || '104' }}" --start-date "2024-01-01" --end-date "2026-12-31" --output-dir research/phase9_weekly/output --hf-cache ~/.cache/huggingface
+      - name: Diagnose Phase 9 to Phase 11 data interface
+        run: |
+          python - <<'PY'
+          import polars as pl
+          m = pl.read_csv("research/phase9_weekly/output/weekly_cycle_manifest.csv")
+          o = pl.read_parquet("research/phase9_weekly/output/selected_weekly_option_bars.parquet")
+          s = pl.read_parquet("research/phase9_weekly/output/selected_weekly_spot_bars.parquet")
+          print("manifest rows", m.height, "columns", m.columns)
+          print("status counts", m.group_by("status").len().sort("len", descending=True).to_dicts())
+          print("options rows", o.height, "columns", o.columns)
+          print("spot rows", s.height, "columns", s.columns)
+          usable = m.filter(pl.col("status")=="USABLE_OHLC")
+          for row in usable.head(5).iter_rows(named=True):
+              ets=str(row["entry_timestamp"]); lts=str(row["lock_timestamp"]); strikes=[float(row["k1"]),float(row["k2"]),float(row["k3"])]
+              er=o.filter((pl.col("timestamp").cast(pl.String)==ets)&pl.col("strike").is_in(strikes)).height
+              lr=o.filter((pl.col("timestamp").cast(pl.String)==lts)&pl.col("strike").is_in(strikes)).height
+              se=s.filter(pl.col("timestamp").cast(pl.String).str.starts_with(str(row["target_expiry"]))).height
+              print("cycle",row["target_expiry"],"entry_rows",er,"lock_rows",lr,"expiry_spot_rows",se,"entry_ts",ets,"lock_ts",lts,"strikes",strikes)
+          PY
       - name: Generate frozen-rule candidates
         run: |
           rm -rf research/phase13_weekly/input
