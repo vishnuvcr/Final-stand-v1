@@ -165,3 +165,9 @@
 - Impact: The next Phase 12 run still failed at the compile step before analysis.
 - Resolution: Re-fetched the committed workflow, verified the rendered YAML text, and replaced the compile step with an explicit multiline shell block.
 - Prevention: Inspect the committed workflow file after every YAML patch and verify that every multi-command `run` step uses the block-scalar form.
+
+### E-0042 — Fast grid workflow used escaped backslashes as literal arguments
+- Observation: The optimized grid step was emitted with doubled shell backslashes, so the shell did not treat the following lines as continuations. `argparse` therefore received no required arguments.
+- Impact: The optimized grid did not execute; no empirical result was produced or changed.
+- Resolution: Replaced the multiline invocation with one explicit command line and will verify the next Actions log before accepting the run.
+- Prevention: Avoid generating shell line continuations through nested string escaping; use a single command line for long immutable path arguments when reliability is more important than formatting.
