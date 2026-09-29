@@ -1,0 +1,46 @@
+name: Phase 19W - Execution Bridge
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Checkout Phase 19 branch
+        uses: actions/checkout@v4
+        with:
+          ref: phase-19w-recovered-rerun
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Execute frozen Phase 19 rerun
+        env:
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_REVISION: 0f4800e43e6f96cec0794369d78eb4d3c4211ef5
+        run: |
+          if [ "$ISSUE_TITLE" != "RUN PHASE 19W" ]; then
+            echo "Non-execution issue; bridge exits without research computation."
+            exit 0
+          fi
+          pip install -q huggingface_hub polars numpy pandas pyarrow
+          python research/phase17w_strike_alternatives/strike_alternatives.py             --variant-start 0             --variant-end 224             --hf-cache ~/.cache/huggingface             --baseline-manifest research/phase9_weekly/output/weekly_cycle_manifest.csv             --expiry-start 0             --expiry-end 63             --output-dir research/phase19w_recovered_rerun/output
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/phase19w_recovered_rerun/output
+          git diff --cached --quiet || git commit -m 'phase19w: record recovered-data empirical rerun'
+          git push origin HEAD:phase-19w-recovered-rerun
+      - name: Upload Phase 19 results
+        if: ${{ github.event.issue.title == 'RUN PHASE 19W' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase19w-recovered-results-issue-bridge
+          path: research/phase19w_recovered_rerun/output/
+          if-no-files-found: error
