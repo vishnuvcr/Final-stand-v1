@@ -145,3 +145,11 @@
 - Options Data was rejected for the quote gate because its published historical files explicitly exclude bid/ask.
 - Defined the minimum extract required: exact historical dates/contracts, L1 bid/ask and quantities, timestamps, contract identifiers, provenance and research-use licensing.
 - No paid purchase has been made; the next gate is verification of exact historical coverage and cost.
+## 2026-09-30 — Phase 15W expanded free-source audit
+- Re-read Phase 15W plan/status and repository logs before proceeding.
+- Expanded the search to public Hugging Face datasets, Kaggle archives, Zenodo, GitHub repositories, broker APIs and open option-chain APIs.
+- Qualified several sources for OHLC/schema cross-checking but found no new free historical NIFTY weekly-options BBO archive meeting the Phase 15W execution-data gate.
+- Added ICICI Breeze, Upstox expired instruments, FYERS, Kotak Neo, Angel One, Dhan, OpenAlgo, ayyararyan/nse-options-pipeline and djjain21's historical-depth repository to the audit matrix.
+- The most important new schema source is ayyararyan/nse-options-pipeline; its BBO fields are documented, but its actual NSEI-Data input is explicitly not tracked in Git.
+- No strategy, holdout, cost or parameter state was changed.
+- Next action: empirical probe of any user-authorized free API credentials, then exact contract/date coverage validation.
