@@ -55,7 +55,7 @@ jobs:
 
       - name: Compile
         run: |
-          python -m py_compile research/phase9_weekly/hf_weekly_ingest.py research/phase11_weekly/weekly_backtest.py research/phase12_weekly/robustness.py research/phase12_weekly/robustness_supplement.py research/phase12_weekly/test_robustness_supplement.py
+          python -m py_compile research/phase9_weekly/hf_weekly_ingest.py research/phase11_weekly/weekly_backtest.py research/phase12_weekly/robustness.py research/phase12_weekly/robustness_supplement.py research/phase12_weekly/test_robustness_supplement.py research/phase12_weekly/weekly_grid_fast.py
           python research/phase12_weekly/test_robustness_supplement.py
 
       - name: Verify HF token
@@ -75,16 +75,11 @@ jobs:
         run: |
           rm -rf research/phase12_weekly/input
           mkdir -p research/phase12_weekly/input
-          for slip in 0.00 0.25 0.50 1.00 2.00; do
-            for stop in none 50 100 150 200 300; do
-              out="research/phase12_weekly/input/trades_slip_${slip}_stop_${stop}.csv"
-              if [ "$stop" = "none" ]; then
-                python research/phase11_weekly/weekly_backtest.py                   --manifest research/phase9_weekly/output/weekly_cycle_manifest.csv                   --options research/phase9_weekly/output/selected_weekly_option_bars.parquet                   --spot research/phase9_weekly/output/selected_weekly_spot_bars.parquet                   --slippage-points "$slip"                   --output "$out"
-              else
-                python research/phase11_weekly/weekly_backtest.py                   --manifest research/phase9_weekly/output/weekly_cycle_manifest.csv                   --options research/phase9_weekly/output/selected_weekly_option_bars.parquet                   --spot research/phase9_weekly/output/selected_weekly_spot_bars.parquet                   --slippage-points "$slip"                   --stop-loss-points "$stop"                   --output "$out"
-              fi
-            done
-          done
+          python research/phase12_weekly/weekly_grid_fast.py \\
+            --manifest research/phase9_weekly/output/weekly_cycle_manifest.csv \\
+            --options research/phase9_weekly/output/selected_weekly_option_bars.parquet \\
+            --spot research/phase9_weekly/output/selected_weekly_spot_bars.parquet \\
+            --output-dir research/phase12_weekly/input
 
       - name: Analyse robustness
         run: |
