@@ -21,3 +21,5 @@ This phase cannot establish robustness until Phase 11 produces admissible weekly
 
 
 - 2026-09-29: corrected Phase 11 timestamp interface propagated to Phase 12; robustness execution retrigger pending after CI startup failures.
+
+- 2026-09-29: removed nonessential job-level conditional to isolate workflow startup failure.
