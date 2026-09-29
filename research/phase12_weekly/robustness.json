@@ -2,92 +2,92 @@
   {
     "file": "research/phase12_weekly/input/trades_slip_0.00_stop_100.csv",
     "n": 63,
-    "total_net_rupees": 173877.3401321107,
-    "mean_net_rupees": 2759.9577798747728,
+    "total_net_rupees": 175843.3006026107,
+    "mean_net_rupees": 2791.163501628741,
     "median_net_rupees": 1254.910561025001,
-    "mean_net_points": 37.05987935719302,
+    "mean_net_points": 37.495892046767615,
     "median_net_points": 17.621683414146148,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.7301587301587301,
-    "max_drawdown_rupees": -28186.52839554791,
-    "sharpe_annualized_weekly": 2.596990101996939,
-    "expected_shortfall_95_rupees": -16848.373375217503,
+    "max_drawdown_rupees": -27623.170239230414,
+    "sharpe_annualized_weekly": 2.6449417353800793,
+    "expected_shortfall_95_rupees": -16812.587695757,
     "block_bootstrap_mean": {
-      "mean": 2759.9577798747728,
-      "bootstrap_p05": 961.6708976216299,
-      "bootstrap_p50": 2805.899454419117,
-      "bootstrap_p95": 4463.565068073078,
-      "prob_mean_positive": 0.9936
+      "mean": 2791.163501628741,
+      "bootstrap_p05": 988.9580862358018,
+      "bootstrap_p50": 2839.9471403561233,
+      "bootstrap_p95": 4496.024870212701,
+      "prob_mean_positive": 0.9938
     },
     "train": {
       "n": 37,
-      "mean": 5028.362261352229
+      "mean": 5080.3809352974995
     },
     "validation": {
       "n": 12,
-      "mean": -92.49324864148093
+      "mean": -136.00063379085563
     },
     "test": {
       "n": 14,
-      "mean": -790.153182444572
+      "mean": -749.913314136179
     }
   },
   {
     "file": "research/phase12_weekly/input/trades_slip_0.00_stop_150.csv",
     "n": 63,
-    "total_net_rupees": 95136.70425465077,
-    "mean_net_rupees": 1510.1064167404884,
+    "total_net_rupees": 97614.13983227577,
+    "mean_net_rupees": 1549.4307909885044,
     "median_net_rupees": 947.7708681184997,
-    "mean_net_points": 20.395194515402558,
+    "mean_net_points": 20.939455904897795,
     "median_net_points": 14.58109027874615,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.6825396825396826,
-    "max_drawdown_rupees": -57377.89378292509,
-    "sharpe_annualized_weekly": 1.1128966446635997,
-    "expected_shortfall_95_rupees": -26983.714651915,
+    "max_drawdown_rupees": -57821.0012777051,
+    "sharpe_annualized_weekly": 1.1471890297290475,
+    "expected_shortfall_95_rupees": -27003.565328135006,
     "block_bootstrap_mean": {
-      "mean": 1510.1064167404884,
-      "bootstrap_p05": -903.5332582073395,
-      "bootstrap_p50": 1471.948270919333,
-      "bootstrap_p95": 3737.639917502761,
-      "prob_mean_positive": 0.8462
+      "mean": 1549.4307909885044,
+      "bootstrap_p05": -868.9413706098147,
+      "bootstrap_p50": 1515.6638097892705,
+      "bootstrap_p95": 3774.8197641005686,
+      "prob_mean_positive": 0.8528
     },
     "train": {
       "n": 37,
-      "mean": 2647.3386270394603
+      "mean": 2697.3418054395956
     },
     "validation": {
       "n": 12,
-      "mean": 187.6944267328945
+      "mean": 188.94620227539448
     },
     "test": {
       "n": 14,
-      "mean": -361.93986190028596
+      "mean": -318.20438544957176
     }
   },
   {
     "file": "research/phase12_weekly/input/trades_slip_0.00_stop_200.csv",
     "n": 63,
-    "total_net_rupees": 17165.009945478356,
-    "mean_net_rupees": 272.46047532505327,
+    "total_net_rupees": 18349.18193798587,
+    "mean_net_rupees": 291.2568561585059,
     "median_net_rupees": 601.3442617249467,
-    "mean_net_points": 3.9394040621874,
+    "mean_net_points": 4.190022473300096,
     "median_net_points": 8.017923489665955,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.6349206349206349,
-    "max_drawdown_rupees": -66360.66395740812,
-    "sharpe_annualized_weekly": 0.22999434006031322,
-    "expected_shortfall_95_rupees": -23841.831093638335,
+    "max_drawdown_rupees": -65349.83564515061,
+    "sharpe_annualized_weekly": 0.24763259382387146,
+    "expected_shortfall_95_rupees": -23504.888322885832,
     "block_bootstrap_mean": {
-      "mean": 272.46047532505327,
-      "bootstrap_p05": -1637.240978140184,
-      "bootstrap_p50": 280.5489730324472,
-      "bootstrap_p95": 2170.7437243413447,
-      "prob_mean_positive": 0.598
+      "mean": 291.2568561585059,
+      "bootstrap_p05": -1602.8901979429577,
+      "bootstrap_p50": 299.47084332537975,
+      "bootstrap_p95": 2175.772102405403,
+      "prob_mean_positive": 0.6042
     },
     "train": {
       "n": 37,
-      "mean": 751.2725310194634
+      "mean": 783.2771794656124
     },
     "validation": {
       "n": 12,
@@ -134,34 +134,34 @@
   {
     "file": "research/phase12_weekly/input/trades_slip_0.00_stop_50.csv",
     "n": 63,
-    "total_net_rupees": 220125.58527465042,
-    "mean_net_rupees": 3494.056909121435,
+    "total_net_rupees": 220471.30570310543,
+    "mean_net_rupees": 3499.5445349699276,
     "median_net_rupees": 1802.695536275,
-    "mean_net_points": 47.07498390279978,
+    "mean_net_points": 47.16808864696803,
     "median_net_points": 24.035940483666668,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.8253968253968254,
-    "max_drawdown_rupees": -12810.040821443486,
-    "sharpe_annualized_weekly": 4.411929641058099,
-    "expected_shortfall_95_rupees": -11053.934892662835,
+    "max_drawdown_rupees": -12197.744151133491,
+    "sharpe_annualized_weekly": 4.432570035365928,
+    "expected_shortfall_95_rupees": -10868.592980879499,
     "block_bootstrap_mean": {
-      "mean": 3494.056909121435,
-      "bootstrap_p05": 2249.4800022567406,
-      "bootstrap_p50": 3352.017403031612,
-      "bootstrap_p95": 4441.036385933658,
+      "mean": 3499.5445349699276,
+      "bootstrap_p05": 2262.647969826635,
+      "bootstrap_p50": 3356.4829741229173,
+      "bootstrap_p95": 4442.303433121296,
       "prob_mean_positive": 1.0
     },
     "train": {
       "n": 37,
-      "mean": 4806.647434170745
+      "mean": 4802.487719920069
     },
     "validation": {
       "n": 12,
-      "mean": 1543.52282929645
+      "mean": 1534.1339280814498
     },
     "test": {
       "n": 14,
-      "mean": 1696.9540184839636
+      "mean": 1740.6894949346781
     }
   },
   {
@@ -200,92 +200,92 @@
   {
     "file": "research/phase12_weekly/input/trades_slip_0.25_stop_100.csv",
     "n": 63,
-    "total_net_rupees": 168757.3729591682,
-    "mean_net_rupees": 2678.688459669336,
+    "total_net_rupees": 170723.33342966824,
+    "mean_net_rupees": 2709.8941814233053,
     "median_net_rupees": 1179.932873525001,
-    "mean_net_points": 35.9540803840835,
+    "mean_net_points": 36.39009307365811,
     "median_net_points": 16.62216841414615,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.7142857142857143,
-    "max_drawdown_rupees": -28936.072370547947,
-    "sharpe_annualized_weekly": 2.5271510074745933,
-    "expected_shortfall_95_rupees": -16885.8258439675,
+    "max_drawdown_rupees": -28372.71421423045,
+    "sharpe_annualized_weekly": 2.574718202945244,
+    "expected_shortfall_95_rupees": -16848.360766590333,
     "block_bootstrap_mean": {
-      "mean": 2678.688459669336,
-      "bootstrap_p05": 892.2968806451514,
-      "bootstrap_p50": 2725.8356319551094,
-      "bootstrap_p95": 4387.250044632418,
-      "prob_mean_positive": 0.993
+      "mean": 2709.8941814233053,
+      "bootstrap_p05": 914.1392313060392,
+      "bootstrap_p50": 2763.8312459274734,
+      "bootstrap_p95": 4417.577237268293,
+      "prob_mean_positive": 0.9932
     },
     "train": {
       "n": 37,
-      "mean": 4934.754071542973
+      "mean": 4986.772745488243
     },
     "validation": {
       "n": 12,
-      "mean": -158.07884239148055
+      "mean": -201.58622754085556
     },
     "test": {
       "n": 14,
-      "mean": -852.2558270874289
+      "mean": -812.0159587790358
     }
   },
   {
     "file": "research/phase12_weekly/input/trades_slip_0.25_stop_150.csv",
     "n": 63,
-    "total_net_rupees": 90418.1608584333,
-    "mean_net_rupees": 1435.2089025148143,
+    "total_net_rupees": 93725.57273102079,
+    "mean_net_rupees": 1487.7075036669967,
     "median_net_rupees": 882.8023931184997,
-    "mean_net_points": 19.37435295535653,
+    "mean_net_points": 20.094270703573994,
     "median_net_points": 13.581575278746149,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.6666666666666666,
-    "max_drawdown_rupees": -58139.5079581076,
-    "sharpe_annualized_weekly": 1.0560825720707259,
-    "expected_shortfall_95_rupees": -27150.116356142502,
+    "max_drawdown_rupees": -57752.63915792512,
+    "sharpe_annualized_weekly": 1.1055692190728994,
+    "expected_shortfall_95_rupees": -26893.308267375,
     "block_bootstrap_mean": {
-      "mean": 1435.2089025148143,
-      "bootstrap_p05": -978.4732035261632,
-      "bootstrap_p50": 1397.7072216559404,
-      "bootstrap_p95": 3668.468306899705,
-      "prob_mean_positive": 0.834
+      "mean": 1487.7075036669967,
+      "bootstrap_p05": -924.446962644863,
+      "bootstrap_p50": 1453.1488874783552,
+      "bootstrap_p95": 3708.7176554876755,
+      "prob_mean_positive": 0.8438
     },
     "train": {
       "n": 37,
-      "mean": 2568.8421524618257
+      "mean": 2638.434684973515
     },
     "validation": {
       "n": 12,
-      "mean": 112.09287470414453
+      "mean": 122.10883298289461
     },
     "test": {
       "n": 14,
-      "mean": -426.72237707885745
+      "mean": -382.98690062814296
     }
   },
   {
     "file": "research/phase12_weekly/input/trades_slip_0.25_stop_200.csv",
     "n": 63,
-    "total_net_rupees": 11385.45607800337,
-    "mean_net_rupees": 180.72152504767254,
+    "total_net_rupees": 13502.50657174087,
+    "mean_net_rupees": 214.325501138744,
     "median_net_rupees": 526.3806367249467,
-    "mean_net_points": 2.692951042615967,
+    "mean_net_points": 3.1410040571635873,
     "median_net_points": 7.018408489665956,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.6190476190476191,
-    "max_drawdown_rupees": -70108.48636863314,
-    "sharpe_annualized_weekly": 0.15151322070695072,
-    "expected_shortfall_95_rupees": -24343.15844321334,
+    "max_drawdown_rupees": -68164.77955514564,
+    "sharpe_annualized_weekly": 0.18187409251151296,
+    "expected_shortfall_95_rupees": -23695.25617205084,
     "block_bootstrap_mean": {
-      "mean": 180.72152504767254,
-      "bootstrap_p05": -1736.820403164504,
-      "bootstrap_p50": 187.35642541870487,
-      "bootstrap_p95": 2093.2393069994982,
-      "prob_mean_positive": 0.5636
+      "mean": 214.325501138744,
+      "bootstrap_p05": -1685.7576135264792,
+      "bootstrap_p50": 220.63208436671232,
+      "bootstrap_p95": 2105.2635003617524,
+      "prob_mean_positive": 0.5758
     },
     "train": {
       "n": 37,
-      "mean": 644.772226493112
+      "mean": 701.9898074049364
     },
     "validation": {
       "n": 12,
@@ -332,34 +332,34 @@
   {
     "file": "research/phase12_weekly/input/trades_slip_0.25_stop_50.csv",
     "n": 63,
-    "total_net_rupees": 215682.18049243544,
-    "mean_net_rupees": 3423.526674483102,
+    "total_net_rupees": 215918.98421081543,
+    "mean_net_rupees": 3427.285463663737,
     "median_net_rupees": 1727.717848775,
-    "mean_net_points": 46.114489917145825,
+    "mean_net_points": 46.184543505742646,
     "median_net_points": 23.036237983666666,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.8095238095238095,
-    "max_drawdown_rupees": -12842.46915894351,
-    "sharpe_annualized_weekly": 4.315778983602223,
-    "expected_shortfall_95_rupees": -11181.115015071167,
+    "max_drawdown_rupees": -12230.172488633485,
+    "sharpe_annualized_weekly": 4.330423154007015,
+    "expected_shortfall_95_rupees": -11032.078673312833,
     "block_bootstrap_mean": {
-      "mean": 3423.526674483102,
-      "bootstrap_p05": 2177.954812573303,
-      "bootstrap_p50": 3277.737555604348,
-      "bootstrap_p95": 4366.267707695682,
+      "mean": 3427.285463663737,
+      "bootstrap_p05": 2187.689067439728,
+      "bootstrap_p50": 3280.4345458139187,
+      "bootstrap_p95": 4368.629853951291,
       "prob_mean_positive": 1.0
     },
     "train": {
       "n": 37,
-      "mean": 4733.590753539665
+      "mean": 4726.487344422097
     },
     "validation": {
       "n": 12,
-      "mean": 1487.3152667964498
+      "mean": 1477.9263655814495
     },
     "test": {
       "n": 14,
-      "mean": 1620.824243565035
+      "mean": 1664.5597200157495
     }
   },
   {
@@ -398,92 +398,92 @@
   {
     "file": "research/phase12_weekly/input/trades_slip_0.50_stop_100.csv",
     "n": 63,
-    "total_net_rupees": 164423.84761985816,
-    "mean_net_rupees": 2609.9023431723517,
+    "total_net_rupees": 166724.03917596064,
+    "mean_net_rupees": 2646.4133202533435,
     "median_net_rupees": 1104.955186025001,
-    "mean_net_points": 35.01472412708667,
+    "mean_net_points": 35.521473554354934,
     "median_net_points": 15.622653414146148,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.7142857142857143,
-    "max_drawdown_rupees": -29685.616345547984,
-    "sharpe_annualized_weekly": 2.4509137720930174,
-    "expected_shortfall_95_rupees": -17127.350466335003,
+    "max_drawdown_rupees": -29122.258189230488,
+    "sharpe_annualized_weekly": 2.507458030693522,
+    "expected_shortfall_95_rupees": -16976.795629173666,
     "block_bootstrap_mean": {
-      "mean": 2609.9023431723517,
-      "bootstrap_p05": 817.7015492146927,
-      "bootstrap_p50": 2654.356615464605,
-      "bootstrap_p95": 4327.609787932471,
-      "prob_mean_positive": 0.9914
+      "mean": 2646.4133202533435,
+      "bootstrap_p05": 849.4791440362915,
+      "bootstrap_p50": 2698.068338347757,
+      "bootstrap_p95": 4359.567512913777,
+      "prob_mean_positive": 0.992
     },
     "train": {
       "n": 37,
-      "mean": 4878.9474572603385
+      "mean": 4930.966131205609
     },
     "validation": {
       "n": 12,
-      "mean": -274.6824745458554
+      "mean": -290.3372692283554
     },
     "test": {
       "n": 14,
-      "mean": -914.3584717302864
+      "mean": -874.118603421893
     }
   },
   {
     "file": "research/phase12_weekly/input/trades_slip_0.50_stop_150.csv",
     "n": 63,
-    "total_net_rupees": 83542.56382802075,
-    "mean_net_rupees": 1326.072441714615,
+    "total_net_rupees": 86947.76152377827,
+    "mean_net_rupees": 1380.1231987901313,
     "median_net_rupees": 817.8339181184997,
-    "mean_net_points": 17.896992107650167,
+    "mean_net_points": 18.637605268178742,
     "median_net_points": 12.582060278746148,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.6666666666666666,
-    "max_drawdown_rupees": -58630.68249007012,
-    "sharpe_annualized_weekly": 0.9782084730550905,
-    "expected_shortfall_95_rupees": -27388.072723187506,
+    "max_drawdown_rupees": -58247.57603227014,
+    "sharpe_annualized_weekly": 1.0287355816149695,
+    "expected_shortfall_95_rupees": -27098.669360030006,
     "block_bootstrap_mean": {
-      "mean": 1326.072441714615,
-      "bootstrap_p05": -1097.3236071160572,
-      "bootstrap_p50": 1288.8400813892936,
-      "bootstrap_p95": 3571.1279265018447,
-      "prob_mean_positive": 0.813
+      "mean": 1380.1231987901313,
+      "bootstrap_p05": -1040.2140517144965,
+      "bootstrap_p50": 1346.8103983356787,
+      "bootstrap_p95": 3613.9208169338217,
+      "prob_mean_positive": 0.8246
     },
     "train": {
       "n": 37,
-      "mean": 2431.9452460847983
+      "mean": 2504.2823236114186
     },
     "validation": {
       "n": 12,
-      "mean": 36.80485120726993
+      "mean": 46.50728095414479
     },
     "test": {
       "n": 14,
-      "mean": -491.5048922574288
+      "mean": -447.76941580671433
     }
   },
   {
     "file": "research/phase12_weekly/input/trades_slip_0.50_stop_200.csv",
     "n": 63,
-    "total_net_rupees": 6960.029759253374,
-    "mean_net_rupees": 110.47666284529166,
+    "total_net_rupees": 9077.080252990874,
+    "mean_net_rupees": 144.08063893636307,
     "median_net_rupees": 451.4170117249467,
-    "mean_net_points": 1.7330858640445397,
+    "mean_net_points": 2.1811388785921575,
     "median_net_points": 6.018893489665956,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.6190476190476191,
-    "max_drawdown_rupees": -72502.18123113312,
-    "sharpe_annualized_weekly": 0.09264521794222717,
-    "expected_shortfall_95_rupees": -24393.109943213338,
+    "max_drawdown_rupees": -70558.47441764562,
+    "sharpe_annualized_weekly": 0.12229548725601473,
+    "expected_shortfall_95_rupees": -23745.207672050834,
     "block_bootstrap_mean": {
-      "mean": 110.47666284529166,
-      "bootstrap_p05": -1806.9109273658926,
-      "bootstrap_p50": 116.0821345228016,
-      "bootstrap_p95": 2022.0833755565975,
-      "prob_mean_positive": 0.5402
+      "mean": 144.08063893636307,
+      "bootstrap_p05": -1756.2104608069212,
+      "bootstrap_p50": 149.26059006529897,
+      "bootstrap_p95": 2033.5029022191402,
+      "prob_mean_positive": 0.5514
     },
     "train": {
       "n": 37,
-      "mean": 574.8699638241933
+      "mean": 632.0875447360177
     },
     "validation": {
       "n": 12,
@@ -530,34 +530,34 @@
   {
     "file": "research/phase12_weekly/input/trades_slip_0.50_stop_50.csv",
     "n": 63,
-    "total_net_rupees": 219747.7192859129,
-    "mean_net_rupees": 3488.059036284332,
+    "total_net_rupees": 220743.0387206379,
+    "mean_net_rupees": 3503.857757470443,
     "median_net_rupees": 1835.600607110001,
-    "mean_net_points": 46.954830550686026,
+    "mean_net_points": 47.18541656602254,
     "median_net_points": 24.474674761466677,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.8095238095238095,
-    "max_drawdown_rupees": -12874.897496443504,
-    "sharpe_annualized_weekly": 4.365125763032218,
-    "expected_shortfall_95_rupees": -11239.417887804499,
+    "max_drawdown_rupees": -12262.600826133508,
+    "sharpe_annualized_weekly": 4.41712693603292,
+    "expected_shortfall_95_rupees": -10980.250062946165,
     "block_bootstrap_mean": {
-      "mean": 3488.059036284332,
-      "bootstrap_p05": 2235.6908609031975,
-      "bootstrap_p50": 3355.2404788102667,
-      "bootstrap_p95": 4466.6878115234485,
+      "mean": 3503.857757470443,
+      "bootstrap_p05": 2261.051603182851,
+      "bootstrap_p50": 3370.6305473762623,
+      "bootstrap_p95": 4476.781764128314,
       "prob_mean_positive": 1.0
     },
     "train": {
       "n": 37,
-      "mean": 4888.313960056622
+      "mean": 4890.140130649866
     },
     "validation": {
       "n": 12,
-      "mean": 1412.9563742839503
+      "mean": 1439.2442453227002
     },
     "test": {
       "n": 14,
-      "mean": 1566.044733743607
+      "mean": 1609.7802101943212
     }
   },
   {
@@ -596,92 +596,92 @@
   {
     "file": "research/phase12_weekly/input/trades_slip_1.00_stop_100.csv",
     "n": 63,
-    "total_net_rupees": 156814.89594304824,
-    "mean_net_rupees": 2489.125332429337,
+    "total_net_rupees": 159153.3774197007,
+    "mean_net_rupees": 2526.2440860269953,
     "median_net_rupees": 954.9998110250008,
-    "mean_net_points": 33.35994790977238,
+    "mean_net_points": 33.87480102392953,
     "median_net_points": 13.623623414146149,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.6984126984126984,
-    "max_drawdown_rupees": -31864.585283110704,
-    "sharpe_annualized_weekly": 2.327168627955373,
-    "expected_shortfall_95_rupees": -17307.54720309,
+    "max_drawdown_rupees": -31450.79474243318,
+    "sharpe_annualized_weekly": 2.3834263788211976,
+    "expected_shortfall_95_rupees": -17140.87026324533,
     "block_bootstrap_mean": {
-      "mean": 2489.125332429337,
-      "bootstrap_p05": 688.9151145258156,
-      "bootstrap_p50": 2531.5388464483785,
-      "bootstrap_p95": 4213.795882335936,
-      "prob_mean_positive": 0.9878
+      "mean": 2526.2440860269953,
+      "bootstrap_p05": 719.387392184655,
+      "bootstrap_p50": 2578.421479173001,
+      "bootstrap_p95": 4253.96289673737,
+      "prob_mean_positive": 0.9892
     },
     "train": {
       "n": 37,
-      "mean": 4771.375890259122
+      "mean": 4823.394564204392
     },
     "validation": {
       "n": 12,
-      "mean": -410.5396352827306
+      "mean": -448.71878932898034
     },
     "test": {
       "n": 14,
-      "mean": -1057.1097409390359
+      "mean": -994.8282845652863
     }
   },
   {
     "file": "research/phase12_weekly/input/trades_slip_1.00_stop_150.csv",
     "n": 63,
-    "total_net_rupees": 74770.58235147326,
-    "mean_net_rupees": 1186.8346404995757,
+    "total_net_rupees": 78175.78004723077,
+    "mean_net_rupees": 1240.8853975750917,
     "median_net_rupees": 687.8969681184997,
-    "mean_net_points": 15.996072017375571,
+    "mean_net_points": 16.736685177904146,
     "median_net_points": 10.583030278746149,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.6507936507936508,
-    "max_drawdown_rupees": -60066.24309907064,
-    "sharpe_annualized_weekly": 0.8767125850311857,
-    "expected_shortfall_95_rupees": -27462.963598187504,
+    "max_drawdown_rupees": -59070.839970960646,
+    "sharpe_annualized_weekly": 0.9262244441176621,
+    "expected_shortfall_95_rupees": -27173.560235030003,
     "block_bootstrap_mean": {
-      "mean": 1186.8346404995757,
-      "bootstrap_p05": -1234.0017936396769,
-      "bootstrap_p50": 1150.4247929962705,
-      "bootstrap_p95": 3433.4146205568595,
-      "prob_mean_positive": 0.7866
+      "mean": 1240.8853975750917,
+      "bootstrap_p05": -1166.0449226215117,
+      "bootstrap_p50": 1208.3092713916526,
+      "bootstrap_p95": 3474.4242588501743,
+      "prob_mean_positive": 0.7984
     },
     "train": {
       "n": 37,
-      "mean": 2286.431278475406
+      "mean": 2358.7683560020278
     },
     "validation": {
       "n": 12,
-      "mean": -94.36633629273047
+      "mean": -84.6639065458556
     },
     "test": {
       "n": 14,
-      "mean": -621.0699226145717
+      "mean": -577.3344461638575
     }
   },
   {
     "file": "research/phase12_weekly/input/trades_slip_1.00_stop_200.csv",
     "n": 63,
-    "total_net_rupees": -1890.822878246628,
-    "mean_net_rupees": -30.013061559470287,
+    "total_net_rupees": 226.22761549087272,
+    "mean_net_rupees": 3.5909145316011544,
     "median_net_rupees": 301.4897617249467,
-    "mean_net_points": -0.1866444930983161,
+    "mean_net_points": 0.2614085214493034,
     "median_net_points": 4.019863489665956,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.6031746031746031,
-    "max_drawdown_rupees": -77711.7999468332,
-    "sharpe_annualized_weekly": -0.02518163021548808,
-    "expected_shortfall_95_rupees": -24493.012943213336,
+    "max_drawdown_rupees": -75594.74945309568,
+    "sharpe_annualized_weekly": 0.0030494595854075263,
+    "expected_shortfall_95_rupees": -23845.110672050836,
     "block_bootstrap_mean": {
-      "mean": -30.013061559470287,
-      "bootstrap_p05": -1947.3686581544287,
-      "bootstrap_p50": -24.695681574267937,
-      "bootstrap_p95": 1878.0480085625495,
-      "prob_mean_positive": 0.4912
+      "mean": 3.5909145316011544,
+      "bootstrap_p05": -1899.414636394664,
+      "bootstrap_p50": 8.340277433744701,
+      "bootstrap_p95": 1887.5496915816943,
+      "prob_mean_positive": 0.5036
     },
     "train": {
       "n": 37,
-      "mean": 435.0654384863553
+      "mean": 492.2830193981796
     },
     "validation": {
       "n": 12,
@@ -728,34 +728,34 @@
   {
     "file": "research/phase12_weekly/input/trades_slip_1.00_stop_50.csv",
     "n": 63,
-    "total_net_rupees": 212242.8564738554,
-    "mean_net_rupees": 3368.9342297437365,
+    "total_net_rupees": 212840.11128606542,
+    "mean_net_rupees": 3378.4144648581814,
     "median_net_rupees": 1685.673357110001,
-    "mean_net_points": 45.3263180825257,
+    "mean_net_points": 45.472657616906666,
     "median_net_points": 22.47564476146668,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.7936507936507936,
-    "max_drawdown_rupees": -12939.754171443492,
-    "sharpe_annualized_weekly": 4.193723101846045,
-    "expected_shortfall_95_rupees": -11472.457136953666,
+    "max_drawdown_rupees": -12327.457501133496,
+    "sharpe_annualized_weekly": 4.225232288328966,
+    "expected_shortfall_95_rupees": -11234.571834902832,
     "block_bootstrap_mean": {
-      "mean": 3368.9342297437365,
-      "bootstrap_p05": 2108.334970749827,
-      "bootstrap_p50": 3229.512992972548,
-      "bootstrap_p95": 4345.435187944613,
+      "mean": 3378.4144648581814,
+      "bootstrap_p05": 2121.124056570477,
+      "bootstrap_p50": 3239.2955473419643,
+      "bootstrap_p95": 4355.256162871024,
       "prob_mean_positive": 1.0
     },
     "train": {
       "n": 37,
-      "mean": 4778.938454005948
+      "mean": 4780.76462459919
     },
     "validation": {
       "n": 12,
-      "mean": 1250.1268820933246
+      "mean": 1243.2427012558246
     },
     "test": {
       "n": 14,
-      "mean": 1458.6150778939639
+      "mean": 1502.350554344678
     }
   },
   {
@@ -794,92 +794,92 @@
   {
     "file": "research/phase12_weekly/input/trades_slip_2.00_stop_100.csv",
     "n": 63,
-    "total_net_rupees": 138831.50673477576,
-    "mean_net_rupees": 2203.6747100758057,
+    "total_net_rupees": 140959.24792772325,
+    "mean_net_rupees": 2237.448379805131,
     "median_net_rupees": 655.0890610250008,
-    "mean_net_points": 29.465107463577155,
+    "mean_net_points": 29.93535945948985,
     "median_net_points": 9.625563414146148,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.6190476190476191,
-    "max_drawdown_rupees": -37795.62118162564,
-    "sharpe_annualized_weekly": 2.0608247629122167,
-    "expected_shortfall_95_rupees": -17585.510577595003,
+    "max_drawdown_rupees": -37592.57092465318,
+    "sharpe_annualized_weekly": 2.108607810724386,
+    "expected_shortfall_95_rupees": -17482.362807318666,
     "block_bootstrap_mean": {
-      "mean": 2203.6747100758057,
-      "bootstrap_p05": 406.52024216654866,
-      "bootstrap_p50": 2252.782639106414,
-      "bootstrap_p95": 3917.9834018232054,
-      "prob_mean_positive": 0.9788
+      "mean": 2237.448379805131,
+      "bootstrap_p05": 428.3826315533882,
+      "bootstrap_p50": 2289.159478250016,
+      "bootstrap_p95": 3956.090223027625,
+      "prob_mean_positive": 0.9798
     },
     "train": {
       "n": 37,
-      "mean": 4474.806373779189
+      "mean": 4526.825047724459
     },
     "validation": {
       "n": 12,
-      "mean": -672.8820102827304
+      "mean": -711.06116432898
     },
     "test": {
       "n": 14,
-      "mean": -1332.9817836901072
+      "mean": -1285.7532047238576
     }
   },
   {
     "file": "research/phase12_weekly/input/trades_slip_2.00_stop_150.csv",
     "n": 63,
-    "total_net_rupees": 62402.09563713323,
-    "mean_net_rupees": 990.5094545576703,
+    "total_net_rupees": 64958.02123892073,
+    "mean_net_rupees": 1031.079702205091,
     "median_net_rupees": 428.0230681184996,
-    "mean_net_points": 13.289570723335348,
+    "mean_net_points": 13.850443758155983,
     "median_net_points": 6.584970278746148,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.5714285714285714,
-    "max_drawdown_rupees": -69344.05237058818,
-    "sharpe_annualized_weekly": 0.719274229606706,
-    "expected_shortfall_95_rupees": -28209.5327967925,
+    "max_drawdown_rupees": -68630.3408340707,
+    "sharpe_annualized_weekly": 0.7535959823770935,
+    "expected_shortfall_95_rupees": -28150.64088167,
     "block_bootstrap_mean": {
-      "mean": 990.5094545576703,
-      "bootstrap_p05": -1467.2268934935867,
-      "bootstrap_p50": 959.2473950777071,
-      "bootstrap_p95": 3260.127595486499,
-      "prob_mean_positive": 0.7448
+      "mean": 1031.079702205091,
+      "bootstrap_p05": -1438.1718553740293,
+      "bootstrap_p50": 1001.780681617189,
+      "bootstrap_p95": 3312.61998082941,
+      "prob_mean_positive": 0.7566
     },
     "train": {
       "n": 37,
-      "mean": 2211.812711101824
+      "mean": 2268.809775050675
     },
     "validation": {
       "n": 12,
-      "mean": -380.80889836335524
+      "mean": -393.9537108521054
     },
     "test": {
       "n": 14,
-      "mean": -1061.8048495195715
+      "mean": -1018.6068505520716
     }
   },
   {
     "file": "research/phase12_weekly/input/trades_slip_2.00_stop_200.csv",
     "n": 63,
-    "total_net_rupees": -19990.648901801622,
-    "mean_net_rupees": -317.31188733018445,
+    "total_net_rupees": -18065.056924271616,
+    "mean_net_rupees": -286.74693530589866,
     "median_net_rupees": 1.6352617249467016,
-    "mean_net_points": -4.11036356686657,
+    "mean_net_points": -3.7028308732094284,
     "median_net_points": 0.021803489665956022,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.5079365079365079,
-    "max_drawdown_rupees": -90533.5380203882,
-    "sharpe_annualized_weekly": -0.2656842937311148,
-    "expected_shortfall_95_rupees": -24825.525859398334,
+    "max_drawdown_rupees": -88607.94604285818,
+    "sharpe_annualized_weekly": -0.24263309482600726,
+    "expected_shortfall_95_rupees": -24241.443093638332,
     "block_bootstrap_mean": {
-      "mean": -317.31188733018445,
-      "bootstrap_p05": -2246.412203457798,
-      "bootstrap_p50": -309.7723619084744,
-      "bootstrap_p95": 1588.6331976751292,
-      "prob_mean_positive": 0.3936
+      "mean": -286.74693530589866,
+      "bootstrap_p05": -2194.9481766317595,
+      "bootstrap_p50": -281.5911993220217,
+      "bootstrap_p95": 1595.5800482015716,
+      "prob_mean_positive": 0.403
     },
     "train": {
       "n": 37,
-      "mean": 144.69636757946353
+      "mean": 196.73939399919303
     },
     "validation": {
       "n": 12,
@@ -926,34 +926,34 @@
   {
     "file": "research/phase12_weekly/input/trades_slip_2.00_stop_50.csv",
     "n": 63,
-    "total_net_rupees": 205156.84095653944,
-    "mean_net_rupees": 3256.4577929609436,
+    "total_net_rupees": 206028.26321105444,
+    "mean_net_rupees": 3270.2898922389595,
     "median_net_rupees": 1581.426076745001,
-    "mean_net_points": 43.98843911443243,
+    "mean_net_points": 44.192803504327664,
     "median_net_points": 21.08568102326668,
     "capital_normalization": "NOT_AVAILABLE: historical SPAN/peak-margin series has not yet been integrated; rupee P&L is not a return-on-capital measure.",
     "win_rate": 0.746031746031746,
-    "max_drawdown_rupees": -13069.467521443497,
-    "sharpe_annualized_weekly": 4.025363627611849,
-    "expected_shortfall_95_rupees": -11764.556682761999,
+    "max_drawdown_rupees": -12457.170851133502,
+    "sharpe_annualized_weekly": 4.067891701460957,
+    "expected_shortfall_95_rupees": -11595.514179886166,
     "block_bootstrap_mean": {
-      "mean": 3256.4577929609436,
-      "bootstrap_p05": 2002.0705508341437,
-      "bootstrap_p50": 3118.7187712338646,
-      "bootstrap_p95": 4191.785363979593,
+      "mean": 3270.2898922389595,
+      "bootstrap_p05": 2023.7765080208362,
+      "bootstrap_p50": 3132.8959733359443,
+      "bootstrap_p95": 4201.52407607402,
       "prob_mean_positive": 1.0
     },
     "train": {
       "n": 37,
-      "mean": 4552.0800735622315
+      "mean": 4548.324395573718
     },
     "validation": {
       "n": 12,
-      "mean": 994.9387366026998
+      "mean": 1028.1125424176996
     },
     "test": {
       "n": 14,
-      "mean": 1770.7580996788927
+      "mean": 1814.4935761296067
     }
   },
   {

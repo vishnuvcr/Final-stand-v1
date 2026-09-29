@@ -1,0 +1,695 @@
+{
+  "scope": "Supplemental Phase 12 robustness audit after the 30-cell slippage x stop-loss grid.",
+  "candidate_cells": 30,
+  "observations_per_cell": 63,
+  "multiple_testing": {
+    "procedure": "Holm step-down adjustment across all 30 candidate cells.",
+    "cells": [
+      {
+        "file": "trades_slip_0.00_stop_100.csv",
+        "slippage_points_per_leg": 0.0,
+        "stop_loss_points": 100.0,
+        "n": 63,
+        "mean_net_rupees": 2791.163501628741,
+        "annualized_weekly_sharpe": 2.6449417353800793,
+        "bootstrap_two_sided_p": 0.0124,
+        "holm_adjusted_p": 0.2852
+      },
+      {
+        "file": "trades_slip_0.00_stop_150.csv",
+        "slippage_points_per_leg": 0.0,
+        "stop_loss_points": 150.0,
+        "n": 63,
+        "mean_net_rupees": 1549.4307909885044,
+        "annualized_weekly_sharpe": 1.1471890297290475,
+        "bootstrap_two_sided_p": 0.2844,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "file": "trades_slip_0.00_stop_200.csv",
+        "slippage_points_per_leg": 0.0,
+        "stop_loss_points": 200.0,
+        "n": 63,
+        "mean_net_rupees": 291.2568561585059,
+        "annualized_weekly_sharpe": 0.24763259382387146,
+        "bootstrap_two_sided_p": 0.7904,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "file": "trades_slip_0.00_stop_300.csv",
+        "slippage_points_per_leg": 0.0,
+        "stop_loss_points": 300.0,
+        "n": 63,
+        "mean_net_rupees": 926.6161519181497,
+        "annualized_weekly_sharpe": 0.8733735395436444,
+        "bootstrap_two_sided_p": 0.3332,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "file": "trades_slip_0.00_stop_50.csv",
+        "slippage_points_per_leg": 0.0,
+        "stop_loss_points": 50.0,
+        "n": 63,
+        "mean_net_rupees": 3499.5445349699276,
+        "annualized_weekly_sharpe": 4.432570035365928,
+        "bootstrap_two_sided_p": 0.0002,
+        "holm_adjusted_p": 0.006
+      },
+      {
+        "file": "trades_slip_0.00_stop_none.csv",
+        "slippage_points_per_leg": 0.0,
+        "stop_loss_points": null,
+        "n": 63,
+        "mean_net_rupees": 471.08133957311,
+        "annualized_weekly_sharpe": 0.4973453505231825,
+        "bootstrap_two_sided_p": 0.6376,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "file": "trades_slip_0.25_stop_100.csv",
+        "slippage_points_per_leg": 0.25,
+        "stop_loss_points": 100.0,
+        "n": 63,
+        "mean_net_rupees": 2709.8941814233053,
+        "annualized_weekly_sharpe": 2.574718202945244,
+        "bootstrap_two_sided_p": 0.0076,
+        "holm_adjusted_p": 0.19
+      },
+      {
+        "file": "trades_slip_0.25_stop_150.csv",
+        "slippage_points_per_leg": 0.25,
+        "stop_loss_points": 150.0,
+        "n": 63,
+        "mean_net_rupees": 1487.7075036669967,
+        "annualized_weekly_sharpe": 1.1055692190728994,
+        "bootstrap_two_sided_p": 0.2912,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "file": "trades_slip_0.25_stop_200.csv",
+        "slippage_points_per_leg": 0.25,
+        "stop_loss_points": 200.0,
+        "n": 63,
+        "mean_net_rupees": 214.325501138744,
+        "annualized_weekly_sharpe": 0.18187409251151296,
+        "bootstrap_two_sided_p": 0.8616,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "file": "trades_slip_0.25_stop_300.csv",
+        "slippage_points_per_leg": 0.25,
+        "stop_loss_points": 300.0,
+        "n": 63,
+        "mean_net_rupees": 854.5848209657692,
+        "annualized_weekly_sharpe": 0.8050338710602991,
+        "bootstrap_two_sided_p": 0.3728,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "file": "trades_slip_0.25_stop_50.csv",
+        "slippage_points_per_leg": 0.25,
+        "stop_loss_points": 50.0,
+        "n": 63,
+        "mean_net_rupees": 3427.285463663737,
+        "annualized_weekly_sharpe": 4.330423154007015,
+        "bootstrap_two_sided_p": 0.0002,
+        "holm_adjusted_p": 0.006
+      },
+      {
+        "file": "trades_slip_0.25_stop_none.csv",
+        "slippage_points_per_leg": 0.25,
+        "stop_loss_points": null,
+        "n": 63,
+        "mean_net_rupees": 397.85924373977673,
+        "annualized_weekly_sharpe": 0.4200348659863063,
+        "bootstrap_two_sided_p": 0.692,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "file": "trades_slip_0.50_stop_100.csv",
+        "slippage_points_per_leg": 0.5,
+        "stop_loss_points": 100.0,
+        "n": 63,
+        "mean_net_rupees": 2646.4133202533435,
+        "annualized_weekly_sharpe": 2.507458030693522,
+        "bootstrap_two_sided_p": 0.0112,
+        "holm_adjusted_p": 0.2688
+      },
+      {
+        "file": "trades_slip_0.50_stop_150.csv",
+        "slippage_points_per_leg": 0.5,
+        "stop_loss_points": 150.0,
+        "n": 63,
+        "mean_net_rupees": 1380.1231987901313,
+        "annualized_weekly_sharpe": 1.0287355816149695,
+        "bootstrap_two_sided_p": 0.3588,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "file": "trades_slip_0.50_stop_200.csv",
+        "slippage_points_per_leg": 0.5,
+        "stop_loss_points": 200.0,
+        "n": 63,
+        "mean_net_rupees": 144.08063893636307,
+        "annualized_weekly_sharpe": 0.12229548725601473,
+        "bootstrap_two_sided_p": 0.896,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "file": "trades_slip_0.50_stop_300.csv",
+        "slippage_points_per_leg": 0.5,
+        "stop_loss_points": 300.0,
+        "n": 63,
+        "mean_net_rupees": 782.5534900133878,
+        "annualized_weekly_sharpe": 0.7367690179145924,
+        "bootstrap_two_sided_p": 0.4316,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "file": "trades_slip_0.50_stop_50.csv",
+        "slippage_points_per_leg": 0.5,
+        "stop_loss_points": 50.0,
+        "n": 63,
+        "mean_net_rupees": 3503.857757470443,
+        "annualized_weekly_sharpe": 4.41712693603292,
+        "bootstrap_two_sided_p": 0.0002,
+        "holm_adjusted_p": 0.006
+      },
+      {
+        "file": "trades_slip_0.50_stop_none.csv",
+        "slippage_points_per_leg": 0.5,
+        "stop_loss_points": null,
+        "n": 63,
+        "mean_net_rupees": 324.63714790644343,
+        "annualized_weekly_sharpe": 0.3427265068147736,
+        "bootstrap_two_sided_p": 0.7372,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "file": "trades_slip_1.00_stop_100.csv",
+        "slippage_points_per_leg": 1.0,
+        "stop_loss_points": 100.0,
+        "n": 63,
+        "mean_net_rupees": 2526.2440860269953,
+        "annualized_weekly_sharpe": 2.3834263788211976,
+        "bootstrap_two_sided_p": 0.014,
+        "holm_adjusted_p": 0.308
+      },
+      {
+        "file": "trades_slip_1.00_stop_150.csv",
+        "slippage_points_per_leg": 1.0,
+        "stop_loss_points": 150.0,
+        "n": 63,
+        "mean_net_rupees": 1240.8853975750917,
+        "annualized_weekly_sharpe": 0.9262244441176621,
+        "bootstrap_two_sided_p": 0.3768,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "file": "trades_slip_1.00_stop_200.csv",
+        "slippage_points_per_leg": 1.0,
+        "stop_loss_points": 200.0,
+        "n": 63,
+        "mean_net_rupees": 3.5909145316011544,
+        "annualized_weekly_sharpe": 0.0030494595854075263,
+        "bootstrap_two_sided_p": 0.9924,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "file": "trades_slip_1.00_stop_300.csv",
+        "slippage_points_per_leg": 1.0,
+        "stop_loss_points": 300.0,
+        "n": 63,
+        "mean_net_rupees": 638.4908281086259,
+        "annualized_weekly_sharpe": 0.6004644035352078,
+        "bootstrap_two_sided_p": 0.498,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "file": "trades_slip_1.00_stop_50.csv",
+        "slippage_points_per_leg": 1.0,
+        "stop_loss_points": 50.0,
+        "n": 63,
+        "mean_net_rupees": 3378.4144648581814,
+        "annualized_weekly_sharpe": 4.225232288328966,
+        "bootstrap_two_sided_p": 0.0002,
+        "holm_adjusted_p": 0.006
+      },
+      {
+        "file": "trades_slip_1.00_stop_none.csv",
+        "slippage_points_per_leg": 1.0,
+        "stop_loss_points": null,
+        "n": 63,
+        "mean_net_rupees": 178.19295623977672,
+        "annualized_weekly_sharpe": 0.18811645557289006,
+        "bootstrap_two_sided_p": 0.8192,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "file": "trades_slip_2.00_stop_100.csv",
+        "slippage_points_per_leg": 2.0,
+        "stop_loss_points": 100.0,
+        "n": 63,
+        "mean_net_rupees": 2237.448379805131,
+        "annualized_weekly_sharpe": 2.108607810724386,
+        "bootstrap_two_sided_p": 0.0328,
+        "holm_adjusted_p": 0.6888000000000001
+      },
+      {
+        "file": "trades_slip_2.00_stop_150.csv",
+        "slippage_points_per_leg": 2.0,
+        "stop_loss_points": 150.0,
+        "n": 63,
+        "mean_net_rupees": 1031.079702205091,
+        "annualized_weekly_sharpe": 0.7535959823770935,
+        "bootstrap_two_sided_p": 0.4696,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "file": "trades_slip_2.00_stop_200.csv",
+        "slippage_points_per_leg": 2.0,
+        "stop_loss_points": 200.0,
+        "n": 63,
+        "mean_net_rupees": -286.74693530589866,
+        "annualized_weekly_sharpe": -0.24263309482600726,
+        "bootstrap_two_sided_p": 0.8208,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "file": "trades_slip_2.00_stop_300.csv",
+        "slippage_points_per_leg": 2.0,
+        "stop_loss_points": 300.0,
+        "n": 63,
+        "mean_net_rupees": 350.3655042991022,
+        "annualized_weekly_sharpe": 0.32875997331690127,
+        "bootstrap_two_sided_p": 0.7188,
+        "holm_adjusted_p": 1.0
+      },
+      {
+        "file": "trades_slip_2.00_stop_50.csv",
+        "slippage_points_per_leg": 2.0,
+        "stop_loss_points": 50.0,
+        "n": 63,
+        "mean_net_rupees": 3270.2898922389595,
+        "annualized_weekly_sharpe": 4.067891701460957,
+        "bootstrap_two_sided_p": 0.0002,
+        "holm_adjusted_p": 0.006
+      },
+      {
+        "file": "trades_slip_2.00_stop_none.csv",
+        "slippage_points_per_leg": 2.0,
+        "stop_loss_points": null,
+        "n": 63,
+        "mean_net_rupees": -114.69542709355655,
+        "annualized_weekly_sharpe": -0.12107494220184754,
+        "bootstrap_two_sided_p": 0.9112,
+        "holm_adjusted_p": 1.0
+      }
+    ]
+  },
+  "cscv_pbo": {
+    "n_paths": 20,
+    "n_candidates": 30,
+    "purge_weeks": 1,
+    "pbo_proxy": 0.0,
+    "median_logit_test_percentile": 2.6026896854443833,
+    "paths": [
+      {
+        "path": 1,
+        "test_blocks": [
+          0,
+          1,
+          2
+        ],
+        "selected_training_config": "trades_slip_0.00_stop_50.csv",
+        "selected_training_mean": 2245.0634653646916,
+        "selected_test_mean": 4871.0126956860495,
+        "selected_test_percentile": 0.896551724137931,
+        "logit_test_percentile": 2.1594842493533726
+      },
+      {
+        "path": 2,
+        "test_blocks": [
+          0,
+          1,
+          3
+        ],
+        "selected_training_config": "trades_slip_0.00_stop_50.csv",
+        "selected_training_mean": 2375.2576829083196,
+        "selected_test_mean": 4471.798654812735,
+        "selected_test_percentile": 1.0,
+        "logit_test_percentile": 27.63104323789236
+      },
+      {
+        "path": 3,
+        "test_blocks": [
+          0,
+          1,
+          4
+        ],
+        "selected_training_config": "trades_slip_0.00_stop_50.csv",
+        "selected_training_mean": 2706.2772475622783,
+        "selected_test_mean": 4493.0914614099975,
+        "selected_test_percentile": 1.0,
+        "logit_test_percentile": 27.63104323789236
+      },
+      {
+        "path": 4,
+        "test_blocks": [
+          0,
+          1,
+          5
+        ],
+        "selected_training_config": "trades_slip_0.00_stop_50.csv",
+        "selected_training_mean": 3043.3387271033607,
+        "selected_test_mean": 4057.3872909428283,
+        "selected_test_percentile": 0.896551724137931,
+        "logit_test_percentile": 2.1594842493533726
+      },
+      {
+        "path": 5,
+        "test_blocks": [
+          0,
+          2,
+          3
+        ],
+        "selected_training_config": "trades_slip_0.00_stop_50.csv",
+        "selected_training_mean": 3706.9239625276014,
+        "selected_test_mean": 3358.357351460486,
+        "selected_test_percentile": 0.9310344827586207,
+        "logit_test_percentile": 2.6026896854443833
+      },
+      {
+        "path": 6,
+        "test_blocks": [
+          0,
+          2,
+          4
+        ],
+        "selected_training_config": "trades_slip_0.00_stop_50.csv",
+        "selected_training_mean": 3962.222392890662,
+        "selected_test_mean": 3343.245208165916,
+        "selected_test_percentile": 0.9310344827586207,
+        "logit_test_percentile": 2.6026896854443833
+      },
+      {
+        "path": 7,
+        "test_blocks": [
+          0,
+          2,
+          5
+        ],
+        "selected_training_config": "trades_slip_0.00_stop_50.csv",
+        "selected_training_mean": 4311.321782415355,
+        "selected_test_mean": 2930.577879078646,
+        "selected_test_percentile": 0.896551724137931,
+        "logit_test_percentile": 2.1594842493533726
+      },
+      {
+        "path": 8,
+        "test_blocks": [
+          0,
+          3,
+          4
+        ],
+        "selected_training_config": "trades_slip_0.50_stop_50.csv",
+        "selected_training_mean": 3948.994086169171,
+        "selected_test_mean": 2882.55611634508,
+        "selected_test_percentile": 0.9310344827586207,
+        "logit_test_percentile": 2.6026896854443833
+      },
+      {
+        "path": 9,
+        "test_blocks": [
+          0,
+          3,
+          5
+        ],
+        "selected_training_config": "trades_slip_0.50_stop_50.csv",
+        "selected_training_mean": 4536.05270531194,
+        "selected_test_mean": 2496.5149528946267,
+        "selected_test_percentile": 0.9310344827586207,
+        "logit_test_percentile": 2.6026896854443833
+      },
+      {
+        "path": 10,
+        "test_blocks": [
+          0,
+          4,
+          5
+        ],
+        "selected_training_config": "trades_slip_0.50_stop_50.csv",
+        "selected_training_mean": 4575.976785903416,
+        "selected_test_mean": 2451.227397189048,
+        "selected_test_percentile": 0.9310344827586207,
+        "logit_test_percentile": 2.6026896854443833
+      },
+      {
+        "path": 11,
+        "test_blocks": [
+          1,
+          2,
+          3
+        ],
+        "selected_training_config": "trades_slip_0.00_stop_50.csv",
+        "selected_training_mean": 2617.8475752284658,
+        "selected_test_mean": 4416.842178569529,
+        "selected_test_percentile": 0.9655172413793104,
+        "logit_test_percentile": 3.332204510175205
+      },
+      {
+        "path": 12,
+        "test_blocks": [
+          1,
+          2,
+          4
+        ],
+        "selected_training_config": "trades_slip_0.00_stop_50.csv",
+        "selected_training_mean": 2834.250420330843,
+        "selected_test_mean": 4436.362195610561,
+        "selected_test_percentile": 0.9655172413793104,
+        "logit_test_percentile": 3.332204510175205
+      },
+      {
+        "path": 13,
+        "test_blocks": [
+          1,
+          2,
+          5
+        ],
+        "selected_training_config": "trades_slip_0.00_stop_50.csv",
+        "selected_training_mean": 3183.349809855536,
+        "selected_test_mean": 4002.430814699623,
+        "selected_test_percentile": 0.9655172413793104,
+        "logit_test_percentile": 3.332204510175205
+      },
+      {
+        "path": 14,
+        "test_blocks": [
+          1,
+          3,
+          4
+        ],
+        "selected_training_config": "trades_slip_0.00_stop_50.csv",
+        "selected_training_mean": 2899.358685077631,
+        "selected_test_mean": 4050.7309828646066,
+        "selected_test_percentile": 1.0,
+        "logit_test_percentile": 27.63104323789236
+      },
+      {
+        "path": 15,
+        "test_blocks": [
+          1,
+          3,
+          5
+        ],
+        "selected_training_config": "trades_slip_0.00_stop_50.csv",
+        "selected_training_mean": 3441.7616948433,
+        "selected_test_mean": 3641.634832064484,
+        "selected_test_percentile": 1.0,
+        "logit_test_percentile": 27.63104323789236
+      },
+      {
+        "path": 16,
+        "test_blocks": [
+          1,
+          4,
+          5
+        ],
+        "selected_training_config": "trades_slip_0.00_stop_50.csv",
+        "selected_training_mean": 3603.965482153308,
+        "selected_test_mean": 3636.3196189947,
+        "selected_test_percentile": 1.0,
+        "logit_test_percentile": 27.63104323789236
+      },
+      {
+        "path": 17,
+        "test_blocks": [
+          2,
+          3,
+          4
+        ],
+        "selected_training_config": "trades_slip_0.00_stop_150.csv",
+        "selected_training_mean": 4392.819391189968,
+        "selected_test_mean": -1158.1830163517814,
+        "selected_test_percentile": 0.5517241379310345,
+        "logit_test_percentile": 0.20763936477824455
+      },
+      {
+        "path": 18,
+        "test_blocks": [
+          2,
+          3,
+          5
+        ],
+        "selected_training_config": "trades_slip_0.00_stop_50.csv",
+        "selected_training_mean": 4852.304270738393,
+        "selected_test_mean": 2537.0459499811095,
+        "selected_test_percentile": 0.896551724137931,
+        "logit_test_percentile": 2.1594842493533726
+      },
+      {
+        "path": 19,
+        "test_blocks": [
+          2,
+          4,
+          5
+        ],
+        "selected_training_config": "trades_slip_0.00_stop_50.csv",
+        "selected_training_mean": 4903.383370332762,
+        "selected_test_mean": 2495.9273790031593,
+        "selected_test_percentile": 0.896551724137931,
+        "logit_test_percentile": 2.1594842493533726
+      },
+      {
+        "path": 20,
+        "test_blocks": [
+          3,
+          4,
+          5
+        ],
+        "selected_training_config": "trades_slip_0.50_stop_50.csv",
+        "selected_training_mean": 4872.782204285584,
+        "selected_test_mean": 2059.3442252302484,
+        "selected_test_percentile": 0.9310344827586207,
+        "logit_test_percentile": 2.6026896854443833
+      }
+    ],
+    "interpretation": "CSCV-style PBO proxy: fraction of combinatorial paths where the configuration selected by training has below-median test percentile. This is a diagnostic proxy, not a claim of exact reproduction of the published PBO estimator."
+  },
+  "dsr_style": {
+    "frozen_phase13_cell": "trades_slip_0.50_stop_50.csv",
+    "result": {
+      "probability": 0.989155571864104,
+      "weekly_sharpe": 0.6125452945423016,
+      "annualized_sharpe": 4.41712693603292,
+      "skewness": -0.4682314390962848,
+      "kurtosis_raw": 3.4222060682140545,
+      "trial_count": 30,
+      "null_max_quantile": 1.9983376793275953,
+      "weekly_sharpe_threshold": 0.2537891390638706,
+      "method": "DSR-style approximation using a multiple-testing null Sharpe threshold plus the non-normality-adjusted probabilistic Sharpe ratio; not a byte-for-byte reproduction of the published DSR implementation."
+    }
+  },
+  "regime_conditioning": {
+    "contract_rule_era": [
+      {
+        "group": "pre_2025-08-28",
+        "n": 43,
+        "mean_net_rupees": 4275.109812276918,
+        "median_net_rupees": 3507.12065307,
+        "win_rate": 0.8372093023255814,
+        "annualized_weekly_sharpe": 5.66479913968424
+      },
+      {
+        "group": "post_2025-08-28",
+        "n": 20,
+        "mean_net_rupees": 1845.6658396365224,
+        "median_net_rupees": 1096.8084416507493,
+        "win_rate": 0.75,
+        "annualized_weekly_sharpe": 2.186158202564253
+      }
+    ],
+    "lot_regime": [
+      {
+        "group": "lot_75",
+        "n": 52,
+        "mean_net_rupees": 3969.051617708028,
+        "median_net_rupees": 2940.372969417528,
+        "win_rate": 0.8076923076923077,
+        "annualized_weekly_sharpe": 5.070058799481881
+      },
+      {
+        "group": "lot_65",
+        "n": 11,
+        "mean_net_rupees": 1304.7595090745906,
+        "median_net_rupees": 1015.4724719194995,
+        "win_rate": 0.8181818181818182,
+        "annualized_weekly_sharpe": 1.6160796292010102
+      }
+    ],
+    "target_error_regime": [
+      {
+        "group": "high_target_error",
+        "n": 21,
+        "mean_net_rupees": 2584.7313086800195,
+        "median_net_rupees": 1374.9947677999992,
+        "win_rate": 0.7619047619047619,
+        "annualized_weekly_sharpe": 2.7317332329324686
+      },
+      {
+        "group": "low_target_error",
+        "n": 21,
+        "mean_net_rupees": 3743.343828508453,
+        "median_net_rupees": 6225.6831402075,
+        "win_rate": 0.8571428571428571,
+        "annualized_weekly_sharpe": 5.365442805012769
+      },
+      {
+        "group": "mid_target_error",
+        "n": 21,
+        "mean_net_rupees": 4183.49813522286,
+        "median_net_rupees": 1443.9009372500007,
+        "win_rate": 0.8095238095238095,
+        "annualized_weekly_sharpe": 5.687422921340645
+      }
+    ]
+  },
+  "tail_gap_stress": [
+    {
+      "additional_gap_points": 0.0,
+      "stopped_trades": 26,
+      "mean_net_rupees": 3503.857757470443,
+      "total_net_rupees": 220743.0387206379,
+      "win_rate": 0.8095238095238095,
+      "annualized_weekly_sharpe": 4.41712693603292
+    },
+    {
+      "additional_gap_points": 5.0,
+      "stopped_trades": 26,
+      "mean_net_rupees": 3350.68315429584,
+      "total_net_rupees": 211093.0387206379,
+      "win_rate": 0.8095238095238095,
+      "annualized_weekly_sharpe": 4.2579795825814415
+    },
+    {
+      "additional_gap_points": 10.0,
+      "stopped_trades": 26,
+      "mean_net_rupees": 3197.5085511212365,
+      "total_net_rupees": 201443.0387206379,
+      "win_rate": 0.8095238095238095,
+      "annualized_weekly_sharpe": 4.092132513224392
+    },
+    {
+      "additional_gap_points": 20.0,
+      "stopped_trades": 26,
+      "mean_net_rupees": 2891.15934477203,
+      "total_net_rupees": 182143.0387206379,
+      "win_rate": 0.8095238095238095,
+      "annualized_weekly_sharpe": 3.7415125626795134
+    }
+  ],
+  "margin_status": "BLOCKED: historical NSE SPAN/peak-margin series is not yet integrated, so no capital-normalized return is reported.",
+  "execution_quality": "OHLC_RECONSTRUCTION: the primary HF dataset does not provide historical bid/ask; these outputs do not establish realized historical fills.",
+  "holdout_governance": "The Phase 13 stop was frozen from training only at 0.50-point slippage. This supplemental audit does not change that frozen rule and does not perform any post-holdout parameter search."
+}
