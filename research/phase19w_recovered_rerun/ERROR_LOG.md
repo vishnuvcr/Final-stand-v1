@@ -84,3 +84,9 @@ Phase 17W maximum usable coverage was 39/63 for the registered family. This rema
 - **Issue:** The full 224-variant Phase 19 computation completed successfully, but the final push was rejected because the Phase 19 branch advanced concurrently during execution.
 - **Impact:** Empirical outputs existed on the runner but were not committed to the branch; no statistical conclusion was admitted from the unpublished run.
 - **Correction:** Serialize the issue-trigger bridge with a concurrency group and rebase the result commit onto the latest Phase 19 branch before pushing. Research parameters remain unchanged.
+
+
+## E19-009 — 2026-09-30
+- **Issue:** The serialized retry completed the 224-variant computation, but `git rebase origin/phase-19w-recovered-rerun` was attempted before staging/committing generated outputs, causing Git to reject the rebase due to unstaged changes.
+- **Impact:** Results again existed only on the runner; no statistical conclusion was admitted.
+- **Correction:** Commit generated output first, then fetch/rebase the result commit onto the current Phase 19 branch, then push. No research parameters change.
