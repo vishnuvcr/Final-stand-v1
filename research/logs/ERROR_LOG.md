@@ -231,3 +231,9 @@
 - Impact: Silently changing K1/K2 would invalidate comparability with the frozen evidence and could contaminate the locked holdout selection.
 - Resolution: Created Phase 17W as a separate preregistered strategy-definition validation phase. The Phase 13W control remains immutable and the final holdout is descriptive only for this new family.
 - Prevention: Treat any change that alters K1, K2, K3 construction, timing, stop or execution assumptions as a new registered experiment rather than editing prior results.
+
+### E-0050 — GitHub Actions expression escaping in Phase 17W workflow
+- Observation: The first workflow commit stored GitHub Actions expressions with a literal backslash before the expression marker because of orchestration-string escaping.
+- Impact: The workflow file would not evaluate inputs/secrets correctly.
+- Resolution: Replaced the stored escaped markers with native GitHub Actions expression syntax and committed the corrected workflow before relying on empirical execution.
+- Prevention: Inspect committed workflow text after creation and validate that every expression is stored exactly as ${{ ... }}.
