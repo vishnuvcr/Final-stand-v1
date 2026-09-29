@@ -60,3 +60,9 @@ Phase 17W maximum usable coverage was 39/63 for the registered family. This rema
 - **Issue:** GitHub runner Polars rejected the HF parquet timezone metadata `+05:30` while restoring the NIFTY index (`POLARS_IGNORE_TIMEZONE_PARSE_ERROR` was not enabled).
 - **Impact:** Spot-interface restoration stopped before reading market observations.
 - **Correction:** Enable Polars timezone-parse compatibility for this frozen source format. This does not alter timestamps or strategy calculations; it only permits the existing parquet timezone metadata to be read.
+
+
+## E19-007 — 2026-09-30
+- **Issue:** The execution bridge invoked a recovery helper that attempted to reconstruct Phase 9 spot bars from HF-03 and failed on Polars timezone parsing of `+05:30`.
+- **Impact:** No empirical results were produced.
+- **Correction:** Removed the helper invocation. The bridge already restores the exact frozen Phase 9 `selected_weekly_spot_bars.parquet` artifact, so reconstruction is unnecessary and would introduce an avoidable data-path deviation.
