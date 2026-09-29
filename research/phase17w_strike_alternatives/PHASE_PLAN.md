@@ -69,7 +69,7 @@ This creates 8 x 4 x 7 = 224 registered K1/K2/K3 configurations.
 OTM1 + NEXT1 is the current Phase 13W definition and is a control. Previous Phase 12/13 results are not recalculated or replaced by this phase.
 
 ## Data and execution
-For each expiry, the workflow downloads the same Hugging Face NIFTY option/index data through the existing cached ingestion route. The variant builder reads the full call chain at entry, selects K1/K2 according to the registered rule, recomputes K3 from the frozen premium-difference rule, then creates variant-specific option paths used by the existing Phase 11W backtest engine.
+For each expiry, the workflow downloads the same Hugging Face NIFTY option/index data through the existing cached ingestion route. The variant builder reads the full call chain at entry, selects K1/K2 according to the registered rule, recomputes K3 from the registered K3 premium multiplier rule, then creates variant-specific option paths used by the existing Phase 11W backtest engine.
 
 No bid/ask observations are invented.
 
@@ -117,7 +117,7 @@ For training:
 Holdout outputs are reported for auditability but are never used to choose or promote a variant.
 
 ## Multiple-comparison control
-All 224 variants are tested in one registered family. The family-level decision uses Holm adjustment across the 32 training p-values.
+All 224 variants are tested in one registered family. The family-level decision uses Holm adjustment across the 224 training p-values.
 
 No hidden sub-selection of variants is allowed after results are observed.
 
