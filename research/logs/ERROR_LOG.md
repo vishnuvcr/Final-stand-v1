@@ -155,3 +155,10 @@
 - Impact: The earlier path-only diagnosis was insufficient; no empirical result can be admitted.
 - Resolution: Added a CI data-interface diagnostic that reports manifest status counts, option/spot row counts, and exact entry/lock/expiry-row availability for representative USABLE_OHLC cycles before candidate generation.
 - Prevention: Cross-phase interfaces must be validated by observed row-level compatibility, not only by filesystem paths.
+
+
+### E-0030 — Option timestamp representation mismatch
+- Observation: Phase 13 diagnostic showed USABLE_OHLC cycles but zero entry/lock option rows because manifest timestamps and Parquet string rendering differed.
+- Impact: Exact timestamp matching rejected otherwise usable cycles.
+- Resolution: Phase 11 now normalizes timestamp strings to ISO `T` form and normalizes `+0530` to `+05:30` before exact comparisons.
+- Prevention: Cross-phase timestamp contracts must normalize explicitly.
