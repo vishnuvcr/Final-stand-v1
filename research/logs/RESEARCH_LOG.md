@@ -167,3 +167,10 @@
 - Started Phase 16W on a separate branch for capital/margin validation using official NSE historical SPAN/risk-parameter/report infrastructure.
 - Preserved the frozen strategy, locked holdout, and no-tuning rule.
 - Added a manual GitHub Actions workflow and source-admission protocol.
+
+## 2026-09-30 — Phase 16W capital/margin closure
+- Preserved the frozen 63-cycle interface from Phase 9/13 and added it to the Phase 16 branch for reproducibility.
+- Installed pinned marginism 0.1.1 as the candidate offline SPAN engine.
+- Ran the NSE static SPAN acquisition probe. 193 unique required dates were identified; 18 candidate archive URLs across 2024–2026 all returned 404; 0 dated SPAN members were recovered.
+- Logged E-0061 and E-0062. No capital/margin number was invented or substituted.
+- Phase 16W closed with a quantified gap: 0/63 cycles have empirical historical SPAN coverage. Future completion requires licensed historical risk files, broker/clearing-member margin ledgers, or authenticated dynamic NSE report access.
