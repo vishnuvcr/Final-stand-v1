@@ -53,6 +53,12 @@ jobs:
             hf-phase9w-${{ inputs.start_date }}-${{ inputs.end_date }}-${{ inputs.max_expiries }}-
             hf-phase9w-
 
+      - name: Compile and unit-test ingestion helpers
+        run: |
+          python -m py_compile research/phase9_weekly/hf_weekly_ingest.py research/phase9_weekly/validate_pilot.py research/phase9_weekly/test_hf_weekly_ingest.py
+          cd research/phase9_weekly
+          python test_hf_weekly_ingest.py
+
       - name: Verify HF_TOKEN is configured
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
