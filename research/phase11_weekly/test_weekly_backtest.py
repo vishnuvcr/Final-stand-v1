@@ -25,12 +25,6 @@ def test_gst_not_applied_to_stt_or_stamp():
     assert abs(x - expected) < 1e-9
 
 
-if __name__ == "__main__":
-    test_entry_cashflow()
-    test_lot_size_transition()
-    test_gst_not_applied_to_stt_or_stamp()
-    test_historical_rate_schedule()
-    print("Phase 11W unit tests passed.")
 
 
 def test_historical_rate_schedule():
@@ -38,3 +32,10 @@ def test_historical_rate_schedule():
     assert cost_rates_for_date("2024-09-30", cfg)[:2] == (0.000625, 0.000495)
     assert cost_rates_for_date("2024-10-01", cfg)[:2] == (0.001, 0.0003503)
     assert cost_rates_for_date("2026-04-01", cfg)[:2] == (0.0015, 0.0003503)
+
+if __name__ == "__main__":
+    test_entry_cashflow()
+    test_lot_size_transition()
+    test_gst_not_applied_to_stt_or_stamp()
+    test_historical_rate_schedule()
+    print("Phase 11W unit tests passed.")
