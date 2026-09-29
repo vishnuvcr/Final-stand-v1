@@ -7,6 +7,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: phase19w-execution-bridge
+  cancel-in-progress: false
+
 jobs:
   execute:
     runs-on: ubuntu-latest
@@ -47,6 +51,8 @@ jobs:
           python research/phase17w_strike_alternatives/strike_alternatives.py             --variant-start 0             --variant-end 224             --hf-cache ~/.cache/huggingface             --baseline-manifest research/phase9_weekly/output/weekly_cycle_manifest.csv             --expiry-start 0             --expiry-end 63             --output-dir research/phase19w_recovered_rerun/output
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin phase-19w-recovered-rerun
+          git rebase origin/phase-19w-recovered-rerun
           git add research/phase19w_recovered_rerun/output
           git diff --cached --quiet || git commit -m 'phase19w: record recovered-data empirical rerun'
           git push origin HEAD:phase-19w-recovered-rerun
