@@ -48,3 +48,9 @@ Phase 17W maximum usable coverage was 39/63 for the registered family. This rema
 - **Issue:** The Phase-9 selected weekly spot-bar parquet was also generated output and absent from the Phase-19 branch.
 - **Impact:** The strategy runner could not reach the backtest stage.
 - **Correction:** Added a deterministic restoration script that reconstructs the exact entry-to-lock NIFTY index slices from the pinned HF-03 `index/NIFTY.parquet` and the frozen 63-cycle calendar. No alternate spot source or synthetic prices are introduced.
+
+
+## E19-006 — 2026-09-30
+- **Issue:** After the frozen Phase 9 interface was restored, the empirical runner failed with `UnboundLocalError: option_source` because `main()` assigned `option_df` on the normal build path but later passed the undefined `option_source` to `run_variants()`.
+- **Impact:** No empirical results were produced.
+- **Correction:** Bound `option_source` to the generated `variant_option_bars.parquet`. This is an execution-variable fix only; the variant family, data, costs, slippage, stop, chronology, and statistics remain unchanged.
