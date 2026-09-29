@@ -284,3 +284,11 @@
 - Diagnosis: strike_alternatives.py imports huggingface_hub at module load time, while the executed variant-job environment did not contain that package.
 - Resolution: Ensure the variant-job install step explicitly installs the same pinned huggingface_hub>=0.36,<0.37 dependency as the prepare/build jobs; no research parameters are changed.
 - Prevention: Run the exact CI import/test command in every job environment and keep runtime imports covered by that job's dependency installation.
+
+
+### E-0058 — Phase 17W variant jobs used a source-tree-only Phase 9 path
+- Observation: Run 36625008508 passed dependency installation, all tests, and merged-input restoration, then every variant chunk failed because the engine looked only at research/phase9_weekly/output for selected_weekly_spot_bars.parquet.
+- Impact: The restored Phase 9 artifact was present under prepared/phase9, but no variant backtest executed.
+- Diagnosis: The CI variant stage intentionally restores the frozen Phase 9 interface as an artifact; the engine still assumed the source-tree output directory from the prepare job.
+- Resolution: Resolve the Phase 9 interface from the source-tree path when present, otherwise from prepared/phase9. No strategy, split, execution, cost, or variant parameters changed.
+- Prevention: Treat restored artifacts as first-class inputs and test both source-tree and CI-restored interface paths.
