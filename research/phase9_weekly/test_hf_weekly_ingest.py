@@ -3,7 +3,7 @@ from zoneinfo import ZoneInfo
 
 import polars as pl
 
-from hf_weekly_ingest import choose_strikes
+from hf_weekly_ingest import choose_strikes, historical_expiry_regime, monthly_expiry_dates
 
 
 IST = ZoneInfo("Asia/Kolkata")
@@ -51,4 +51,24 @@ def test_zero_volume_is_not_admitted_to_entry_quotes():
 if __name__ == "__main__":
     test_weekly_strike_selection_uses_open_not_close()
     test_zero_volume_is_not_admitted_to_entry_quotes()
+    test_monthly_expiry_is_excluded_from_weekly_catalog()
+    test_historical_expiry_regime_boundary()
     print("Phase 9W ingestion helper tests passed.")
+
+
+def test_monthly_expiry_is_excluded_from_weekly_catalog():
+    expiries = [
+        (datetime(2025, 1, 2, tzinfo=IST).date(), "a"),
+        (datetime(2025, 1, 9, tzinfo=IST).date(), "b"),
+        (datetime(2025, 1, 16, tzinfo=IST).date(), "c"),
+        (datetime(2025, 1, 23, tzinfo=IST).date(), "d"),
+        (datetime(2025, 1, 30, tzinfo=IST).date(), "e"),
+    ]
+    assert monthly_expiry_dates(expiries) == {datetime(2025, 1, 30, tzinfo=IST).date()}
+
+
+def test_historical_expiry_regime_boundary():
+    assert historical_expiry_regime(datetime(2025, 8, 28, tzinfo=IST).date()) == "THURSDAY_ERA"
+    assert historical_expiry_regime(datetime(2025, 9, 2, tzinfo=IST).date()) == "TUESDAY_ERA"
+
+
