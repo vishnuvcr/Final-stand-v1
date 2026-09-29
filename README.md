@@ -48,5 +48,8 @@ NSE currently documents four weekly NIFTY 50 option expiries excluding the month
 ## Cost and broker realism
 Weekly turnover makes friction more important. The model includes Paytm Money brokerage, statutory/regulatory/exchange charges, bid/ask spread, slippage, multi-leg execution, margin requirements and applicable square-off constraints.
 
+## Phase 9W Hugging Face data gate
+A primary Hugging Face source has been identified: thetrademarkk/india-index-options-1m, with 1-minute NIFTY option data partitioned by expiry and a separate NIFTY spot file. Its documented schema contains OHLC, volume and open interest, not historical bid/ask. A second HF source, rissin/nse-options-intraday, provides an independent 1-minute NIFTY OHLC series from October 2024 onward. See research/phase9_weekly/DATA_ACCESS_MATRIX.md for the admission rules and execution-quality distinction.
+
 ## No trading conclusion yet
 No live-trading recommendation or profitability conclusion has been established.
