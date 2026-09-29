@@ -245,6 +245,7 @@ def main() -> None:
 
     cycles: list[CycleRecord] = []
     selected_frames: list[pl.DataFrame] = []
+    selected_spot_frames: list[pl.DataFrame] = []
     prior_expiry: date | None = initial_prior_expiry
 
     for expiry, source_path in expiry_files:
@@ -325,6 +326,17 @@ def main() -> None:
             k1, k2, k3, p1, p2, target, p3 = choose_strikes(entry_calls, spot)
 
         selected_strikes = [k for k in (k1, k2, k3) if k is not None]
+
+        spot_slice = index_df.filter(
+            (pl.col("timestamp") >= entry_ts)
+            & (pl.col("timestamp") <= lock_ts)
+        ).with_columns(
+            pl.lit(expiry.isoformat()).alias("target_expiry"),
+            pl.lit(entry_ts.isoformat()).alias("entry_timestamp"),
+            pl.lit(lock_ts.isoformat()).alias("lock_timestamp"),
+        )
+        if spot_slice.height:
+            selected_spot_frames.append(spot_slice)
         lock_rows = (
             opt.filter(
                 (pl.col("timestamp") == lock_ts)
@@ -401,6 +413,11 @@ def main() -> None:
     if selected_frames:
         pl.concat(selected_frames, how="diagonal").write_parquet(
             out / "selected_weekly_option_bars.parquet", compression="zstd"
+        )
+
+    if selected_spot_frames:
+        pl.concat(selected_spot_frames, how="diagonal").write_parquet(
+            out / "selected_weekly_spot_bars.parquet", compression="zstd"
         )
 
     print(json.dumps({
