@@ -195,3 +195,8 @@
 - Observation: Even ZoneInfo Asia/Kolkata Python datetimes were materialized as UTC literals by the Polars comparison path.
 - Resolution: Compare normalized local bar-time keys to second precision (`YYYY-MM-DDTHH:MM:SS`). All source bars and manifest timestamps are explicitly Asia/Kolkata, so no cross-timezone conversion is introduced.
 - Prevention: Keep cross-phase comparison keys timezone-local and separately validate timezone metadata at ingestion.
+
+
+### E-0036 — Diagnostic retained obsolete typed datetime comparison
+- Observation: Phase 13 diagnostic itself still compared Asia/Kolkata timestamps with Python datetime literals, reproducing the UTC schema error after the backtest had been converted to local keys.
+- Resolution: Diagnostic now uses the same second-precision local timestamp key as Phase 11.
