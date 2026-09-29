@@ -18,3 +18,6 @@ Implementation complete; execution depends on successful upstream data ingestion
 
 ## Restriction
 This phase cannot establish robustness until Phase 11 produces admissible weekly trade results.
+
+
+- 2026-09-29: corrected Phase 11 timestamp interface propagated to Phase 12; robustness execution retrigger pending after CI startup failures.
