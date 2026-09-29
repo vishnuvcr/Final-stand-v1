@@ -11,10 +11,11 @@ import polars as pl
 @dataclass(frozen=True)
 class CostConfig:
     brokerage_per_order: float = 10.0
-    stt_sell_rate: float = 0.001
-    exchange_turnover_rate: float = 0.0000345
-    sebi_turnover_rate: float = 0.0000005
+    stt_sell_rate: float = 0.0015
+    exchange_turnover_rate: float = 0.0003503
+    sebi_turnover_rate: float = 0.000001
     stamp_buy_rate: float = 0.00003
+    ipft_turnover_rate: float = 0.000005
     gst_rate: float = 0.18
     slippage_points_per_leg: float = 0.25
     lot_size_pre_2026: int = 75
@@ -52,15 +53,26 @@ def lot_size_for_expiry(expiry: str, cfg: CostConfig) -> int:
     return cfg.lot_size_pre_2026 if expiry < "2026-01-06" else cfg.lot_size_2026
 
 
-def cost_rupees(buy_turnover: float, sell_turnover: float, orders: int, cfg: CostConfig) -> float:
+def cost_rates_for_date(trade_date: str, cfg: CostConfig) -> tuple[float, float, float, float]:
+    """Return dated STT, NSE option transaction, SEBI and IPFT rates."""
+    if trade_date < "2024-10-01":
+        return 0.000625, 0.000495, 0.000001, cfg.ipft_turnover_rate
+    if trade_date < "2026-04-01":
+        return 0.001, 0.0003503, 0.000001, cfg.ipft_turnover_rate
+    return cfg.stt_sell_rate, cfg.exchange_turnover_rate, cfg.sebi_turnover_rate, cfg.ipft_turnover_rate
+
+
+def cost_rupees(buy_turnover: float, sell_turnover: float, orders: int, cfg: CostConfig, trade_date: str) -> float:
     brokerage = cfg.brokerage_per_order * orders
-    stt = sell_turnover * cfg.stt_sell_rate
-    exchange = (buy_turnover + sell_turnover) * cfg.exchange_turnover_rate
-    sebi = (buy_turnover + sell_turnover) * cfg.sebi_turnover_rate
+    stt_rate, exchange_rate, sebi_rate, ipft_rate = cost_rates_for_date(trade_date, cfg)
+    stt = sell_turnover * stt_rate
+    exchange = (buy_turnover + sell_turnover) * exchange_rate
+    sebi = (buy_turnover + sell_turnover) * sebi_rate
+    ipft = (buy_turnover + sell_turnover) * ipft_rate
     stamp = buy_turnover * cfg.stamp_buy_rate
-    gst_base = brokerage + exchange + sebi
+    gst_base = brokerage + exchange + sebi + ipft
     gst = gst_base * cfg.gst_rate
-    return brokerage + stt + exchange + sebi + stamp + gst
+    return brokerage + stt + exchange + sebi + ipft + stamp + gst
 
 
 def intrinsic(spot: float, strike: float) -> float:
@@ -136,7 +148,7 @@ def backtest_cycle(cycle: dict, options: pl.DataFrame, spot: pl.DataFrame, stop_
                         orders += 3
                         buy_turn = entry_buy + (nm[k2] + slip) * lot + (nm[k3] + slip) * lot
                         sell_turn = entry_sell + (nm[k1] - slip) * lot
-                        costs = cost_rupees(buy_turn, sell_turn, orders, cfg)
+                        costs = cost_rupees(buy_turn, sell_turn, orders, cfg, nt[:10])
                         gross = net_cf
                         return TradeResult(
                             expiry, entry_ts, lock_ts, nt, k1, k2, k3,
@@ -202,10 +214,10 @@ def backtest_cycle(cycle: dict, options: pl.DataFrame, spot: pl.DataFrame, stop_
     gross = net_cf + intrinsic(s, k1) - intrinsic(s, k3)
     buy_turn = entry_buy + (lock[k2] + slip) * lot
     sell_turn = entry_sell
-    costs = cost_rupees(buy_turn, sell_turn, orders, cfg)
+    costs = cost_rupees(buy_turn, sell_turn, orders, cfg, expiry)
 
     return TradeResult(
-        expiry, entry_ts, lock_ts, lock_ts, k1, k2, k3,
+        expiry, entry_ts, lock_ts, f"{expiry}T15:30:00+05:30", k1, k2, k3,
         float(cycle["entry_spot"]), float(cycle["p1"]) - float(cycle["p2"]),
         float(cycle["target_premium"]),
         float(cycle["target_error"]) if cycle["target_error"] is not None else None,
