@@ -42,6 +42,9 @@ class CycleRecord:
     p2: float | None
     target_premium: float | None
     p3: float | None
+    lock_p1: float | None
+    lock_p2: float | None
+    lock_p3: float | None
     target_error: float | None
     entry_quote_complete: bool
     lock_quote_complete: bool
@@ -372,6 +375,7 @@ def main() -> None:
                 spot,
                 k1, k2, k3,
                 p1, p2, target, p3,
+                lock_p1, lock_p2, lock_p3,
                 target_error,
                 entry_complete,
                 lock_complete,
