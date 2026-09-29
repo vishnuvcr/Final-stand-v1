@@ -292,93 +292,98 @@ def build_variants(
             for k2_rule in K2_RULES:
                 for k3_multiplier in K3_MULTIPLIERS:
                     variant_id = make_variant_id(k1_rule, k2_rule, k3_multiplier)
-                if k1 is None:
+
+                    if k1 is None:
+                        cycles.append(
+                            VariantCycle(
+                                variant_id, expiry.isoformat(),
+                                prior_expiry.isoformat() if prior_expiry else None,
+                                historical_expiry_regime(expiry),
+                                entry_ts.isoformat(), lock_ts.isoformat(), source_path, source_sha,
+                                spot_float, None, None, None, None, None, None,
+                                k3_multiplier, None, None,
+                                "INCOMPLETE",
+                            )
+                        )
+                        continue
+
+                    p1 = open_value(entry_calls.filter(pl.col("strike") == k1))
+                    k2 = choose_k2(strikes, spot_float, k1, k2_rule)
+                    if k2 is None:
+                        cycles.append(
+                            VariantCycle(
+                                variant_id, expiry.isoformat(),
+                                prior_expiry.isoformat() if prior_expiry else None,
+                                historical_expiry_regime(expiry),
+                                entry_ts.isoformat(), lock_ts.isoformat(), source_path, source_sha,
+                                spot_float, k1, None, None, p1, None, None,
+                                k3_multiplier, None, None,
+                                "INCOMPLETE",
+                            )
+                        )
+                        continue
+
+                    p2 = open_value(entry_calls.filter(pl.col("strike") == k2))
+                    if p1 is None or p2 is None:
+                        cycles.append(
+                            VariantCycle(
+                                variant_id, expiry.isoformat(),
+                                prior_expiry.isoformat() if prior_expiry else None,
+                                historical_expiry_regime(expiry),
+                                entry_ts.isoformat(), lock_ts.isoformat(), source_path, source_sha,
+                                spot_float, k1, k2, None, p1, p2, None,
+                                k3_multiplier, None, None,
+                                "INCOMPLETE",
+                            )
+                        )
+                        continue
+
+                    d = float(p1 - p2)
+                    if d <= 0:
+                        cycles.append(
+                            VariantCycle(
+                                variant_id, expiry.isoformat(),
+                                prior_expiry.isoformat() if prior_expiry else None,
+                                historical_expiry_regime(expiry),
+                                entry_ts.isoformat(), lock_ts.isoformat(), source_path, source_sha,
+                                spot_float, k1, k2, None, p1, p2,
+                                k3_multiplier * d, k3_multiplier, None, None,
+                                "INCOMPLETE_D_NONPOSITIVE",
+                            )
+                        )
+                        continue
+
+                    target = k3_multiplier * d
+                    k3, p3 = select_k3(entry_calls, k2, target)
+                    status = "USABLE_OHLC" if k3 is not None and p3 is not None else "INCOMPLETE"
+                    target_error = abs(p3 - target) / target if p3 is not None and target > 0 else None
+
                     cycles.append(
                         VariantCycle(
                             variant_id, expiry.isoformat(),
                             prior_expiry.isoformat() if prior_expiry else None,
                             historical_expiry_regime(expiry),
                             entry_ts.isoformat(), lock_ts.isoformat(), source_path, source_sha,
-                            spot_float, None, None, None, None, None, None, k3_multiplier, None,
-                            "INCOMPLETE",
-                        )
-                    )
-                    continue
-
-                p1 = open_value(entry_calls.filter(pl.col("strike") == k1))
-                k2 = choose_k2(strikes, spot_float, k1, k2_rule)
-                if k2 is None:
-                    cycles.append(
-                        VariantCycle(
-                            variant_id, expiry.isoformat(),
-                            prior_expiry.isoformat() if prior_expiry else None,
-                            historical_expiry_regime(expiry),
-                            entry_ts.isoformat(), lock_ts.isoformat(), source_path, source_sha,
-                            spot_float, k1, None, None, p1, None, None, k3_multiplier, None,
-                            "INCOMPLETE",
-                        )
-                    )
-                    continue
-
-                p2 = open_value(entry_calls.filter(pl.col("strike") == k2))
-                if p1 is None or p2 is None:
-                    cycles.append(
-                        VariantCycle(
-                            variant_id, expiry.isoformat(),
-                            prior_expiry.isoformat() if prior_expiry else None,
-                            historical_expiry_regime(expiry),
-                            entry_ts.isoformat(), lock_ts.isoformat(), source_path, source_sha,
-                            spot_float, k1, k2, None, p1, p2, None, k3_multiplier, None,
-                            "INCOMPLETE",
-                        )
-                    )
-                    continue
-
-                d = float(p1 - p2)
-                if d <= 0:
-                    cycles.append(
-                        VariantCycle(
-                            variant_id, expiry.isoformat(),
-                            prior_expiry.isoformat() if prior_expiry else None,
-                            historical_expiry_regime(expiry),
-                            entry_ts.isoformat(), lock_ts.isoformat(), source_path, source_sha,
-                            spot_float, k1, k2, None, p1, p2, k3_multiplier * d, k3_multiplier, None,
-                            "INCOMPLETE_D_NONPOSITIVE",
-                        )
-                    )
-                    continue
-
-                target = k3_multiplier * d
-                k3, p3 = select_k3(entry_calls, k2, target)
-                status = "USABLE_OHLC" if k3 is not None and p3 is not None else "INCOMPLETE"
-                target_error = abs(p3 - target) / target if p3 is not None and target > 0 else None
-
-                cycles.append(
-                    VariantCycle(
-                        variant_id, expiry.isoformat(),
-                        prior_expiry.isoformat() if prior_expiry else None,
-                        historical_expiry_regime(expiry),
-                        entry_ts.isoformat(), lock_ts.isoformat(), source_path, source_sha,
-                        spot_float, k1, k2, k3, p1, p2, target, k3_multiplier, p3, target_error, status,
-                    )
-                )
-
-                if status == "USABLE_OHLC":
-                    selected_specs.append(
-                        (
-                            variant_id,
-                            str(k1),
-                            str(k2),
-                            float(k3),
-                            float(k3_multiplier),
-                            expiry.isoformat(),
-                            entry_ts.isoformat(),
-                            lock_ts.isoformat(),
-                            str(source_path),
-                            str(expiry.isoformat()),
+                            spot_float, k1, k2, k3, p1, p2, target,
+                            k3_multiplier, p3, target_error, status,
                         )
                     )
 
+                    if status == "USABLE_OHLC":
+                        selected_specs.append(
+                            (
+                                variant_id,
+                                str(k1),
+                                str(k2),
+                                float(k3),
+                                float(k3_multiplier),
+                                expiry.isoformat(),
+                                entry_ts.isoformat(),
+                                lock_ts.isoformat(),
+                                str(source_path),
+                                str(expiry.isoformat()),
+                            )
+                        )
         prior_expiry = expiry
 
     cycle_df = pl.DataFrame([asdict(x) for x in cycles])
