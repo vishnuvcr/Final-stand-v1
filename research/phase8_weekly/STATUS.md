@@ -28,4 +28,9 @@ The prior monthly-expiry Phase 8 is retained for auditability but has been super
 ## Current weekly finding
 NSE currently documents four weekly NIFTY 50 option expiries excluding monthly contracts, with Tuesday weekly expiry and a new weekly series introduced after expiry. citeturn642743search0turn642743search1
 
+## Phase 9W current data finding
+Hugging Face now provides a feasible primary research source with expiry-partitioned 1-minute NIFTY options and a separate 1-minute NIFTY spot file. The dataset documentation explicitly describes OHLC rather than bid/ask, so the empirical phase will not silently treat OHLC as observed order-book execution.
+
+The next gate is a 52–104 expiry pilot with source checksums, strike completeness, entry/lock coverage, target-error diagnostics and an overlapping-source comparison.
+
 No weekly profitability result has been established.
