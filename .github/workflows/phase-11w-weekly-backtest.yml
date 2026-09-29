@@ -51,8 +51,11 @@ jobs:
             hf-phase11w-v1-
             hf-phase9w-v2-
 
-      - name: Compile
-        run: python -m py_compile research/phase9_weekly/hf_weekly_ingest.py research/phase11_weekly/weekly_backtest.py
+      - name: Compile and unit-test
+        run: |
+          python -m py_compile research/phase9_weekly/hf_weekly_ingest.py research/phase11_weekly/weekly_backtest.py research/phase11_weekly/test_weekly_backtest.py
+          cd research/phase11_weekly
+          python test_weekly_backtest.py
 
       - name: Verify HF token
         env:
