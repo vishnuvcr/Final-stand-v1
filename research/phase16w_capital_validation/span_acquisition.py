@@ -89,8 +89,7 @@ def main() -> None:
             report["members"].extend(matched)
         report["archives"].append(entry)
     Path(args.output).write_text(json.dumps(report,indent=2))
-    if not report["members"]:
-        raise SystemExit("No dated SPAN members were recovered from the candidate archives.")
-    print(json.dumps({"years":years,"requested_dates":len(dates),"matched_members":len(report["members"])},indent=2))
+    print(json.dumps({"years":years,"requested_dates":len(dates),"matched_members":len(report["members"]),"archives":report["archives"]},indent=2))
+
 
 if __name__=="__main__": main()
