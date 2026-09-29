@@ -80,3 +80,9 @@
 - Impact: No partial repository mutation occurred.
 - Resolution: Reissued the patch using quoted strings; the workflow update then succeeded.
 - Prevention: For GitHub Actions files, use non-template string literals whenever the payload contains GitHub Actions expressions.
+
+### E-0022 — GitHub Actions pip cache expected dependency manifest
+- Observation: GitHub Actions failed at actions/setup-python because cache: pip was enabled without requirements.txt or pyproject.toml.
+- Impact: The Phase 13 job stopped before dependency installation; no empirical data were processed.
+- Resolution: Removed pip caching from the Phase 9/11/12/13 workflows. Hugging Face data caching remains enabled.
+- Prevention: Do not enable setup-python dependency caching unless the repository contains a supported dependency lock/manifest file.
