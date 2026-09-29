@@ -1,37 +1,50 @@
 # Final Stand v1 — Market Inefficiency Research
 
 ## Current status
-**Phase 8 is active on branch `phase-8-video-call-ladder`.** The main branch carries the governance baseline; the active research implementation is isolated on its phase branch.
+**Active experiment: Phase 8W — Weekly NIFTY call-ladder-to-spread strategy.**
 
-## Research objective
-Test whether a video-derived NIFTY monthly-options strategy — an initial long call / middle short call / farther short call ladder followed, after time decay, by purchasing the middle strike to convert the position into a defined-risk bull call spread — produces a statistically robust, executable net edge after realistic Indian transaction costs, bid/ask slippage, margin constraints, and risk controls.
+The previous monthly-expiry version is retained only for auditability. It is not the active research design.
+
+## New weekly objective
+Test the video-derived strategy as a **weekly trading system**, where each NIFTY weekly expiry is one complete trade cycle.
+
+Primary operationalization:
+- target contract: the new weekly expiry after the prior weekly expiry;
+- entry: first trading session after expiry at 10:00 IST;
+- K1: first call strike above spot;
+- K2: next call strike;
+- K3: call strike above K2 whose premium is closest to 2 × (K1 premium − K2 premium);
+- lock: buy K2 on the trading day immediately before expiry at 14:00 IST;
+- post-lock position: long K1 / short K3 bull call spread;
+- one primary trade per weekly expiry.
 
 The hypothesis is exploratory. No profitability is assumed.
 
-## Phase map
-- Phase 0 — Repository and research governance ✅
-- Phases 1–7 — Prior market-inefficiency / volatility / option-surface research: preserved from project history; not recreated here.
-- Phase 8 — Video-derived call-ladder-to-spread strategy: **INITIALIZED**
-- Phase 9 — Data acquisition + point-in-time option-chain reconstruction
-- Phase 10 — Payoff/Greeks/margin validation and execution-cost model
-- Phase 11 — In-sample / validation / walk-forward backtesting
-- Phase 12 — CPCV / PBO / DSR / sensitivity / regime analysis
-- Phase 13 — Untouched holdout + robustness gate
-- Phase 14 — Final manuscript, figures, appendices and reproducibility package
+## Current NSE structure
+NSE currently documents four weekly NIFTY 50 option expiries excluding the monthly contracts; weekly expiry is Tuesday, or the previous trading day when Tuesday is a holiday. NSE also specifies introduction of a new serial weekly contract after expiry. citeturn642743search0turn642743search1
 
-## Canonical files
-- [Project instructions](PROJECT_INSTRUCTIONS.md)
-- [Phase 8 strategy specification](research/phase8/STRATEGY_SPEC.md)
-- [Phase 8 research protocol](research/phase8/RESEARCH_PROTOCOL.md)
-- [Phase 8 research questions](research/phase8/RESEARCH_QUESTIONS.md)
+## Weekly research status
+- Phase 8W — weekly strategy definition: ✅
+- Phase 9W — PIT weekly data: 🟡 pending
+- Phase 10W — mechanics/margin/costs: pending
+- Phase 11W — weekly backtest: pending
+- Phase 12W — robustness: pending
+- Phase 13W — untouched holdout: pending
+- Phase 14W — final manuscript: pending
+
+## Canonical weekly files
+- [Weekly master research plan](RESEARCH_PLAN.md)
+- [Weekly strategy specification](research/phase8_weekly/STRATEGY_SPEC.md)
+- [Weekly research questions](research/phase8_weekly/RESEARCH_QUESTIONS.md)
+- [Weekly research protocol](research/phase8_weekly/RESEARCH_PROTOCOL.md)
+- [Weekly literature review](research/phase8_weekly/LITERATURE_REVIEW.md)
+- [Weekly data-source manifest](research/phase8_weekly/DATA_SOURCE_MANIFEST.md)
+- [Weekly phase status](research/phase8_weekly/STATUS.md)
 - [Research log](research/logs/RESEARCH_LOG.md)
 - [Error log](research/logs/ERROR_LOG.md)
 
-## Important methodological rule
-The source video is treated as a hypothesis generator, not as proof of an edge. Video-reported rules will be separated from rules that are later chosen or optimized statistically. All parameters must be frozen before the final holdout.
-
 ## Cost and broker realism
-The execution model will include Paytm Money brokerage, statutory/regulatory/exchange charges, bid/ask spread, slippage, multi-leg execution, margin requirements, and any applicable overnight/auto-square-off constraints. Paytm Money states that F&O brokerage is Rs.10 per executed unique order and that statutory/regulatory/exchange charges are levied at actuals; these values will be versioned rather than hard-coded without date attribution.
+Weekly turnover makes friction more important. The model includes Paytm Money brokerage, statutory/regulatory/exchange charges, bid/ask spread, slippage, multi-leg execution, margin requirements and applicable square-off constraints.
 
 ## No trading conclusion yet
-No live-trading recommendation is made at this stage. The strategy must survive the predefined statistical and economic gates before any conclusion about usability.
+No live-trading recommendation or profitability conclusion has been established.
