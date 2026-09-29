@@ -4,26 +4,28 @@
 phase-13w-untouched-holdout
 
 ## State
-Backtest eligibility diagnostic required after run 36596109078; awaiting diagnostic rerun.
+**Completed.** The frozen weekly stop rule was selected from training data only and the chronological validation and untouched holdout were successfully evaluated in Phase 13 workflow run 36600595100.
 
 ## Selection
-Mandatory stop selected from training only at fixed 0.50-point slippage.
+- Slippage for selection: 0.50 index points per leg.
+- Candidate hard stops: 25, 50, 75, 100, 150, 200, 300 index points.
+- Frozen stop: 50 index points.
+- Selection statistic: training mean net rupees; tie-break lower training maximum drawdown, then lower stop.
+- Holdout was not used for selection.
 
-## Latest execution note
-Run 36596109078 ingested 100 expiry candidates and 63 USABLE_OHLC cycles, but generated zero backtest trades even after explicit Phase 9 data paths were supplied. This is logged as E-0029 and is not an empirical result; a row-level data-interface diagnostic has been added.
+## Empirical result
+- Training: 37 cycles; total net P&L ₹180,867.62; mean ₹4,888.31/cycle; win rate 83.78%; annualized weekly Sharpe 6.82.
+- Validation: 12 cycles; total net P&L ₹16,955.48; mean ₹1,412.96/cycle; win rate 75.00%; annualized weekly Sharpe 1.49.
+- Untouched holdout: 14 cycles; total net P&L ₹21,924.63; mean ₹1,566.04/cycle; win rate 78.57%; annualized weekly Sharpe 2.02.
+- All 63 cycles: total net P&L ₹219,747.72; mean ₹3,488.06/cycle; win rate 80.95%; annualized weekly Sharpe 4.37.
+- Holdout maximum drawdown: -₹12,874.90.
+- Holdout expected shortfall 95%: -₹12,874.90.
 
-## Required outputs
-- frozen stop-loss rule;
-- train / validation / holdout net P&L;
-- win rate;
-- maximum drawdown;
-- expected shortfall;
-- weekly Sharpe;
-- trade count and cost burden;
-- target-error distribution;
-- lock frequency;
-- stop frequency;
-- explicit data-quality and OHLC-reconstruction limitations.
+## Data-quality and capital caveats
+- Execution quality is OHLC_RECONSTRUCTION; the primary HF source does not contain historical bid/ask.
+- These rupee P&L figures are not returns on capital.
+- Historical NSE SPAN/peak-margin series is still required before capital-normalized performance can be reported.
+- The Phase 12 supplemental robustness audit was performed after the holdout was observed. Therefore the holdout is locked as a descriptive out-of-sample observation and cannot be used for any subsequent parameter tuning.
 
-## Restriction
-No holdout observation may influence parameter selection.
+## Required manuscript treatment
+Report the holdout as an observed historical reconstruction result, clearly separating it from live-fill performance and capital-normalized returns.
