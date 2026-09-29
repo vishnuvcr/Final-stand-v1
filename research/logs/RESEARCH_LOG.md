@@ -64,3 +64,18 @@
 - Added data attribution and redistribution notes and kept third-party raw files out of the public repository.
 - Hardened the GitHub Actions cache key and download timeout settings for the HF workflow.
 - Current result: Phase 9W is ready for execution, but no empirical pass/fail result has been claimed because the workflow has not been executed in the available tool environment.
+
+
+## 2026-09-29 — Phase 11W backtest pipeline
+- Created separate branch phase-11w-weekly-backtest.
+- Added a cost-adjusted OHLC-reconstruction backtest consuming the Phase 9 cycle manifest, selected option bars and NIFTY spot path.
+- Included explicit slippage, Paytm Money brokerage parameterization, lot-size transition and stop-loss sensitivity.
+- Added manual and push-triggered workflow execution.
+- No result has been admitted because upstream Phase 9 empirical data execution has not yet been observed.
+
+## 2026-09-29 — Phase 12W robustness pipeline
+- Created separate branch phase-12w-robustness.
+- Added chronological train/validation/test analysis, weekly block bootstrap, Sharpe, drawdown and expected shortfall.
+- Added 30-cell stop/slippage stress grid.
+- Added manual and push-triggered workflow execution.
+- Robustness conclusions remain blocked until Phase 11 produces admissible trade results.
