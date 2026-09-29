@@ -1,7 +1,7 @@
 # Research Status
 
 ## Active research branch
-**phase-8-weekly-expiry-restart**
+**phase-9w-hf-data-gate**
 
 The prior monthly-expiry Phase 8 is retained for auditability but has been superseded as the active experimental design.
 
