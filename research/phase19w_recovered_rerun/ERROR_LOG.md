@@ -90,3 +90,9 @@ Phase 17W maximum usable coverage was 39/63 for the registered family. This rema
 - **Issue:** The serialized retry completed the 224-variant computation, but `git rebase origin/phase-19w-recovered-rerun` was attempted before staging/committing generated outputs, causing Git to reject the rebase due to unstaged changes.
 - **Impact:** Results again existed only on the runner; no statistical conclusion was admitted.
 - **Correction:** Commit generated output first, then fetch/rebase the result commit onto the current Phase 19 branch, then push. No research parameters change.
+
+
+## E19-010 — 2026-09-30
+- **Issue:** The 224-variant computation completed (`promotable: []`), but the workflow attempted `git rebase` after generating outputs. The rebase saw unstaged generated files and exited before commit/push, so the empirical output directory was not persisted.
+- **Impact:** No strategy calculation failure; persistence failed and the result set was not available for independent validation.
+- **Correction:** Workflow ordering is changed to compute first, upload the complete output directory as an artifact, then commit only repository-size-safe outputs without a post-compute rebase. A single authoritative retry will be used.
