@@ -292,4 +292,9 @@
 - Diagnosis: The CI variant stage intentionally restores the frozen Phase 9 interface as an artifact; the engine still assumed the source-tree output directory from the prepare job.
 - Resolution: Resolve the Phase 9 interface from the source-tree path when present, otherwise from prepared/phase9. No strategy, split, execution, cost, or variant parameters changed.
 - Prevention: Treat restored artifacts as first-class inputs and test both source-tree and CI-restored interface paths.
-[object Object]
+### E-0059 — Phase 17W variant jobs hit runner memory limits
+- Observation: Run 36625523052 successfully built and merged all 63 frozen expiry inputs, but several variant chunks terminated with exit 137/143 during the variant computation step; the runner shutdown occurred while the process was active.
+- Impact: The 224-variant family produced no admissible aggregate result; the phase remains open.
+- Diagnosis: Each variant job loaded the full ~402 MB merged option parquet into memory, then created expiry-wide pivots and partition dictionaries across the complete multi-variant dataset. Concurrent jobs therefore exceeded the hosted-runner memory budget.
+- Resolution: Changed the runner to lazy-scan the merged parquet and collect one variant at a time, then build only that variant's expiry-wide matrices. This is an execution/memory optimization only; strategy parameters, 224-variant registry, 63-cycle chronology, costs, slippage, stop and holdout lock are unchanged.
+- Prevention: Keep multi-variant CI jobs memory-bounded by streaming/filtering immutable cached inputs per variant rather than materializing the entire family.
