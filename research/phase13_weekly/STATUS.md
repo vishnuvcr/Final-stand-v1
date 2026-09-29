@@ -4,13 +4,13 @@
 phase-13w-untouched-holdout
 
 ## State
-Pipeline corrected after run 36595701035; awaiting re-execution.
+Backtest eligibility diagnostic required after run 36596109078; awaiting diagnostic rerun.
 
 ## Selection
 Mandatory stop selected from training only at fixed 0.50-point slippage.
 
 ## Latest execution note
-Run 36595701035 ingested 100 expiry candidates and 63 USABLE_OHLC cycles, but generated zero backtest trades because the workflow did not pass Phase 9 data paths explicitly. This is logged as E-0028 and is not an empirical result.
+Run 36596109078 ingested 100 expiry candidates and 63 USABLE_OHLC cycles, but generated zero backtest trades even after explicit Phase 9 data paths were supplied. This is logged as E-0029 and is not an empirical result; a row-level data-interface diagnostic has been added.
 
 ## Required outputs
 - frozen stop-loss rule;
