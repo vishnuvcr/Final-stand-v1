@@ -217,3 +217,10 @@
 - Impact: An empirical historical-BBO probe cannot be honestly executed yet.
 - Resolution: Added a credential-safe probe protocol and scaffold. No credentials are fabricated or requested in repository files.
 - Prevention: Treat missing authentication as a blocking data-access condition, not as evidence of data absence; do not substitute OHLC for BBO.
+
+
+### E-0047 — Free historical BBO gate closed without qualification
+- Observation: The expanded free-source/API audit did not produce a legally usable, complete historical NIFTY weekly-options BBO archive covering the study contracts/cycles.
+- Impact: Quote-based executable-fill validation cannot be completed from free sources.
+- Resolution: Close the free-BBO discovery gate and proceed to capital/margin validation without substituting OHLC for BBO.
+- Prevention: Keep the BBO limitation explicit in all downstream results; any future paid-data use requires separate authorization and exact coverage validation.
