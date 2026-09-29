@@ -29,6 +29,9 @@ jobs:
             --variant-start 0 \
             --variant-end 224 \
             --hf-cache ~/.cache/huggingface \
+            --baseline-manifest research/phase9_weekly/output/weekly_cycle_manifest.csv \
+            --expiry-start 0 \
+            --expiry-end 63 \
             --output-dir research/phase19w_recovered_rerun/output
       - uses: actions/upload-artifact@v4
         with:
