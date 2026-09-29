@@ -31,6 +31,18 @@
 - Phase status: 9W blocked pending qualified intraday data; 10W active and mechanics framework implemented.
 
 
+## 2026-09-29 — Phase 9W Hugging Face data gate started
+- User supplied an HF_TOKEN repository secret for faster Hugging Face downloads.
+- Searched Hugging Face for NIFTY weekly option history suitable for the frozen weekly strategy.
+- Identified thetrademarkk/india-index-options-1m as the primary candidate: 1-minute NIFTY option data partitioned by expiry plus a separate 1-minute NIFTY index file. The documented schema provides OHLC, volume and open interest, but no historical bid/ask. https://huggingface.co/datasets/thetrademarkk/india-index-options-1m
+- Identified rissin/nse-options-intraday as an independent 1-minute OHLC cross-check from October 2024 onward. https://huggingface.co/datasets/rissin/nse-options-intraday
+- Identified artist-23/nifty-options-data as a secondary IV/spot/strike diagnostic source through December 2025. https://huggingface.co/datasets/artist-23/nifty-options-data
+- Created branch phase-9w-hf-data-gate, preserving phase separation.
+- Added a manual GitHub Actions workflow that consumes the HF_TOKEN secret, caches the Hugging Face downloads, records the resolved dataset revision and SHA-256 hashes, and produces a weekly cycle manifest plus selected option bars.
+- The raw third-party data are intentionally not copied into the public repository by default because the primary dataset is published under CC-BY-NC-4.0 and the secondary dataset has its own redistribution terms.
+- Corrected the ingestion logic so the first selected expiry uses the preceding expiry from the full source catalog rather than incorrectly treating the pilot window as if it began at the first observed cycle.
+- Phase status: 9W active; empirical profitability remains untested.
+
 ## 2026-09-29 — Phase 10W analytical mechanics result
 - A non-empirical Black–Scholes stress illustration was performed to examine weekly target-strike discreteness.
 - The key diagnostic added is target error: |actual K3 premium - target premium| / target premium.
