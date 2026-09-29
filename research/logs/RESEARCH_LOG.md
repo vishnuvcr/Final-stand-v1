@@ -11,3 +11,10 @@
 - Increased the pilot data requirement from monthly expiries to at least 52 weekly expiry cycles, preferably 104+ if quote quality permits.
 - Explicitly elevated weekly turnover and transaction costs to primary endpoints.
 - Current status: weekly design gate PASSED; historical weekly quote-data gate PENDING.
+
+
+## 2026-09-29 — Weekly reset completion
+- Created the weekly literature review and fresh weekly master research plan.
+- Confirmed the monthly research plan is not copied into the active weekly branch.
+- Added branch-local status and error logging.
+- Weekly branch status remains design gate passed / data gate pending.
