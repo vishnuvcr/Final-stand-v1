@@ -58,8 +58,9 @@ def cost_rupees(buy_turnover: float, sell_turnover: float, orders: int, cfg: Cos
     exchange = (buy_turnover + sell_turnover) * cfg.exchange_turnover_rate
     sebi = (buy_turnover + sell_turnover) * cfg.sebi_turnover_rate
     stamp = buy_turnover * cfg.stamp_buy_rate
-    non_gst = brokerage + stt + exchange + sebi + stamp
-    return non_gst + non_gst * cfg.gst_rate
+    gst_base = brokerage + exchange + sebi
+    gst = gst_base * cfg.gst_rate
+    return brokerage + stt + exchange + sebi + stamp + gst
 
 
 def intrinsic(spot: float, strike: float) -> float:
@@ -116,9 +117,8 @@ def backtest_cycle(cycle: dict, options: pl.DataFrame, spot: pl.DataFrame, stop_
     ).select(["timestamp", "strike", "open"]).sort("timestamp")
 
     if stop_loss is not None and pre.height:
-        for ts_df in pre.group_by("timestamp", maintain_order=True):
-            ts = str(ts_df[0][0])
-            g = ts_df[1]
+        for ts_key, g in pre.group_by("timestamp", maintain_order=True):
+            ts = str(ts_key[0] if isinstance(ts_key, tuple) else ts_key)
             m = {float(r["strike"]): float(r["open"]) for r in g.iter_rows(named=True)}
             if len(m) != 3:
                 continue
@@ -161,9 +161,8 @@ def backtest_cycle(cycle: dict, options: pl.DataFrame, spot: pl.DataFrame, stop_
     ).select(["timestamp", "strike", "open"]).sort("timestamp")
 
     if stop_loss is not None and post.height:
-        for ts_df in post.group_by("timestamp", maintain_order=True):
-            ts = str(ts_df[0][0])
-            g = ts_df[1]
+        for ts_key, g in post.group_by("timestamp", maintain_order=True):
+            ts = str(ts_key[0] if isinstance(ts_key, tuple) else ts_key)
             m = {float(r["strike"]): float(r["open"]) for r in g.iter_rows(named=True)}
             if len(m) != 2:
                 continue
@@ -253,7 +252,7 @@ def main():
         "lot_size_rule": "75 through 2025-12-23; 65 from 2026-01-06",
         "execution_quality": "OHLC_RECONSTRUCTION",
     }
-    (out.parent / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    (out.parent / (out.stem + ".summary.json")).write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(json.dumps(summary, indent=2))
 
 
