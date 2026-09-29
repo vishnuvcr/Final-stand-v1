@@ -1,0 +1,55 @@
+{
+  "selection_slippage_points_per_leg": 0.5,
+  "candidate_stops": [
+    25.0,
+    50.0,
+    75.0,
+    100.0,
+    150.0,
+    200.0,
+    300.0
+  ],
+  "frozen_stop_loss_points": 50.0,
+  "selection_basis": "training mean net rupees; tie-break lower training max drawdown; then lower stop",
+  "training": {
+    "n": 37,
+    "total_net_rupees": 180867.61652209502,
+    "mean_net_rupees": 4888.313960056622,
+    "median_net_rupees": 6466.624671015,
+    "win_rate": 0.8378378378378378,
+    "max_drawdown_rupees": -10728.055583474998,
+    "expected_shortfall_95_rupees": -10728.055583474998,
+    "annualized_weekly_sharpe": 6.822858688866613
+  },
+  "validation": {
+    "n": 12,
+    "total_net_rupees": 16955.476491407404,
+    "mean_net_rupees": 1412.9563742839503,
+    "median_net_rupees": 996.7395399837496,
+    "win_rate": 0.75,
+    "max_drawdown_rupees": -10115.300583495,
+    "expected_shortfall_95_rupees": -10115.300583495,
+    "annualized_weekly_sharpe": 1.4877706017258423
+  },
+  "untouched_holdout": {
+    "n": 14,
+    "total_net_rupees": 21924.626272410496,
+    "mean_net_rupees": 1566.044733743607,
+    "median_net_rupees": 1096.8084416507493,
+    "win_rate": 0.7857142857142857,
+    "max_drawdown_rupees": -12874.8974964435,
+    "expected_shortfall_95_rupees": -12874.8974964435,
+    "annualized_weekly_sharpe": 2.021252494458445
+  },
+  "all_periods": {
+    "n": 63,
+    "total_net_rupees": 219747.7192859129,
+    "mean_net_rupees": 3488.059036284332,
+    "median_net_rupees": 1835.600607110001,
+    "win_rate": 0.8095238095238095,
+    "max_drawdown_rupees": -12874.897496443504,
+    "expected_shortfall_95_rupees": -11239.417887804499,
+    "annualized_weekly_sharpe": 4.365125763032218
+  },
+  "holdout_used_for_selection": false
+}
