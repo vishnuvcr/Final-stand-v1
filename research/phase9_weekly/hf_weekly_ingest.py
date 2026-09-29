@@ -169,13 +169,18 @@ def main() -> None:
     repo_info = api.repo_info(DATASET_REPO, repo_type=DATASET_TYPE, revision=revision)
     resolved_revision = getattr(repo_info, "sha", None) or revision
 
-    expiry_files = list_nifty_expiry_files(api, resolved_revision)
+    all_expiry_files = list_nifty_expiry_files(api, resolved_revision)
     start = date.fromisoformat(args.start_date)
     end = date.fromisoformat(args.end_date)
-    expiry_files = [(d, p) for d, p in expiry_files if start <= d <= end][-args.max_expiries :]
+    window_files = [(d, p) for d, p in all_expiry_files if start <= d <= end]
 
-    if not expiry_files:
+    if not window_files:
         raise RuntimeError("No NIFTY expiry files matched the requested window.")
+
+    expiry_files = window_files[-args.max_expiries :]
+    first_selected_expiry = expiry_files[0][0]
+    prior_candidates = [d for d, _ in all_expiry_files if d < first_selected_expiry]
+    initial_prior_expiry = prior_candidates[-1] if prior_candidates else None
 
     index_local = hf_hub_download(
         repo_id=DATASET_REPO,
@@ -206,7 +211,7 @@ def main() -> None:
 
     cycles: list[CycleRecord] = []
     selected_frames: list[pl.DataFrame] = []
-    prior_expiry: date | None = None
+    prior_expiry: date | None = initial_prior_expiry
 
     for expiry, source_path in expiry_files:
         local = hf_hub_download(
