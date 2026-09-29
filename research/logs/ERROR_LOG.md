@@ -169,3 +169,10 @@
 - Impact: Phase 11 continued to reject all exact entry/lock timestamps.
 - Resolution: Corrected the regex to match the literal `+0530` suffix.
 - Prevention: Add a direct unit test for representative timestamp normalization before accepting the phase interface.
+
+
+### E-0032 — Zero fractional seconds in typed option timestamps
+- Observation: Option Parquet `timestamp` is `Datetime(μs, Asia/Kolkata)` and stringifies as `YYYY-MM-DD HH:MM:SS.000000+05:30`; manifest timestamps are `YYYY-MM-DDTHH:MM:SS+05:30`.
+- Impact: Exact entry/lock matching remained zero despite prior separator/offset normalization.
+- Resolution: Normalize zero fractional seconds before comparisons.
+- Prevention: Prefer typed datetime joins in future cross-phase interfaces and retain this string normalization only as compatibility logic.
