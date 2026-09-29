@@ -13,3 +13,6 @@
 **Missing-data rule:** unavailable contract observations are omitted as missing; no synthetic bars or source blending is introduced in this frozen rerun.
 
 **Next:** complete all 224 empirical backtests, inspect outputs, validate controls, apply promotion gate, then close the phase with manuscript-ready results and limitations.
+
+
+**Execution trigger correction:** A normal repository commit is being used to trigger the admitted workflow after workflow-file-only push events produced no jobs.
