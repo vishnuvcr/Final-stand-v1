@@ -167,3 +167,14 @@
 - Started Phase 16W on a separate branch for capital/margin validation using official NSE historical SPAN/risk-parameter/report infrastructure.
 - Preserved the frozen strategy, locked holdout, and no-tuning rule.
 - Added a manual GitHub Actions workflow and source-admission protocol.
+
+
+## 2026-09-30 — Phase 17W K1/K2 strike-definition alternatives initialized
+- Re-read the active Phase 16W plan/status and research/error logs before proceeding.
+- User requested testing of multiple K1/K2 selection alternatives because the current K1/K2 geometry may be an operational assumption rather than a source-proven rule.
+- Created separate branch phase-17w-strike-alternatives so the prior frozen Phase 13W evidence remains unchanged.
+- Preregistered 32 deterministic configurations: 8 K1 rules x 4 K2 rules.
+- Fixed K3, timing, 50-point stop, 0.50-point/leg slippage, cost model, weekly chronology and OHLC execution model.
+- Holdout chronology is anchored to the exact 63-cycle Phase 9/13 baseline calendar; holdout statistics are descriptive only.
+- Added a manual GitHub Actions workflow with an automatic push trigger for reproducible execution.
+- No empirical result has yet been admitted from Phase 17W.
