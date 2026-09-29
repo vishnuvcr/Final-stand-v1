@@ -1,0 +1,21 @@
+name: Phase 10W - Mechanics Margin Cost Gate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  protocol-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify Phase 10 protocol artifacts
+        run: |
+          test -f research/phase10_weekly/README.md
+          test -f research/phase10_weekly/STATUS.md
+          test -f research/phase10_weekly/MARGIN_PROTOCOL.md
+          grep -q "SPAN" research/phase10_weekly/MARGIN_PROTOCOL.md
+          grep -q "Paytm Money" research/phase10_weekly/README.md
+          echo "Phase 10 protocol gate present. Historical SPAN reconstruction remains pending."
