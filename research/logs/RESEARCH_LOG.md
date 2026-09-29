@@ -111,3 +111,22 @@
 - E-0030/E-0031 fixes did not yet yield trades.
 - Added diagnostic output of raw option timestamps, manifest timestamps, and their dtypes before altering the backtest further.
 - Strategy rules remain unchanged; no empirical result is accepted until cross-phase timestamp matching is demonstrated.
+
+## 2026-09-29 — Phase 12 robustness closure
+- Canonical Phase 12 workflow run 94 completed successfully after optimizing the 30-cell grid to a single-load indexed engine and adding a pre-push rebase.
+- All 30 candidate cells produced 63 usable weekly cycles.
+- Frozen cell (0.50 slippage per leg, 50-point stop): mean ₹3,503.86/cycle, annualized weekly Sharpe 4.42, bootstrap p=0.0002, Holm-adjusted p=0.006.
+- CSCV-style PBO proxy = 0.00 across 20 paths; DSR-style probability = 0.9892. Both are repository-specific approximations and are not exact published-estimator replications.
+- Regime and tail-gap diagnostics completed. Historical SPAN/peak-margin integration remains the main capital-normalization blocker.
+
+## 2026-09-29 — Phase 13 holdout closure
+- Phase 13 workflow run 36600595100 completed successfully.
+- Frozen 50-point stop was selected using training data only at 0.50-point slippage per leg.
+- Untouched 14-cycle holdout: mean ₹1,566.04/cycle, win rate 78.57%, annualized weekly Sharpe 2.02, max drawdown -₹12,874.90.
+- Holdout remains locked and is not used for subsequent tuning.
+
+## 2026-09-29 — Phase 14 manuscript synthesis
+- Created phase-14w-manuscript branch from the completed Phase 13 branch.
+- Added final structured manuscript with research questions, aims/objectives, methodology, statistical analysis, results, inference, discussion, strengths, limitations, conclusion, future directions, appendices and supplementary materials.
+- Added two SVG figures and a machine-readable supplementary results table.
+- Added literature references covering PBO/CSCV, DSR, White's Reality Check, technical-rule bootstrap data-snooping and Holm multiple testing. citeturn0search1turn0search0turn1search0turn1search5turn1search4
