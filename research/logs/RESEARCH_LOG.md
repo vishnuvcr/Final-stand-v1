@@ -89,3 +89,15 @@
 - Paytm Money currently states ₹10 brokerage per unique executed F&O order; the model retains this broker-specific input. citeturn2search0
 - Phase 12 now explicitly states that rupee P&L is not a return-on-capital measure until historical SPAN/peak-margin series are integrated.
 - No profitability conclusion was admitted.
+
+## 2026-09-29 — Phase 12 robustness execution resumed and completed
+- Re-read the active plan, Phase 12 status, research log and error log before proceeding from the user's resume instruction.
+- Observed Phase 12 run 81 complete successfully after the workflow gate simplification. The 30-cell slippage x stop-loss grid produced 30 non-empty candidate ledgers with 63 weekly trades per cell.
+- Canonical run 81 artifact: `phase-12w-robustness-81` (GitHub Actions artifact id 11051125242). The stress matrix includes slippage 0, 0.25, 0.50, 1.00 and 2.00 index points per leg and stop-loss none, 50, 100, 150 and 200 and 300 points.
+- At the frozen Phase 13 cell (0.50-point slippage per leg, 50-point stop), the 63-cycle full-sample mean net P&L was ₹3,488.06 per weekly cycle, while the chronological 14-cycle test segment mean was ₹1,566.04. These are OHLC-reconstruction results, not return-on-capital metrics.
+- The Phase 13 frozen rule was selected on training data only and independently produced 37 training cycles, 12 validation cycles and 14 holdout cycles. The observed holdout was not used to select the stop.
+- Identified a protocol gap: the existing Phase 12 implementation covered chronological split, block bootstrap, Sharpe, drawdown, expected shortfall and the 30-cell stress grid, but the written Phase 12 plan also calls for CSCV/PBO, DSR, multiple-testing correction, regime conditioning, tail-gap stress and margin stress. A supplemental audit was therefore added without changing the frozen rule.
+- Added `research/phase12_weekly/robustness_supplement.py` and deterministic tests for CSCV-style PBO, Holm multiple-testing adjustment, a DSR-style non-normality/multiple-testing diagnostic, structural regime conditioning, and an additional stop-gap stress overlay.
+- Added workflow serialization so duplicate Phase 12 runs do not race on repository pushes.
+- Literature check for the supplemental methods used the published PBO/CSCV and DSR papers by Bailey et al. and Bailey & López de Prado. citeturn946365search0turn946365search7
+- Phase 12 status after this step: primary stress execution passed; supplemental robustness execution pending.
