@@ -42,3 +42,9 @@ Phase 17W maximum usable coverage was 39/63 for the registered family. This rema
 - **Issue:** The corrected Phase 19 runner reached the strategy build but could not find `research/phase9_weekly/output/weekly_cycle_manifest.csv` on the Phase 19 branch.
 - **Impact:** No empirical computation ran; the frozen Phase 9 interface had not been carried into this branch.
 - **Correction:** The execution bridge now restores the exact frozen Phase 9 Actions artifact `11060261904` before execution, including `weekly_cycle_manifest.csv` and `selected_weekly_spot_bars.parquet`. The strategy and statistical parameters remain unchanged.
+
+
+## E19-006 — 2026-09-30
+- **Issue:** The Phase-9 selected weekly spot-bar parquet was also generated output and absent from the Phase-19 branch.
+- **Impact:** The strategy runner could not reach the backtest stage.
+- **Correction:** Added a deterministic restoration script that reconstructs the exact entry-to-lock NIFTY index slices from the pinned HF-03 `index/NIFTY.parquet` and the frozen 63-cycle calendar. No alternate spot source or synthetic prices are introduced.
