@@ -8,3 +8,9 @@
 
 ## Inherited limitation
 Phase 17W maximum usable coverage was 39/63 for the registered family. This remains a Phase 18W data-recovery question, not a Phase 19W empirical result.
+
+## E19-002 — 2026-09-30
+- **Issue:** Direct local execution could not reach Hugging Face because the runtime has DNS/network isolation (`NameResolutionError` for `huggingface.co`).
+- **Impact:** No local empirical result was produced and no local result was substituted for the GitHub Actions/HF pipeline.
+- **Correction:** The empirical rerun remains delegated to GitHub Actions, where `HF_TOKEN` and the existing cache are available.
+- **Prevention:** Treat network-isolated local execution as a diagnostic only; do not reinterpret it as source-data unavailability.
