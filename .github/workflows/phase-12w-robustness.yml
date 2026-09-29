@@ -67,9 +67,9 @@ jobs:
             for stop in none 50 100 150 200 300; do
               out="research/phase12_weekly/input/trades_slip_${slip}_stop_${stop}.csv"
               if [ "$stop" = "none" ]; then
-                python research/phase11_weekly/weekly_backtest.py                   --slippage-points "$slip"                   --output "$out"
+                python research/phase11_weekly/weekly_backtest.py                   --manifest research/phase9_weekly/output/weekly_cycle_manifest.csv                   --options research/phase9_weekly/output/selected_weekly_option_bars.parquet                   --spot research/phase9_weekly/output/selected_weekly_spot_bars.parquet                   --slippage-points "$slip"                   --output "$out"
               else
-                python research/phase11_weekly/weekly_backtest.py                   --slippage-points "$slip"                   --stop-loss-points "$stop"                   --output "$out"
+                python research/phase11_weekly/weekly_backtest.py                   --manifest research/phase9_weekly/output/weekly_cycle_manifest.csv                   --options research/phase9_weekly/output/selected_weekly_option_bars.parquet                   --spot research/phase9_weekly/output/selected_weekly_spot_bars.parquet                   --slippage-points "$slip"                   --stop-loss-points "$stop"                   --output "$out"
               fi
             done
           done
