@@ -187,7 +187,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install stack
-        run: pip install "polars>=1.20,<2" "pyarrow>=18,<23" "numpy>=2,<3" pytest
+        run: pip install "huggingface_hub>=0.36,<0.37" "polars>=1.20,<2" "pyarrow>=18,<23" "numpy>=2,<3" pytest
       - name: Download merged inputs
         uses: actions/download-artifact@v4
         with:
@@ -230,7 +230,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install stack
-        run: pip install "polars>=1.20,<2" "pyarrow>=18,<23" "numpy>=2,<3"
+        run: pip install "huggingface_hub>=0.36,<0.37" "polars>=1.20,<2" "pyarrow>=18,<23" "numpy>=2,<3"
       - name: Download variant chunks
         uses: actions/download-artifact@v4
         with:
