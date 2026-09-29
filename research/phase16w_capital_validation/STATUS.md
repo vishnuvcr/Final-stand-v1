@@ -11,7 +11,7 @@ Active — initialization.
 - Historical BBO limitation is carried forward explicitly.
 
 ## Current gate
-CAPITAL/MARGIN DATA: PENDING ACQUISITION AND MAPPING
+CAPITAL/MARGIN DATA: STATIC HISTORICAL SPAN ROUTE EXHAUSTED — 0/63 CYCLES
 
 ## Planned work
 1. Inventory official NSE F&O SPAN/risk-parameter and margin-report routes.
@@ -27,3 +27,9 @@ CAPITAL/MARGIN DATA: PENDING ACQUISITION AND MAPPING
 - No holdout selection.
 - No OHLC substitution for historical BBO.
 - No fabricated or inferred margin observations.
+## Final execution
+- Run 36627668048 succeeded on the acquisition/probe stage.
+- 18 candidate static NSE SPAN URLs (6 patterns × 3 years: 2024–2026) returned HTTP 404.
+- 193 unique required trading dates were identified from the frozen cycle interface; 0 dated SPAN members were recovered.
+- Result: 0/63 cycles with empirical historical SPAN coverage.
+- Phase closed under the preregistered stopping rule; no tuning and no holdout selection.
