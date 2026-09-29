@@ -52,3 +52,10 @@ No profitability conclusion or live-trading recommendation has been established.
 - Phase 12W: chronological robustness and block-bootstrap stress pipeline implemented on a separate branch, including slippage stress.
 - Active branch for the next research phase: phase-12w-robustness.
 - Results remain conditional on successful upstream data ingestion and validation.
+
+## Latest research status — 2026-09-29
+- Phase 11W cost/settlement hardening completed: dated NSE option transaction charges and STT schedule are now represented, and expiry settlement uses the NIFTY closing value path rather than the lock timestamp. citeturn9search0turn5search3turn3search10
+- Phase 12W robustness code now labels rupee P&L explicitly as not being return-on-capital until dated SPAN/peak-margin data are integrated. NSE documents daily SPAN risk-parameter and margin-report infrastructure. citeturn10search0turn10search7
+- Phase 13W untouched holdout branch created with a pre-registered mandatory stop selection rule using training data only and fixed 0.50-point per-leg slippage.
+- Current active research phase: Phase 13W — untouched holdout.
+- No empirical profitability conclusion has been admitted because GitHub Actions outputs have not yet been independently observed.
