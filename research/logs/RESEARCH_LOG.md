@@ -138,3 +138,10 @@
 - Searched Hugging Face and Kaggle for free Indian/NIFTY option bid/ask archives; no qualifying complete historical archive was identified in this pass.
 - Audited official NSE historical-data documentation for historical order/trade and market-data products.
 - Gate result: free samples are schema-qualified but no complete free historical quote archive has yet been qualified for the 63-cycle backtest.
+## 2026-09-29 — Phase 15W paid-source shortlist
+- Current TrueData documentation confirms Level-1 best bid/ask and historical bid/ask history through its Market Data API for NSE F&O; pricing is requirement-dependent and exact long-range/expired-contract coverage must be confirmed.
+- Current NSE domestic tariff was checked: Historical Trade Data F&O is ₹1,10,000/year/site; Historical Order & Trade Data F&O is ₹12,50,000/year/site, before applicable taxes/levies.
+- TickBytes was retained as a technical alternative because its documented feed contains tick execution data and top-5 bid/ask depth.
+- Options Data was rejected for the quote gate because its published historical files explicitly exclude bid/ask.
+- Defined the minimum extract required: exact historical dates/contracts, L1 bid/ask and quantities, timestamps, contract identifiers, provenance and research-use licensing.
+- No paid purchase has been made; the next gate is verification of exact historical coverage and cost.
