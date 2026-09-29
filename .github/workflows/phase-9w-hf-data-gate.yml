@@ -110,6 +110,7 @@ jobs:
             research/phase9_weekly/output/source_manifest.json
             research/phase9_weekly/output/weekly_cycle_manifest.csv
             research/phase9_weekly/output/selected_weekly_option_bars.parquet
+            research/phase9_weekly/output/selected_weekly_spot_bars.parquet
             research/phase9_weekly/output/source_crosscheck.csv
           if-no-files-found: error
           retention-days: 30
