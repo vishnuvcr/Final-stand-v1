@@ -99,3 +99,9 @@
 - Impact: Local execution of the updated unit tests could not be performed in this environment.
 - Resolution: Repository changes were made through the GitHub connector and the workflow remains the execution authority. No empirical result was claimed.
 - Prevention: Keep deterministic unit tests in the repository and rely on GitHub Actions for networked data execution; verify workflow artifacts before admitting results.
+
+### E-0019 — Phase 13 end-to-end execution remains workflow-dependent
+- Observation: The local runtime cannot resolve github.com, while the Phase 13 workflow requires network access to Hugging Face.
+- Impact: Local execution cannot substitute for the repository workflow.
+- Resolution: Keep the workflow as the execution authority and require an observed artifact before admitting holdout results.
+- Prevention: Never fabricate or infer workflow outputs from source code alone.
