@@ -2,12 +2,15 @@ name: Phase 19W - Recovered Data Empirical Rerun
 
 on:
   workflow_dispatch:
+  push:
+    branches: [phase-19w-recovered-rerun]
 
 permissions:
   contents: write
 
 jobs:
   rerun:
+    if: hashFiles('research/phase19w_recovered_rerun/ADMISSION.md') != ''
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
@@ -18,12 +21,12 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: ~/.cache/huggingface
-          key: phase19w-hf-main-${{hashFiles('research/phase17w_strike_alternatives/VARIANT_REGISTRY.md')}}
+          key: phase19w-hf03-0f480e43-${{hashFiles('research/phase17w_strike_alternatives/VARIANT_REGISTRY.md')}}
       - run: pip install -q huggingface_hub polars numpy pandas pyarrow
       - name: Run fixed 224-variant rerun
         env:
           HF_TOKEN: ${{secrets.HF_TOKEN}}
-          HF_REVISION: main
+          HF_REVISION: 0f4800e43e6f96cec0794369d78eb4d3c4211ef5
         run: |
           python research/phase17w_strike_alternatives/strike_alternatives.py \
             --variant-start 0 \
