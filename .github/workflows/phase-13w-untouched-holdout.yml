@@ -68,6 +68,9 @@ jobs:
           print("status counts", m.group_by("status").len().sort("len", descending=True).to_dicts())
           print("options rows", o.height, "columns", o.columns)
           print("spot rows", s.height, "columns", s.columns)
+          print("sample option timestamps", o.select("timestamp").unique().head(10).to_series().cast(pl.String).to_list())
+          print("sample manifest timestamps", m.select("entry_timestamp").head(5).to_series().cast(pl.String).to_list())
+          print("option timestamp dtype", o.schema["timestamp"], "manifest dtype", m.schema["entry_timestamp"])
           usable = m.filter(pl.col("status")=="USABLE_OHLC")
           for row in usable.head(5).iter_rows(named=True):
               ets=str(row["entry_timestamp"]); lts=str(row["lock_timestamp"]); strikes=[float(row["k1"]),float(row["k2"]),float(row["k3"])]
