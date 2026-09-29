@@ -105,3 +105,9 @@
 - Impact: Local execution cannot substitute for the repository workflow.
 - Resolution: Keep the workflow as the execution authority and require an observed artifact before admitting holdout results.
 - Prevention: Never fabricate or infer workflow outputs from source code alone.
+
+### E-0022 — GitHub Actions pip cache expected dependency manifest
+- Observation: GitHub Actions failed at actions/setup-python because cache: pip was enabled without requirements.txt or pyproject.toml.
+- Impact: The Phase 13 job stopped before dependency installation; no empirical data were processed.
+- Resolution: Removed pip caching from the Phase 9/11/12/13 workflows. Hugging Face data caching remains enabled.
+- Prevention: Do not enable setup-python dependency caching unless the repository contains a supported dependency lock/manifest file.
