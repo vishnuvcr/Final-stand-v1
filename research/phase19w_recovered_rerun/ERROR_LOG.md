@@ -1,5 +1,10 @@
 # Phase 19W Error Log
 
-No Phase 19W execution errors yet.
+## E19-001 — 2026-09-30
+- **Issue:** Initial workflow template generation produced malformed GitHub Actions expressions because the file-generation code interpolated GitHub `${{ ... }}` tokens.
+- **Impact:** The first committed workflow definition was syntactically invalid and was not executed.
+- **Correction:** Replaced the workflow with a fixed manual `workflow_dispatch` job using the frozen 224-variant range and a temporary `HF_REVISION=main` setting. No empirical result was generated from the malformed workflow.
+- **Prevention:** Future workflow generation will treat GitHub expression syntax as literal configuration text rather than host-language interpolation.
 
-Known inherited limitation from Phase 17W: incomplete historical data reduced maximum usable coverage to 39/63 for the registered family. This is an inherited condition under investigation by Phase 18W, not a Phase 19W result.
+## Inherited limitation
+Phase 17W maximum usable coverage was 39/63 for the registered family. This remains a Phase 18W data-recovery question, not a Phase 19W empirical result.
