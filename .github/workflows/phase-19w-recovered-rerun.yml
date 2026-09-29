@@ -10,7 +10,6 @@ permissions:
 
 jobs:
   rerun:
-    if: hashFiles('research/phase19w_recovered_rerun/ADMISSION.md') != ''
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
