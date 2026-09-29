@@ -624,42 +624,22 @@ def _fast_backtest_cycle(
 
 def run_variants(
     cycle_df: pl.DataFrame,
-    option_df: pl.DataFrame,
+    option_source: Path,
     spot_df: pl.DataFrame,
     out_dir: Path,
     variant_subset: list[str] | None = None,
 ) -> pl.DataFrame:
+    """Run variants with bounded memory.
+
+    The merged option parquet is intentionally scanned lazily. Loading the full
+    multi-variant file plus per-expiry pivots caused GitHub-hosted runners to hit
+    their memory limit. Each registered variant is now collected and processed
+    independently; this changes only execution strategy, not research parameters.
+    """
     cfg = CostConfig()
     variants_to_run = variant_subset or VARIANT_IDS
     rows: list[dict] = []
     usable = cycle_df.filter(pl.col("status") == "USABLE_OHLC")
-    option_partitions = option_df.partition_by(
-        ["variant_id", "target_expiry"],
-        as_dict=True,
-    ) if option_df.height else {}
-
-    # Precompute one timestamp × strike matrix per expiry. The prior implementation
-    # rebuilt a Polars pivot for every variant-cycle pair, which dominated runtime.
-    expiry_wide: dict[str, pl.DataFrame] = {}
-    if option_df.height:
-        expiry_keys = option_df.select("target_expiry").unique().to_series().to_list()
-        for expiry_key in expiry_keys:
-            part = option_df.filter(pl.col("target_expiry") == expiry_key)
-            base = (
-                part.select(["timestamp", "strike", "open"])
-                .unique(["timestamp", "strike"], keep="first")
-                .with_columns(
-                    pl.col("timestamp").cast(pl.String).str.replace(r" ", "T").str.slice(0, 19)
-                )
-            )
-            expiry_wide[str(expiry_key)] = (
-                base.pivot(
-                    on="strike",
-                    index="timestamp",
-                    values="open",
-                    aggregate_function="first",
-                ).sort("timestamp")
-            )
 
     spot_keyed = (
         spot_df
@@ -676,14 +656,45 @@ def run_variants(
 
     for variant in variants_to_run:
         cycles = usable.filter(pl.col("variant_id") == variant).sort("target_expiry")
+        option_slice = (
+            pl.scan_parquet(str(option_source))
+            .filter(pl.col("variant_id") == variant)
+            .collect()
+        )
+        if option_slice.height == 0:
+            pl.DataFrame().write_csv(out_dir / f"trades_{variant}.csv")
+            continue
+
+        expiry_wide: dict[str, pl.DataFrame] = {}
+        for expiry_key in option_slice.select("target_expiry").unique().to_series().to_list():
+            part = option_slice.filter(pl.col("target_expiry") == expiry_key)
+            base = (
+                part.select(["timestamp", "strike", "open"])
+                .unique(["timestamp", "strike"], keep="first")
+                .with_columns(
+                    pl.col("timestamp").cast(pl.String).str.replace(r" ", "T").str.slice(0, 19)
+                )
+            )
+            expiry_wide[str(expiry_key)] = (
+                base.pivot(
+                    on="strike",
+                    index="timestamp",
+                    values="open",
+                    aggregate_function="first",
+                ).sort("timestamp")
+            )
+
+        option_partitions = option_slice.partition_by(
+            ["variant_id", "target_expiry"], as_dict=True
+        )
         local_results: list[dict] = []
         for row in cycles.iter_rows(named=True):
-            option_slice = option_partitions.get((variant, row["target_expiry"]))
-            if option_slice is None or option_slice.height == 0:
+            part = option_partitions.get((variant, row["target_expiry"]))
+            if part is None or part.height == 0:
                 continue
             result = _fast_backtest_cycle(
                 row,
-                option_slice,
+                part,
                 spot_close.get(row["target_expiry"]),
                 cfg,
                 stop_loss=50.0,
@@ -696,6 +707,10 @@ def run_variants(
             local_results.append(record)
             rows.append(record)
         pl.DataFrame(local_results).write_csv(out_dir / f"trades_{variant}.csv")
+
+        del option_partitions
+        del expiry_wide
+        del option_slice
 
     result_df = pl.DataFrame(rows)
     result_df.write_csv(out_dir / "all_variant_trades.csv")
@@ -743,7 +758,7 @@ def main() -> None:
     if args.built_input_dir:
         built_dir = Path(args.built_input_dir)
         cycle_df = pl.read_csv(built_dir / "variant_cycle_manifest.csv")
-        option_df = pl.read_parquet(built_dir / "variant_option_bars.parquet")
+        option_source = built_dir / "variant_option_bars.parquet"
     else:
         cycle_df, option_df, _ = build_variants(
             args.max_expiries,
@@ -786,7 +801,7 @@ def main() -> None:
     )
 
     train_set, validation_set, holdout_set = split_cutoffs(baseline_expiries)
-    results = run_variants(cycle_df, option_df, spot_df, out_dir, selected_variants)
+    results = run_variants(cycle_df, option_source, spot_df, out_dir, selected_variants)
 
     rows: list[dict] = []
     pvals: list[tuple[str, float | None]] = []
