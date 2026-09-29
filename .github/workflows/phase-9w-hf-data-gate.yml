@@ -1,0 +1,91 @@
+name: Phase 9W - Hugging Face Weekly Data Gate
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_expiries:
+        description: "Number of most recent NIFTY expiry files"
+        required: true
+        default: "104"
+      start_date:
+        description: "Earliest expiry date"
+        required: true
+        default: "2024-01-01"
+      end_date:
+        description: "Latest expiry date"
+        required: true
+        default: "2026-12-31"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: phase-9w-hf-data-gate
+  cancel-in-progress: false
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout weekly data-gate branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install data stack
+        run: |
+          python -m pip install --upgrade pip
+          pip install "huggingface_hub>=0.34,<1" "polars>=1.20,<2" "pyarrow>=18,<23"
+
+      - name: Cache Hugging Face downloads
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-phase9w-${{ inputs.start_date }}-${{ inputs.end_date }}-${{ inputs.max_expiries }}-${{ github.run_id }}
+          restore-keys: |
+            hf-phase9w-${{ inputs.start_date }}-${{ inputs.end_date }}-${{ inputs.max_expiries }}-
+            hf-phase9w-
+
+      - name: Verify HF_TOKEN is configured
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          test -n "$HF_TOKEN"
+          echo "HF_TOKEN is configured."
+
+      - name: Ingest weekly NIFTY data
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_REVISION: main
+        run: |
+          python research/phase9_weekly/hf_weekly_ingest.py             --max-expiries "${{ inputs.max_expiries }}"             --start-date "${{ inputs.start_date }}"             --end-date "${{ inputs.end_date }}"             --output-dir research/phase9_weekly/output             --hf-cache ~/.cache/huggingface
+
+      - name: Validate pilot
+        run: |
+          python research/phase9_weekly/validate_pilot.py
+
+      - name: Upload pilot artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase-9w-hf-ingest-${{ github.run_number }}
+          path: |
+            research/phase9_weekly/output/source_manifest.json
+            research/phase9_weekly/output/weekly_cycle_manifest.csv
+            research/phase9_weekly/output/selected_weekly_option_bars.parquet
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit non-raw research metadata
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/phase9_weekly/output/source_manifest.json research/phase9_weekly/output/weekly_cycle_manifest.csv
+          git diff --cached --quiet || git commit -m "research: record phase 9W HF data gate output"
+          git push
