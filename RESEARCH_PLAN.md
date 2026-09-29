@@ -14,7 +14,9 @@ The prior monthly-expiry call-ladder experiment is archived for auditability. Th
 - Weekly literature review.
 - Weekly data requirements.
 
-### Phase 9W — Point-in-time weekly data
+### Phase 9W — Point-in-time weekly data 🟡 Active
+Primary ingestion source is now Hugging Face, using thetrademarkk/india-index-options-1m 1-minute NIFTY option-chain files plus the NIFTY spot file. A secondary Hugging Face source is reserved for overlapping cross-validation. Because the primary public source documents OHLC rather than bid/ask, the phase has two execution-quality tiers: conservative 1-minute OHLC reconstruction and any later true bid/ask source.
+
 Acquire and validate:
 - weekly NIFTY spot;
 - weekly option quotes/trades;
