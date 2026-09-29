@@ -4,7 +4,7 @@
 phase-12w-robustness
 
 ## State
-Primary 30-cell empirical stress execution passed. Supplemental robustness diagnostics are implemented and awaiting the serialized follow-up workflow.
+Primary 30-cell empirical stress execution passed. Supplemental robustness diagnostics are implemented; the first follow-up run exposed and fixed a workflow command defect, and a serialized rerun is now executing.
 
 ## Observed primary stress result
 - 63 usable weekly cycles were processed in each of the 30 slippage x stop-loss cells.
@@ -27,4 +27,4 @@ Primary 30-cell empirical stress execution passed. Supplemental robustness diagn
 The Phase 13 stop is frozen from training only at 0.50-point slippage. Supplemental diagnostics cannot change that rule. The Phase 13 holdout was observed before this supplemental audit, so it is treated as a locked descriptive out-of-sample result and will not be used for any further tuning.
 
 ## Next gate
-Run the serialized supplemental workflow, inspect its artifact, then update Phase 13/main README and proceed to Phase 14 manuscript only after the robustness supplement and margin caveat are documented.
+Complete the serialized supplemental workflow, inspect its artifact, then update Phase 13/main README and proceed to Phase 14 manuscript only after the robustness supplement and margin caveat are documented.
