@@ -1,7 +1,7 @@
 # Final Stand v1 — Market Inefficiency Research
 
 ## Current status
-**Active experiment: Phase 8W — Weekly NIFTY call-ladder-to-spread strategy.**
+**Active experiment: Phase 13W — Untouched weekly holdout of the NIFTY call-ladder-to-spread strategy.**
 
 The previous monthly-expiry version is retained only for auditability. It is not the active research design.
 
@@ -29,7 +29,7 @@ NSE currently documents four weekly NIFTY 50 option expiries excluding the month
 - Phase 10W — mechanics/margin/costs: 🟡 active
 - Phase 11W — weekly backtest: pending
 - Phase 12W — robustness: pending
-- Phase 13W — untouched holdout: pending
+- Phase 13W — untouched holdout: 🟡 re-running after deterministic workflow-path correction
 - Phase 14W — final manuscript: pending
 
 ## Canonical weekly files
@@ -52,4 +52,4 @@ Weekly turnover makes friction more important. The model includes Paytm Money br
 A primary Hugging Face source has been identified: thetrademarkk/india-index-options-1m, with 1-minute NIFTY option data partitioned by expiry and a separate NIFTY spot file. Its documented schema contains OHLC, volume and open interest, not historical bid/ask. A second HF source, rissin/nse-options-intraday, provides an independent 1-minute NIFTY OHLC series from October 2024 onward. See research/phase9_weekly/DATA_ACCESS_MATRIX.md for the admission rules and execution-quality distinction.
 
 ## No trading conclusion yet
-No live-trading recommendation or profitability conclusion has been established.
+No live-trading recommendation or profitability conclusion has been established. Run 36595701035 is classified as a pipeline failure: 63 usable cycles were ingested, but zero trades were generated because the workflow still relied on Phase 11 default data paths. The corrected workflow now passes Phase 9 data paths explicitly; the next run must produce admissible trade data before any holdout conclusion.
