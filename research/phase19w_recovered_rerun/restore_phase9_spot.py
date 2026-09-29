@@ -1,6 +1,8 @@
 from datetime import date
 from pathlib import Path
 import os
+from datetime import datetime, time
+from zoneinfo import ZoneInfo
 import polars as pl
 from huggingface_hub import HfApi, hf_hub_download
 
@@ -27,8 +29,9 @@ for es in exp:
     if not entry_days or not lock_days:
         continue
     entry=entry_days[0]; lock=lock_days[-1]
-    entry_ts=__import__("datetime").datetime.combine(entry,__import__("datetime").time(10,0),__import__("datetime").timezone(__import__("datetime").timedelta(hours=5,minutes=30)))
-    lock_ts=__import__("datetime").datetime.combine(lock,__import__("datetime").time(14,0),__import__("datetime").timezone(__import__("datetime").timedelta(hours=5,minutes=30)))
+    ist=ZoneInfo("Asia/Kolkata")
+    entry_ts=datetime.combine(entry,time(10,0),ist)
+    lock_ts=datetime.combine(lock,time(14,0),ist)
     part=idx.filter((pl.col("timestamp")>=entry_ts)&(pl.col("timestamp")<=lock_ts)).with_columns(
         pl.lit(es).alias("target_expiry"),
         pl.lit(entry_ts.isoformat()).alias("entry_timestamp"),
