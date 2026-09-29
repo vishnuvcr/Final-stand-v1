@@ -1,55 +1,55 @@
 # Final Stand v1 — Market Inefficiency Research
 
 ## Current status
-**Active experiment: Phase 13W — Untouched weekly holdout of the NIFTY call-ladder-to-spread strategy.**
 
-The previous monthly-expiry version is retained only for auditability. It is not the active research design.
+**Weekly research protocol completed through Phase 14W manuscript synthesis.**
 
-## New weekly objective
-Test the video-derived strategy as a **weekly trading system**, where each NIFTY weekly expiry is one complete trade cycle.
+The active study evaluates a deterministic weekly NIFTY call-ladder-to-spread strategy with explicit transaction costs, slippage, chronological validation, an untouched holdout and a 30-cell robustness audit.
 
-Primary operationalization:
-- target contract: the new weekly expiry after the prior weekly expiry;
-- entry: first trading session after expiry at 10:00 IST;
-- K1: first call strike above spot;
-- K2: next call strike;
-- K3: call strike above K2 whose premium is closest to 2 × (K1 premium − K2 premium);
-- lock: buy K2 on the trading day immediately before expiry at 14:00 IST;
-- post-lock position: long K1 / short K3 bull call spread;
-- one primary trade per weekly expiry.
+### Phase status
 
-The hypothesis is exploratory. No profitability is assumed.
-
-## Current NSE structure
-NSE currently documents four weekly NIFTY 50 option expiries excluding the monthly contracts; weekly expiry is Tuesday, or the previous trading day when Tuesday is a holiday. NSE also specifies introduction of a new serial weekly contract after expiry. citeturn642743search0turn642743search1
-
-## Weekly research status
 - Phase 8W — weekly strategy definition: ✅
-- Phase 9W — HF weekly data gate: 🟡 active
-- Phase 10W — mechanics/margin/costs: 🟡 active
-- Phase 11W — weekly backtest: pending
-- Phase 12W — robustness: pending
-- Phase 13W — untouched holdout: 🟡 re-running after deterministic workflow-path correction
-- Phase 14W — final manuscript: pending
+- Phase 9W — HF weekly data gate: ✅ 63 usable weekly cycles
+- Phase 10W — mechanics, margin and costs: ✅
+- Phase 11W — weekly backtest: ✅
+- Phase 12W — robustness: ✅
+- Phase 13W — frozen stop and untouched holdout: ✅
+- Phase 14W — final manuscript: ✅
 
-## Canonical weekly files
-- [Weekly master research plan](RESEARCH_PLAN.md)
-- [Weekly strategy specification](research/phase8_weekly/STRATEGY_SPEC.md)
-- [Weekly research questions](research/phase8_weekly/RESEARCH_QUESTIONS.md)
-- [Weekly research protocol](research/phase8_weekly/RESEARCH_PROTOCOL.md)
-- [Weekly literature review](research/phase8_weekly/LITERATURE_REVIEW.md)
-- [Weekly data-source manifest](research/phase8_weekly/DATA_SOURCE_MANIFEST.md)
-- [Weekly cost/margin model](research/phase8_weekly/COST_MARGIN_MODEL.md)
-- [Analytical weekly stress test](research/phase8_weekly/ANALYTICAL_WEEKLY_STRESS.md)
-- [Weekly phase status](research/phase8_weekly/STATUS.md)
-- [Research log](research/logs/RESEARCH_LOG.md)
+### Key empirical observations
+
+- 63 usable weekly cycles.
+- Frozen configuration: 0.50 index points slippage per leg + 50-point hard stop.
+- Untouched 14-cycle holdout: mean net P&L ₹1,566.04/cycle; win rate 78.57%; annualized weekly Sharpe 2.02.
+- Frozen Phase 12 robustness cell: mean net P&L ₹3,503.86/cycle; annualized weekly Sharpe 4.42.
+- Holm-adjusted bootstrap p-value for the frozen cell across the 30-cell grid: 0.006.
+- CSCV-style PBO proxy: 0.00 across 20 combinatorial paths.
+- DSR-style probability: 0.9892; this is an implementation-specific approximation, not an exact published-estimator reproduction.
+
+### Critical limitations
+
+The primary dataset contains OHLC rather than historical bid/ask. Results therefore represent historical price reconstruction rather than verified executable fills. Historical NSE SPAN/peak-margin integration is still required before capital-normalized returns can be reported.
+
+No live-trading profitability claim is established.
+
+## Canonical research artifacts
+
+- [Research plan](RESEARCH_PLAN.md)
+- [Strategy specification](research/phase8_weekly/STRATEGY_SPEC.md)
+- [Research questions](research/phase8_weekly/RESEARCH_QUESTIONS.md)
+- [Research protocol](research/phase8_weekly/RESEARCH_PROTOCOL.md)
+- [Literature review](research/phase8_weekly/LITERATURE_REVIEW.md)
+- [Data-source manifest](research/phase8_weekly/DATA_SOURCE_MANIFEST.md)
+- [Cost and margin model](research/phase8_weekly/COST_MARGIN_MODEL.md)
+- [Phase 12 status](research/phase12_weekly/STATUS.md)
+- [Phase 12 robustness outputs](research/phase12_weekly/robustness.json)
+- [Phase 12 supplemental robustness](research/phase12_weekly/robustness_supplement.json)
+- [Phase 13 holdout result](research/phase13_weekly/holdout.json)
+- [Phase 14 final manuscript](research/phase14_weekly/FINAL_MANUSCRIPT.md)
+- [Phase 14 status](research/phase14_weekly/STATUS.md)
+- [Research execution log](research/logs/RESEARCH_LOG.md)
 - [Error log](research/logs/ERROR_LOG.md)
 
-## Cost and broker realism
-Weekly turnover makes friction more important. The model includes Paytm Money brokerage, statutory/regulatory/exchange charges, bid/ask spread, slippage, multi-leg execution, margin requirements and applicable square-off constraints.
+## Research governance
 
-## Phase 9W Hugging Face data gate
-A primary Hugging Face source has been identified: thetrademarkk/india-index-options-1m, with 1-minute NIFTY option data partitioned by expiry and a separate NIFTY spot file. Its documented schema contains OHLC, volume and open interest, not historical bid/ask. A second HF source, rissin/nse-options-intraday, provides an independent 1-minute NIFTY OHLC series from October 2024 onward. See research/phase9_weekly/DATA_ACCESS_MATRIX.md for the admission rules and execution-quality distinction.
-
-## No trading conclusion yet
-No live-trading recommendation or profitability conclusion has been established. Runs 36595701035 and 36596109078 are classified as pipeline failures: each ingested 63 usable cycles but generated zero trades. The second run supplied explicit Phase 9 paths, so the remaining issue is now being diagnosed at the row-level data interface before any empirical conclusion is admitted.
+All phases remain on separate branches. Empirical workflows have manual dispatch controls, cached Hugging Face data, reproducible artifacts and explicit error logging. The Phase 13 holdout is locked against any subsequent parameter tuning.
