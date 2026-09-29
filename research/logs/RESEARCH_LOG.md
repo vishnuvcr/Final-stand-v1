@@ -105,3 +105,9 @@
 - The holdout selector then failed on missing zero-trade metrics. This is a pipeline defect, not an empirical result.
 - Corrective workflow patch: pass all three Phase 9 output paths explicitly to Phase 11 for every candidate run.
 - Phase 13 remains pending re-execution; no profitability or holdout conclusion is admitted.
+
+
+### 2026-09-29 — Phase 13 timestamp investigation
+- E-0030/E-0031 fixes did not yet yield trades.
+- Added diagnostic output of raw option timestamps, manifest timestamps, and their dtypes before altering the backtest further.
+- Strategy rules remain unchanged; no empirical result is accepted until cross-phase timestamp matching is demonstrated.
