@@ -5,7 +5,7 @@ from pathlib import Path
 from urllib.request import Request, urlopen
 
 BASE = "https://nsearchives.nseindia.com/archives/nsccl/span/nsccl.{year}.s.zip"
-DATE_RE = re.compile(r"(20\\d{6})")
+DATE_RE = re.compile(r"(20\d{6})")
 
 def sha256(path: Path) -> str:
     h=hashlib.sha256()
