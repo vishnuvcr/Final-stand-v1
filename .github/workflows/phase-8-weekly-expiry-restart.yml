@@ -1,0 +1,38 @@
+name: Phase 8W - Weekly Call Ladder
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_mode:
+        description: 'Validation mode'
+        required: true
+        default: 'protocol'
+        type: choice
+        options:
+          - protocol
+          - unit-tests
+          - dry-run
+
+jobs:
+  weekly_phase:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify weekly research artifacts
+        run: |
+          test -f RESEARCH_PLAN.md
+          test -f research/phase8_weekly/STRATEGY_SPEC.md
+          test -f research/phase8_weekly/RESEARCH_PROTOCOL.md
+          test -f research/phase8_weekly/DATA_SOURCE_MANIFEST.md
+          echo "Weekly phase protocol artifacts present."
+      - name: Verify weekly assumptions are explicit
+        run: |
+          grep -q "10:00 IST" research/phase8_weekly/STRATEGY_SPEC.md
+          grep -q "14:00 IST" research/phase8_weekly/STRATEGY_SPEC.md
+          echo "Weekly lifecycle timestamps are explicitly defined."
+      - name: Hold empirical execution
+        run: |
+          echo "Empirical execution remains blocked until the weekly PIT-data gate passes."
