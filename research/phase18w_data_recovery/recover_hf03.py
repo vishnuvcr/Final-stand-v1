@@ -85,3 +85,4 @@ Path('research/phase18w_data_recovery/output/hf03_variant_coverage.json').write_
 pd.DataFrame(rows).to_csv('research/phase18w_data_recovery/output/hf03_variant_coverage.csv',index=False)
 pd.DataFrame(control).to_csv('research/phase18w_data_recovery/output/hf03_control_crosscheck.csv',index=False)
 print(json.dumps({'cycles':len(rows),'total_cells':out['total_variant_cycle_cells'],'mean_cycle_coverage':sum(x['coverage_rate'] for x in rows)/len(rows)},indent=2))
+# Phase19 bridge trigger: execution is performed by the companion bridge job in the Phase18 workflow.
