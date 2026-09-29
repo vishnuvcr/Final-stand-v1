@@ -20,3 +20,9 @@ Phase 17W maximum usable coverage was 39/63 for the registered family. This rema
 - **Issue:** The first automatic Phase 19 trigger failed before job creation because `hashFiles()` was used in a job-level `if` expression.
 - **Impact:** No empirical computation ran and no result was produced.
 - **Correction:** Removed the unsupported job-level gate. The committed `ADMISSION.md` is now the explicit repository admission record; the workflow retains both manual and push triggers.
+
+
+## E19-004 — 2026-09-30
+- **Issue:** The first live Phase 19 execution bridge reached the runner but failed immediately with `ModuleNotFoundError: No module named 'research'`.
+- **Impact:** No empirical computation ran and no output was admitted.
+- **Correction:** Set `PYTHONPATH` to the checked-out repository workspace in the execution environment. No strategy, data, cost, or statistical parameter was changed.
