@@ -90,7 +90,7 @@ jobs:
           p="research/phase17w_strike_alternatives/output/variant_summary.json"
           rows=json.load(open(p))
           assert len(rows) == 224
-          b=next(x for x in rows if x["variant_id"]=="OTM1_NEXT1")
+          b=next(x for x in rows if x["variant_id"]=="OTM1_NEXT1_K3M2")
           print(json.dumps(b,indent=2))
           assert b["training"]["n"] > 0
           assert b["validation"]["n"] > 0
