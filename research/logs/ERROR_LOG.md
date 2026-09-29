@@ -298,3 +298,9 @@
 - Diagnosis: Each variant job loaded the full ~402 MB merged option parquet into memory, then created expiry-wide pivots and partition dictionaries across the complete multi-variant dataset. Concurrent jobs therefore exceeded the hosted-runner memory budget.
 - Resolution: Changed the runner to lazy-scan the merged parquet and collect one variant at a time, then build only that variant's expiry-wide matrices. This is an execution/memory optimization only; strategy parameters, 224-variant registry, 63-cycle chronology, costs, slippage, stop and holdout lock are unchanged.
 - Prevention: Keep multi-variant CI jobs memory-bounded by streaming/filtering immutable cached inputs per variant rather than materializing the entire family.
+
+### E-0060 — Phase 17W aggregate result commit was rejected by a concurrent branch update
+- Observation: Run 36626050986 completed all 224 variant evaluations and the global audit successfully, but the final Git push was rejected with a non-fast-forward error because the branch had received newer research-log/status commits while the workflow was running.
+- Impact: The machine-readable aggregate remained available as workflow artifact 11060372488, but the workflow could not commit its generated output directory automatically.
+- Resolution: Preserved the successful artifact and created the auditable Phase 17W RESULTS.md on the current branch. No empirical values were changed.
+- Prevention: Avoid concurrent branch writes during long-running aggregate workflows; if a future result commit is required, reconcile the current branch tip before pushing generated outputs.
