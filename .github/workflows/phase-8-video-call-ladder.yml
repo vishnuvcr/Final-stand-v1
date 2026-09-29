@@ -1,0 +1,34 @@
+name: Phase 8 - Video Call Ladder
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_mode:
+        description: 'Validation mode'
+        required: true
+        default: 'protocol'
+        type: choice
+        options:
+          - protocol
+          - unit-tests
+          - dry-run
+
+jobs:
+  phase8:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Show phase status
+        run: |
+          echo "Phase 8 manual workflow"
+          echo "Mode: ${{ inputs.run_mode }}"
+          test -f research/phase8/STRATEGY_SPEC.md
+          test -f research/phase8/RESEARCH_PROTOCOL.md
+          test -f research/phase8/RESEARCH_QUESTIONS.md
+          echo "Protocol artifacts present."
+      - name: Placeholder scientific gate
+        run: |
+          echo "Empirical execution is blocked until point-in-time data and cost/margin inputs are validated."
