@@ -204,3 +204,9 @@ The machine-readable outputs are stored in the Phase 12 branch under `research/p
 - Frozen holdout JSON: `research/phase13_weekly/holdout.json`.
 - Research error log: `research/logs/ERROR_LOG.md`.
 - Research execution log: `research/logs/RESEARCH_LOG.md`.
+## References
+1. Bailey, D. H., Borwein, J. M., López de Prado, M., & Zhu, Q. J. (2017). *The Probability of Backtest Overfitting*. Journal of Computational Finance, 20(4), 39–70. DOI: 10.21314/JCF.2016.322. The paper develops the PBO/CSCV framework for investment backtests. citeturn0search1turn0search14
+2. Bailey, D. H., & López de Prado, M. (2014). *The Deflated Sharpe Ratio: Correcting for Selection Bias, Backtest Overfitting and Non-Normality*. Journal of Portfolio Management, 40(5), 94–107. DOI: 10.2139/ssrn.2460551. The paper motivates correcting Sharpe-based inference for multiple testing and non-normality. citeturn0search0
+3. White, H. (2000). *A Reality Check for Data Snooping*. Econometrica, 68(5), 1097–1126. DOI: 10.1111/1468-0262.00152. This work formalizes the data-snooping problem in specification searches and motivates bootstrap-based correction. citeturn1search0turn1search1
+4. Sullivan, R., Timmermann, A., & White, H. (1999). *Data-Snooping, Technical Trading Rule Performance, and the Bootstrap*. Journal of Finance, 54, 1647–1691. DOI: 10.1111/0022-1082.00163. The study applies White's bootstrap reality-check framework to technical trading rules. citeturn1search5turn1search6
+5. Holm, S. (1979). *A Simple Sequentially Rejective Multiple Test Procedure*. Scandinavian Journal of Statistics, 6(2), 65–70. This is the foundational reference for the Holm step-down multiple-testing procedure. citeturn1search4
