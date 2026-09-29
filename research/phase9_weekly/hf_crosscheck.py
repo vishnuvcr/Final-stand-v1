@@ -121,12 +121,13 @@ def main() -> None:
     for row in primary.iter_rows(named=True):
         for leg in ("k1", "k2", "k3"):
             strike = row[leg]
-            p = row[leg.replace("k", "p")]
+            p_entry = row[leg.replace("k", "p")]
+            p_lock = row["lock_" + leg.replace("k", "p")]
             if strike is None:
                 continue
             for event_name, ts_col, primary_price in (
-                ("entry", "entry_timestamp", p),
-                ("lock", "lock_timestamp", None),
+                ("entry", "entry_timestamp", p_entry),
+                ("lock", "lock_timestamp", p_lock),
             ):
                 ts_key = datetime.fromisoformat(row[ts_col]).strftime("%Y-%m-%d %H:%M:%S")
                 match = joined.filter(
