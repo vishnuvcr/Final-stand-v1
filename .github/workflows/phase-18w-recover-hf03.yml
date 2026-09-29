@@ -1,0 +1,44 @@
+name: Phase 18W - Recover HF03 Full Weekly Chains
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [phase-18w-data-recovery]
+    paths:
+      - 'research/phase18w_data_recovery/recover_hf03.py'
+      - 'research/phase18w_data_recovery/FROZEN_63_EXPIRIES.csv'
+      - '.github/workflows/phase-18w-recover-hf03.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/cache@v4
+        with:
+          path: research/phase18w_data_recovery/output/hf03
+          key: hf03-nifty-weekly-${{ hashFiles('research/phase18w_data_recovery/FROZEN_63_EXPIRIES.csv') }}
+      - run: pip install -q huggingface_hub pandas pyarrow requests
+      - name: Recover and measure 224-variant coverage
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python research/phase18w_data_recovery/recover_hf03.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase18w-hf03-coverage
+          path: research/phase18w_data_recovery/output/hf03_variant_coverage.*
+      - name: Commit coverage report
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/phase18w_data_recovery/output/hf03_variant_coverage.* research/phase18w_data_recovery/output/hf03_control_crosscheck.csv
+          git diff --cached --quiet || git commit -m 'phase18w: recover HF03 weekly chains and measure variant coverage'
+          git push
