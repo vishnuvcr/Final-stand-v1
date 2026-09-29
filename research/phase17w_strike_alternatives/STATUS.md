@@ -19,7 +19,7 @@ The weekly strategy's K1/K2 selection has a material structural effect on K3, D,
 
 ## Current gate
 
-ALTERNATIVE BACKTEST: OPTIMIZED AFTER RUNNER CANCELLATION; READY FOR RE-RUN
+ALTERNATIVE BACKTEST: OPTIMIZED AFTER RUNNER CANCELLATION; FORCE-TRIGGERING CLEAN PUSH RUN
 
 ## Planned sequence
 1. Re-read protocol and verify branch artifacts.
