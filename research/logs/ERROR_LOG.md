@@ -162,3 +162,10 @@
 - Impact: Exact timestamp matching rejected otherwise usable cycles.
 - Resolution: Phase 11 now normalizes timestamp strings to ISO `T` form and normalizes `+0530` to `+05:30` before exact comparisons.
 - Prevention: Cross-phase timestamp contracts must normalize explicitly.
+
+
+### E-0031 — Timestamp normalization regex escaped incorrectly
+- Observation: The first E-0030 patch used an over-escaped `+0530` regex, so the intended offset normalization did not occur.
+- Impact: Phase 11 continued to reject all exact entry/lock timestamps.
+- Resolution: Corrected the regex to match the literal `+0530` suffix.
+- Prevention: Add a direct unit test for representative timestamp normalization before accepting the phase interface.
