@@ -89,3 +89,11 @@
 - Paytm Money currently states ₹10 brokerage per unique executed F&O order; the model retains this broker-specific input. citeturn2search0
 - Phase 12 now explicitly states that rupee P&L is not a return-on-capital measure until historical SPAN/peak-margin series are integrated.
 - No profitability conclusion was admitted.
+
+## 2026-09-29 — Phase 13W holdout protocol
+- Created phase-13w-untouched-holdout from the hardened Phase 12 branch.
+- Added a mandatory hard-stop selection protocol using training observations only.
+- Fixed selection slippage at 0.50 index points per leg; candidate stops are 25/50/75/100/150/200/300 points.
+- Holdout observations are not read during parameter selection.
+- Added manual and push-triggered GitHub Actions execution.
+- No holdout result has been claimed until the workflow output is actually observed.
