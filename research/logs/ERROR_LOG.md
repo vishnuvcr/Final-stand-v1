@@ -13,3 +13,10 @@
 - Impact: The exact original transcript/title was not independently retrieved.
 - Resolution: Treat the user's detailed transcription as the source representation of the video and independently verify the mathematical payoff.
 - Prevention: Cache a transcript/source artifact in the repository when technically available.
+
+
+### E-0003 — README update SHA mismatch
+- Observation: README update initially supplied the earlier commit SHA instead of the current README blob SHA.
+- Impact: GitHub Contents API returned HTTP 409 and no file mutation occurred.
+- Resolution: Refetched README to obtain its current blob SHA, then retried with the correct SHA.
+- Prevention: For future file updates, always fetch the current blob SHA immediately before update when multiple commits may have changed the file.
