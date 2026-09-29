@@ -349,6 +349,10 @@ def main() -> None:
             if selected_strikes else opt.head(0)
         )
 
+        lock_p1 = open_value(lock_rows.filter(pl.col("strike") == k1)) if k1 is not None else None
+        lock_p2 = open_value(lock_rows.filter(pl.col("strike") == k2)) if k2 is not None else None
+        lock_p3 = open_value(lock_rows.filter(pl.col("strike") == k3)) if k3 is not None else None
+
         entry_complete = all(x is not None and x > 0 for x in (p1, p2, p3)) and all(
             x is not None for x in (k1, k2, k3)
         )
