@@ -53,7 +53,10 @@ def main():
         p = base / f"trades_slip_{SELECTION_SLIPPAGE:.2f}_stop_{int(stop)}.csv"
         if not p.exists():
             raise SystemExit(f"Missing candidate: {p}")
-        candidates[stop] = pl.read_csv(p)
+        try:
+            candidates[stop] = pl.read_csv(p)
+        except pl.exceptions.NoDataError:
+            raise SystemExit(f"Candidate {p} is empty: upstream backtest produced zero executable trades; diagnose the upstream cycle/quote filter before holdout selection.")
 
     scored = []
     for stop, df in candidates.items():
