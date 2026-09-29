@@ -18,6 +18,7 @@ Changing K1 or K2 changes D, K3, entry cash flow, margin path and tail exposure,
 3. Do alternative K1/K2 rules materially change trade eligibility, target error, payoff shape, costs and drawdowns?
 4. Which alternative rules remain viable on training and validation data without using the untouched holdout for selection?
 5. Does the current K1/K2 definition remain within the empirical family rather than being an implicit assumption?
+6. How sensitive are results to the K3 premium multiplier/value used to translate D into the target K3 premium?
 
 ## Fixed components
 The following remain frozen for every variant:
@@ -25,7 +26,7 @@ The following remain frozen for every variant:
 - 10:00 IST entry decision timestamp;
 - 14:00 IST pre-expiry lock timestamp;
 - call-only ladder;
-- K3 = listed strike above K2 whose entry premium is closest to 2*(P1-P2);
+- K3 = listed strike above K2 whose entry premium is closest to M*(P1-P2), where M is the registered K3 premium multiplier;
 - D <= 0 => no trade;
 - 50-point hard stop;
 - 0.50 NIFTY-point slippage per leg;
@@ -53,7 +54,16 @@ Four deterministic definitions are preregistered, always requiring K2 > K1:
 - NEXT3: third listed strike above K1.
 - MIRROR_GAP: strike above K1 whose distance from K1 is closest to the absolute spot-to-K1 distance; ties go to the lower strike.
 
-This creates 8 x 4 = 32 registered K1/K2 configurations.
+The registered K3 premium multiplier family is:
+- M0.5
+- M1.0
+- M1.5
+- M2.0 (current baseline)
+- M2.5
+- M3.0
+- M4.0
+
+This creates 8 x 4 x 7 = 224 registered K1/K2/K3 configurations.
 
 ## Baseline control
 OTM1 + NEXT1 is the current Phase 13W definition and is a control. Previous Phase 12/13 results are not recalculated or replaced by this phase.
@@ -78,7 +88,7 @@ A variant is marked PROMOTABLE_TO_CAPITAL_PHASE only if, using training/validati
 1. it has at least 50 valid cycles out of the 63-cycle calendar;
 2. training mean net P&L > 0;
 3. validation mean net P&L > 0;
-4. training block-bootstrap one-sided p-value is significant after Holm correction across the 32 registered variants.
+4. training block-bootstrap one-sided p-value is significant after Holm correction across the 224 registered variants.
 
 This is a preregistered gate, not a ranking. No holdout statistic is used in that gate.
 
@@ -95,30 +105,31 @@ For each variant report:
 - total transaction costs;
 - target error distribution;
 - K1/K2 distance from spot;
+- K3 multiplier;
 - D distribution;
 - lock and stop frequencies.
 
 For training:
 - moving-block bootstrap of mean net P&L;
 - one-sided p-value for mean <= 0 under a centered bootstrap null;
-- Holm correction across all 32 p-values.
+- Holm correction across all 224 p-values.
 
 Holdout outputs are reported for auditability but are never used to choose or promote a variant.
 
 ## Multiple-comparison control
-All 32 variants are tested in one registered family. The family-level decision uses Holm adjustment across the 32 training p-values.
+All 224 variants are tested in one registered family. The family-level decision uses Holm adjustment across the 32 training p-values.
 
 No hidden sub-selection of variants is allowed after results are observed.
 
 ## Stopping rule
 Stop this phase after:
-1. all 32 registered configurations are evaluated;
+1. all 224 registered configurations are evaluated;
 2. data-quality and deterministic tests pass;
 3. training/validation/holdout reports are generated;
 4. the promotion gate is applied without holdout leakage;
 5. the strategy-definition implications are documented.
 
-Do not expand the K1/K2 search space after observing results.
+Do not expand the K1/K2/K3 search space after observing results.
 
 ## Downstream rule
 If one or more variants pass the preregistered promotion gate, Phase 16W capital/margin validation can be resumed for those predeclared variants in a separate phase. The original frozen Phase 13W variant remains the historical control and is never erased.
