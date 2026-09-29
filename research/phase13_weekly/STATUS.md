@@ -4,10 +4,13 @@
 phase-13w-untouched-holdout
 
 ## State
-Design implemented; awaiting workflow execution.
+Pipeline corrected after run 36595701035; awaiting re-execution.
 
 ## Selection
 Mandatory stop selected from training only at fixed 0.50-point slippage.
+
+## Latest execution note
+Run 36595701035 ingested 100 expiry candidates and 63 USABLE_OHLC cycles, but generated zero backtest trades because the workflow did not pass Phase 9 data paths explicitly. This is logged as E-0028 and is not an empirical result.
 
 ## Required outputs
 - frozen stop-loss rule;
