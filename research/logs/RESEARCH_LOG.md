@@ -11,3 +11,9 @@
 - Independent payoff verification identifies the pre-lock position as a bull call ladder and confirms its theoretical unbounded upside loss.
 - Buying back K2 algebraically cancels the middle short, leaving a K1-long/K3-short bull call spread.
 - Current phase status: INITIALIZED / design stage only. No empirical profitability conclusion has been established.
+
+## 2026-09-29 — Literature and governance update
+- Added the master multi-phase research plan.
+- Added the initial Phase 8 literature/evidence review covering bull call ladders, nonlinear option-return inference, NIFTY option-surface research, NSE contract rules, India VIX and Paytm Money execution/margin rules.
+- Updated README links to the canonical plan and literature review.
+- Phase 8 remains at the design/data-readiness gate; no empirical backtest result has been produced.
