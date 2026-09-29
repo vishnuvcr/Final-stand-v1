@@ -60,3 +60,16 @@
 - Impact: No partial repository mutation occurred from those failed calls.
 - Resolution: Rewrote the affected strings using ordinary string concatenation.
 - Prevention: Avoid nested template literals in repository-update scripts; use plain strings for code/document payloads.
+
+
+### E-0013 — Phase 9 README create/update ordering
+- Observation: The Phase 9 README was created first; a later attempt used the create-file action again instead of the update-file action.
+- Impact: GitHub correctly rejected the request with HTTP 422 because the file already existed; no partial mutation occurred.
+- Resolution: Fetched the current blob SHA and updated the existing file through the update-file action.
+- Prevention: Before any repository write, check whether the target path exists and choose create-file or update-file accordingly.
+
+### E-0014 — GitHub Actions expression parsing in orchestration strings
+- Observation: A workflow-edit payload used unescaped `${{ ... }}` expressions inside JavaScript template literals and failed before the repository write.
+- Impact: No partial repository mutation occurred.
+- Resolution: Reissued the patch using quoted strings with escaped dollar-brace sequences.
+- Prevention: Never place raw GitHub Actions expressions inside JavaScript template literals; use plain quoted strings or escaped sequences.
