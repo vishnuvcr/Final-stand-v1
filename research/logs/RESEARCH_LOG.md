@@ -160,3 +160,10 @@
 - TrueData documentation remains the most directly aligned candidate because historical tick retrieval can include bid/ask and expired symbols, but exact old-date coverage must be verified with authenticated access.
 - Added an API probe protocol and credential-safe scaffold. No credentials were stored and no strategy/holdout data were accessed.
 - Phase 15W remains blocked only at the authenticated historical-BBO access gate; free archive discovery is complete for the current search scope.
+
+
+## 2026-09-30 — Phase 16W initialization
+- Closed Phase 15W's free-BBO discovery gate without qualifying a free historical BBO archive.
+- Started Phase 16W on a separate branch for capital/margin validation using official NSE historical SPAN/risk-parameter/report infrastructure.
+- Preserved the frozen strategy, locked holdout, and no-tuning rule.
+- Added a manual GitHub Actions workflow and source-admission protocol.
