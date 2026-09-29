@@ -153,3 +153,9 @@
 - Impact: The holdout was not used to select the stop rule, but it was no longer untouched with respect to all later diagnostic inspection.
 - Resolution: The frozen stop remains unchanged and no post-holdout tuning is permitted. The observed holdout is treated as a locked out-of-sample result for descriptive reporting only; all remaining analyses are non-tuning diagnostics.
 - Prevention: Complete Phase 12 robustness diagnostics before opening any future final holdout whenever the data schedule permits.
+
+### E-0040 — Supplemental robustness workflow compile command concatenated two commands
+- Observation: The first workflow revision placed `python research/phase12_weekly/test_robustness_supplement.py` on the same shell line as the `py_compile` command, so Python treated `python` as an input filename and exited with `[Errno 2] No such file or directory: 'python'`.
+- Impact: Supplemental analysis did not start; no empirical result was altered.
+- Resolution: Split the compile and test commands into separate YAML run lines and set the workflow to cancel superseded runs. Output/log path filters were added to prevent self-triggered reruns.
+- Prevention: Keep multi-command workflow steps as explicit shell lines and review the rendered command from the Actions log before accepting CI status.
