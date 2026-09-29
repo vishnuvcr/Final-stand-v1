@@ -4,6 +4,8 @@ on:
   workflow_dispatch:
   push:
     branches: [phase-19w-recovered-rerun]
+  pull_request:
+    branches: [main]
 
 permissions:
   contents: write
@@ -26,7 +28,6 @@ jobs:
         env:
           HF_TOKEN: ${{secrets.HF_TOKEN}}
           HF_REVISION: 0f4800e43e6f96cec0794369d78eb4d3c4211ef5
-          PYTHONPATH: ${{github.workspace}}
         run: |
           python research/phase17w_strike_alternatives/strike_alternatives.py \
             --variant-start 0 \
@@ -47,4 +48,4 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add research/phase19w_recovered_rerun/output
           git diff --cached --quiet || git commit -m 'phase19w: record recovered-data empirical rerun'
-          git push
+          git push origin HEAD:phase-19w-recovered-rerun
