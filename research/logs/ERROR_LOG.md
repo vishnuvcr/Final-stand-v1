@@ -249,3 +249,9 @@
 - Impact: No alternative backtests were executed.
 - Resolution: Changed the workflow to invoke the engine as the module research.phase17w_strike_alternatives.strike_alternatives from repository root, matching the existing test import path.
 - Prevention: In CI, invoke repository-internal Python modules with -m when they import sibling research packages unless package path setup is explicit.
+
+### E-0053 — Phase 17W variant engine required scale optimization
+- Observation: The first corrected empirical run reached the 32-variant engine, where the initial implementation repeatedly scanned full expiry parquet data while constructing variant-specific paths.
+- Impact: This created unnecessary repeated I/O/CPU and risked an excessively long CI execution for the finite 32-configuration experiment.
+- Resolution: Reworked the engine to read each expiry source once for variant-path extraction, filter to the union of required strikes, and partition the combined option bars by (variant, expiry) before backtesting.
+- Prevention: For finite multi-variant studies, share immutable data reads and pre-partition variant inputs before running the common backtest kernel.
