@@ -48,3 +48,15 @@ After the first public-source audit, no complete free historical NIFTY options L
 - TickBytes is a strong technical alternative because its feed contains top-5 bid/ask depth, but the complete historical archive is subscription/licensed.
 - Options Data is not suitable for the bid/ask gate because its published files explicitly exclude bid/ask.
 - A minimum-extract specification and vendor inquiry have been written; no purchase has been made.
+## Expanded free-source audit — 2026-09-30
+- Re-searched public Hugging Face, Kaggle, Zenodo, GitHub and broker/API routes.
+- New candidates included ICICI Breeze, Upstox expired-instrument APIs, FYERS, Kotak Neo, Angel One, Dhan, OpenAlgo, ayyararyan/nse-options-pipeline and djjain21's historical-depth repository.
+- Several sources provide useful 1-minute OHLC/OI or live BBO, but no newly discovered source qualified as a free historical NIFTY weekly-options BBO archive.
+- The strongest new schema evidence is ayyararyan/nse-options-pipeline, whose documented input contains captured_at, bid_price, ask_price, bid_qty and ask_qty; however, the actual NSEI-Data input is explicitly not tracked in Git.
+- Zenodo provides an open 2017–2020 NIFTY 1-minute OHLC archive, useful only as an older independent price cross-check.
+- ICICI Breeze provides 1-minute historical NFO option OHLC/OI; Upstox provides expired 1-minute candles but its expired-instrument API is Plus-only; FYERS explicitly says expired option-chain BBO is unavailable; Kotak Neo excludes expired/delisted instruments from historical candles; Angel One provides NFO candles/OI but not historical BBO.
+
+## Updated gate
+**FREE HISTORICAL BBO DATASET: NOT QUALIFIED.**
+
+No strategy parameter or holdout state was changed. The next zero-cost test is an empirical probe of any user-authorized free API credentials for expired NIFTY contracts, followed by exact coverage validation against the frozen cycle set.
