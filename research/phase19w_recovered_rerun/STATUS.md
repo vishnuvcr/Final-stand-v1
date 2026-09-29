@@ -1,11 +1,15 @@
 # Phase 19W Status
 
-**State:** PREPARED — awaiting Phase 18W recovery closure.
+**State:** EXECUTING — recovered-data empirical rerun admitted.
 
-**Execution status:** Not started.
+**Execution status:** 224 variants / frozen 63-cycle chronology submitted to GitHub Actions.
+
+**Recovered data:** HF-03 pinned revision `0f4800e43e6f96cec0794369d78eb4d3c4211ef5`; 13,956/14,112 variant-cycle cells available (98.895%); 59 fully covered cycles and 4 partial cycles.
 
 **Frozen inputs:** 224 registered configurations, 63-cycle calendar, 37/12/14 chronology, 50-point stop, 0.50-point slippage per leg, Paytm Money/NSE cost model, holdout locked.
 
-**Entry gate:** Phase 18W must first provide admitted recovered data and a provenance/coverage report.
+**Statistical plan:** centered block bootstrap (block length 3, 3000 reps), Holm adjustment across 224 training p-values, unchanged promotion gate.
 
-**No empirical conclusion is permitted from this branch until the recovered-data rerun is actually executed.**
+**Missing-data rule:** unavailable contract observations are omitted as missing; no synthetic bars or source blending is introduced in this frozen rerun.
+
+**Next:** complete all 224 empirical backtests, inspect outputs, validate controls, apply promotion gate, then close the phase with manuscript-ready results and limitations.
