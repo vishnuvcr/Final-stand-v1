@@ -55,3 +55,10 @@ Canonical files are maintained inside the respective phase branches. The researc
 - Free OHLC sources remain useful for cross-validation; public BBO schemas/samples remain schema-qualified but archive-unqualified.
 - New audit: [Phase 15W expanded free-source audit](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-15w-execution-data-discovery/research/phase15w_execution_data/FREE_SOURCE_AUDIT_EXPANDED.md)
 - Next zero-cost gate: empirical coverage probe of any user-authorized free API credentials for expired NIFTY contracts.
+
+### Phase 15W API probe gate — 2026-09-30
+- ICICI Breeze and Dhan provide historical option OHLC/OI routes, not documented historical BBO responses. citeturn2search1turn1search0
+- Upstox provides expired 1-minute OHLC but its expired-instrument APIs require Plus. citeturn0search0turn0search2
+- TrueData remains the directly BBO-capable historical candidate; exact historical expired-weekly coverage still requires authenticated verification.
+- [API probe protocol](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-15w-execution-data-discovery/research/phase15w_execution_data/API_PROBE_PROTOCOL.md)
+- [Expanded free-source audit](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-15w-execution-data-discovery/research/phase15w_execution_data/FREE_SOURCE_AUDIT_EXPANDED.md)
