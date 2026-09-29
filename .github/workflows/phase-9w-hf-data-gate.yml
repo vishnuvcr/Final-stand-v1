@@ -55,7 +55,7 @@ jobs:
 
       - name: Compile and unit-test ingestion helpers
         run: |
-          python -m py_compile research/phase9_weekly/hf_weekly_ingest.py research/phase9_weekly/validate_pilot.py research/phase9_weekly/test_hf_weekly_ingest.py
+          python -m py_compile research/phase9_weekly/hf_weekly_ingest.py research/phase9_weekly/validate_pilot.py research/phase9_weekly/test_hf_weekly_ingest.py research/phase9_weekly/hf_crosscheck.py
           cd research/phase9_weekly
           python test_hf_weekly_ingest.py
 
@@ -74,7 +74,12 @@ jobs:
           HF_HUB_DOWNLOAD_TIMEOUT: "120"
           HF_HUB_ETAG_TIMEOUT: "30"
         run: |
-          python research/phase9_weekly/hf_weekly_ingest.py             --max-expiries "${{ inputs.max_expiries }}"             --start-date "${{ inputs.start_date }}"             --end-date "${{ inputs.end_date }}"             --output-dir research/phase9_weekly/output             --hf-cache ~/.cache/huggingface
+          python research/phase9_weekly/hf_weekly_ingest.py \
+            --max-expiries "${{ inputs.max_expiries }}" \
+            --start-date "${{ inputs.start_date }}" \
+            --end-date "${{ inputs.end_date }}" \
+            --output-dir research/phase9_weekly/output \
+            --hf-cache ~/.cache/huggingface
 
       - name: Cross-check 2025 against secondary Hugging Face source
         env:
@@ -109,6 +114,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add research/phase9_weekly/output/source_manifest.json research/phase9_weekly/output/weekly_cycle_manifest.csv
+          git add research/phase9_weekly/output/source_manifest.json research/phase9_weekly/output/weekly_cycle_manifest.csv research/phase9_weekly/output/source_crosscheck.csv
           git diff --cached --quiet || git commit -m "research: record phase 9W HF data gate output"
           git push
