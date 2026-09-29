@@ -1,7 +1,7 @@
 # Final Stand v1 — Market Inefficiency Research
 
 ## Current status
-The repository was newly initialized on 2026-09-29. The research program is continuing from the prior project state documented in the attached research manuscript and is now adding a new, explicitly defined options-strategy branch derived from the user-supplied video specification.
+**Phase 8 is active on branch `phase-8-video-call-ladder`.** The main branch carries the governance baseline; the active research implementation is isolated on its phase branch.
 
 ## Research objective
 Test whether a video-derived NIFTY monthly-options strategy — an initial long call / middle short call / farther short call ladder followed, after time decay, by purchasing the middle strike to convert the position into a defined-risk bull call spread — produces a statistically robust, executable net edge after realistic Indian transaction costs, bid/ask slippage, margin constraints, and risk controls.
