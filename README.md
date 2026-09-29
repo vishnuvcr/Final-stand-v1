@@ -44,3 +44,11 @@ The active branch contains a manual GitHub Actions workflow using HF_TOKEN and t
 
 ## No trading conclusion
 No profitability conclusion or live-trading recommendation has been established. The weekly strategy must survive realistic execution costs, tail-risk testing, chronological robustness and an untouched holdout.
+
+
+## Latest research pipeline status — 2026-09-29
+- Phase 9W: Hugging Face weekly data gate implemented and push-triggered for execution; no empirical pass/fail result is being fabricated.
+- Phase 11W: cost-adjusted weekly backtest pipeline implemented on a separate branch, including Paytm Money brokerage, lot-size changes, slippage, lock mechanics and stop-loss sensitivity.
+- Phase 12W: chronological robustness and block-bootstrap stress pipeline implemented on a separate branch, including slippage stress.
+- Active branch for the next research phase: phase-12w-robustness.
+- Results remain conditional on successful upstream data ingestion and validation.
