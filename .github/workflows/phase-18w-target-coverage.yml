@@ -1,0 +1,39 @@
+name: Phase 18W - Target Coverage Probe
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [phase-18w-data-recovery]
+    paths:
+      - 'research/phase18w_data_recovery/FROZEN_63_EXPIRIES.csv'
+      - 'research/phase18w_data_recovery/coverage_probe.py'
+      - '.github/workflows/phase-18w-target-coverage.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -q huggingface_hub
+      - name: Probe frozen 63-cycle coverage
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: python research/phase18w_data_recovery/coverage_probe.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase18w-target-coverage
+          path: research/phase18w_data_recovery/output/target_coverage_inventory.json
+      - name: Commit coverage inventory
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/phase18w_data_recovery/output/target_coverage_inventory.json
+          git diff --cached --quiet || git commit -m 'phase18w: record frozen-cycle source coverage'
+          git push
