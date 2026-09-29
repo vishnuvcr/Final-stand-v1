@@ -80,3 +80,16 @@
 - Impact: No partial repository mutation occurred.
 - Resolution: Reissued the patch using quoted strings; the workflow update then succeeded.
 - Prevention: For GitHub Actions files, use non-template string literals whenever the payload contains GitHub Actions expressions.
+
+
+### E-0016 — Phase 11 bulk artifact string parsing
+- Observation: A large JavaScript template-literal payload containing Python/Markdown backticks failed before repository writes.
+- Impact: No partial repository mutation.
+- Resolution: Retried with simplified plain-text artifact strings and created the backtest engine successfully.
+- Prevention: Keep repository artifact payloads free of nested backticks or use quoted strings.
+
+### E-0017 — Phase 12 workflow expression parsing
+- Observation: A workflow payload containing GitHub Actions expressions failed when parsed as a JavaScript template literal.
+- Impact: No partial repository mutation.
+- Resolution: Escaped the expression interpolation and recreated the workflow.
+- Prevention: Escape all GitHub Actions expression markers in orchestration template strings.
