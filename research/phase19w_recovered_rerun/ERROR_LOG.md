@@ -36,3 +36,9 @@ Phase 17W maximum usable coverage was 39/63 for the registered family. This rema
 - **Issue:** The Phase-9 frozen cycle manifest is generated output and is not present in the historical branches available to the Phase-19 runner.
 - **Impact:** The exact 63-cycle calendar could not be consumed by the script, despite the frozen expiry list being present and independently versioned.
 - **Correction:** Restoring a deterministic two-column manifest directly from the versioned `FROZEN_63_EXPIRIES.csv`, preserving its exact 63-expiry order. No synthetic market observations are created; this file is only the frozen calendar control input.
+
+
+## E19-005 — 2026-09-30
+- **Issue:** The corrected Phase 19 runner reached the strategy build but could not find `research/phase9_weekly/output/weekly_cycle_manifest.csv` on the Phase 19 branch.
+- **Impact:** No empirical computation ran; the frozen Phase 9 interface had not been carried into this branch.
+- **Correction:** The execution bridge now restores the exact frozen Phase 9 Actions artifact `11060261904` before execution, including `weekly_cycle_manifest.csv` and `selected_weekly_spot_bars.parquet`. The strategy and statistical parameters remain unchanged.
