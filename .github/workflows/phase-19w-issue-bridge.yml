@@ -50,6 +50,13 @@ jobs:
           find research/phase19w_recovered_rerun/output -type f -not -name 'variant_option_bars.parquet' -print0 | xargs -0 git add
           git diff --cached --quiet || git commit -m 'phase19w: record recovered-data empirical rerun'
           git push origin HEAD:phase-19w-recovered-rerun
+      - name: Commit reproducible Phase 19 results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          find research/phase19w_recovered_rerun/output -type f -not -name 'variant_option_bars.parquet' -print0 | xargs -0 git add
+          git diff --cached --quiet || git commit -m 'phase19w: record recovered-data empirical rerun'
+          git push origin HEAD:phase-19w-recovered-rerun
       - name: Upload Phase 19 results
         if: ${{ github.event.issue.title == 'RUN PHASE 19W' }}
         uses: actions/upload-artifact@v4
