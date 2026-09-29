@@ -49,11 +49,6 @@ jobs:
           fi
           pip install -q huggingface_hub polars numpy pandas pyarrow
           python research/phase17w_strike_alternatives/strike_alternatives.py             --variant-start 0             --variant-end 224             --hf-cache ~/.cache/huggingface             --baseline-manifest research/phase9_weekly/output/weekly_cycle_manifest.csv             --expiry-start 0             --expiry-end 63             --output-dir research/phase19w_recovered_rerun/output
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add research/phase19w_recovered_rerun/output
-          git diff --cached --quiet || git commit -m 'phase19w: record recovered-data empirical rerun'
-          git push origin HEAD:phase-19w-recovered-rerun
       - name: Commit reproducible Phase 19 results
         run: |
           git config user.name 'github-actions[bot]'
@@ -62,7 +57,7 @@ jobs:
           git diff --cached --quiet || git commit -m 'phase19w: record recovered-data empirical rerun'
           git push origin HEAD:phase-19w-recovered-rerun
       - name: Upload Phase 19 results
-        if: ${{ github.event.issue.title == 'RUN PHASE 19W' }}
+        if: always() && github.event.issue.title == 'RUN PHASE 19W'
         uses: actions/upload-artifact@v4
         with:
           name: phase19w-recovered-results-issue-bridge
