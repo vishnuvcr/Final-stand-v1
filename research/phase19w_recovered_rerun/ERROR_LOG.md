@@ -54,3 +54,9 @@ Phase 17W maximum usable coverage was 39/63 for the registered family. This rema
 - **Issue:** After the frozen Phase 9 interface was restored, the empirical runner failed with `UnboundLocalError: option_source` because `main()` assigned `option_df` on the normal build path but later passed the undefined `option_source` to `run_variants()`.
 - **Impact:** No empirical results were produced.
 - **Correction:** Bound `option_source` to the generated `variant_option_bars.parquet`. This is an execution-variable fix only; the variant family, data, costs, slippage, stop, chronology, and statistics remain unchanged.
+
+
+## E19-007 — 2026-09-30
+- **Issue:** GitHub runner Polars rejected the HF parquet timezone metadata `+05:30` while restoring the NIFTY index (`POLARS_IGNORE_TIMEZONE_PARSE_ERROR` was not enabled).
+- **Impact:** Spot-interface restoration stopped before reading market observations.
+- **Correction:** Enable Polars timezone-parse compatibility for this frozen source format. This does not alter timestamps or strategy calculations; it only permits the existing parquet timezone metadata to be read.
