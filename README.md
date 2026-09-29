@@ -1,37 +1,41 @@
 # Final Stand v1 — Market Inefficiency Research
 
-## Current status
-**Phase 8 is active on branch `phase-8-video-call-ladder`.** The main branch carries the governance baseline; the active research implementation is isolated on its phase branch.
+## Active research reset
+**The active strategy research has been reset from monthly to weekly NIFTY expiries.**
 
-## Research objective
-Test whether a video-derived NIFTY monthly-options strategy — an initial long call / middle short call / farther short call ladder followed, after time decay, by purchasing the middle strike to convert the position into a defined-risk bull call spread — produces a statistically robust, executable net edge after realistic Indian transaction costs, bid/ask slippage, margin constraints, and risk controls.
+Active branch: `phase-8-weekly-expiry-restart`
 
-The hypothesis is exploratory. No profitability is assumed.
+Archived/superseded branch: `phase-8-video-call-ladder` — monthly-expiry design, retained for auditability only.
 
-## Phase map
-- Phase 0 — Repository and research governance ✅
-- Phases 1–7 — Prior market-inefficiency / volatility / option-surface research: preserved from project history; not recreated here.
-- Phase 8 — Video-derived call-ladder-to-spread strategy: **INITIALIZED**
-- Phase 9 — Data acquisition + point-in-time option-chain reconstruction
-- Phase 10 — Payoff/Greeks/margin validation and execution-cost model
-- Phase 11 — In-sample / validation / walk-forward backtesting
-- Phase 12 — CPCV / PBO / DSR / sensitivity / regime analysis
-- Phase 13 — Untouched holdout + robustness gate
-- Phase 14 — Final manuscript, figures, appendices and reproducibility package
+## Weekly research objective
+Test the same core video-derived call-ladder-to-spread strategy as a **weekly trading system**, with one complete trade cycle per NIFTY weekly expiry.
 
-## Canonical files
-- [Project instructions](PROJECT_INSTRUCTIONS.md)
-- [Phase 8 strategy specification](research/phase8/STRATEGY_SPEC.md)
-- [Phase 8 research protocol](research/phase8/RESEARCH_PROTOCOL.md)
-- [Phase 8 research questions](research/phase8/RESEARCH_QUESTIONS.md)
-- [Research log](research/logs/RESEARCH_LOG.md)
-- [Error log](research/logs/ERROR_LOG.md)
+NSE currently documents four weekly NIFTY 50 index-option expiry contracts excluding monthly contracts, with weekly expiry on Tuesday or the previous trading day if Tuesday is a holiday, and a new serial weekly contract introduced after expiry.
 
-## Important methodological rule
-The source video is treated as a hypothesis generator, not as proof of an edge. Video-reported rules will be separated from rules that are later chosen or optimized statistically. All parameters must be frozen before the final holdout.
+Research branch:
+https://github.com/vishnuvcr/Final-stand-v1/tree/phase-8-weekly-expiry-restart
 
-## Cost and broker realism
-The execution model will include Paytm Money brokerage, statutory/regulatory/exchange charges, bid/ask spread, slippage, multi-leg execution, margin requirements, and any applicable overnight/auto-square-off constraints. Paytm Money states that F&O brokerage is Rs.10 per executed unique order and that statutory/regulatory/exchange charges are levied at actuals; these values will be versioned rather than hard-coded without date attribution.
+## Reset decision
+The monthly experiment is not being mechanically converted into weekly data. The weekly branch has a new:
+- weekly lifecycle;
+- entry/lock/exit timing;
+- weekly data-quality gate;
+- weekly cost/turnover model;
+- weekly-specific hypotheses;
+- weekly literature review;
+- weekly robustness framework.
 
-## No trading conclusion yet
-No live-trading recommendation is made at this stage. The strategy must survive the predefined statistical and economic gates before any conclusion about usability.
+## Active weekly phase map
+- 8W — Weekly strategy definition ✅
+- 9W — Weekly point-in-time data 🟡 pending
+- 10W — Mechanics, margin and costs
+- 11W — Weekly backtest
+- 12W — Robustness / CPCV / PBO / DSR
+- 13W — Untouched weekly holdout
+- 14W — Final research manuscript
+
+## Research governance
+The repository remains the canonical research-state record. Research steps, errors, phase status, methodology changes and final results are committed as auditable artifacts.
+
+## No trading conclusion
+No profitability conclusion or live-trading recommendation has been established. The weekly strategy must survive realistic execution costs, tail-risk testing, chronological robustness and an untouched holdout.
