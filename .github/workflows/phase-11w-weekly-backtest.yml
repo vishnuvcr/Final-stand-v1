@@ -1,0 +1,94 @@
+name: Phase 11W - Weekly Backtest
+
+on:
+  push:
+    branches:
+      - phase-11w-weekly-backtest
+  workflow_dispatch:
+    inputs:
+      max_expiries:
+        description: "Weekly expiries"
+        required: true
+        default: "104"
+      start_date:
+        description: "Earliest expiry"
+        required: true
+        default: "2024-01-01"
+      end_date:
+        description: "Latest expiry"
+        required: true
+        default: "2026-12-31"
+
+permissions:
+  contents: write
+
+jobs:
+  backtest:
+    if: github.event_name == 'workflow_dispatch' || !startsWith(github.event.head_commit.message, 'research: record phase 11W backtest output')
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install data stack
+        run: |
+          python -m pip install --upgrade pip
+          pip install "huggingface_hub>=0.34,<1" "polars>=1.20,<2" "pyarrow>=18,<23"
+
+      - name: Cache Hugging Face data
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-phase11w-v1-${{ inputs.start_date || '2024-01-01' }}-${{ inputs.end_date || '2026-12-31' }}-${{ inputs.max_expiries || '104' }}
+          restore-keys: |
+            hf-phase11w-v1-
+            hf-phase9w-v2-
+
+      - name: Compile
+        run: python -m py_compile research/phase9_weekly/hf_weekly_ingest.py research/phase11_weekly/weekly_backtest.py
+
+      - name: Verify HF token
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: test -n "$HF_TOKEN"
+
+      - name: Build Phase 9 data cache
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_REVISION: main
+          HF_HOME: ~/.cache/huggingface
+        run: |
+          python research/phase9_weekly/hf_weekly_ingest.py             --max-expiries "${{ inputs.max_expiries || '104' }}"             --start-date "${{ inputs.start_date || '2024-01-01' }}"             --end-date "${{ inputs.end_date || '2026-12-31' }}"             --output-dir research/phase9_weekly/output             --hf-cache ~/.cache/huggingface
+
+      - name: Run no-stop baseline
+        run: |
+          python research/phase11_weekly/weekly_backtest.py
+
+      - name: Run stop-loss sensitivity grid
+        run: |
+          mkdir -p research/phase11_weekly/output/grid
+          for stop in 25 50 75 100 150 200 300; do
+            python research/phase11_weekly/weekly_backtest.py               --stop-loss-points "$stop"               --output "research/phase11_weekly/output/grid/trades_stop_${stop}.csv"
+          done
+
+      - name: Upload backtest artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase-11w-weekly-backtest-${{ github.run_number }}
+          path: research/phase11_weekly/output/
+          retention-days: 30
+
+      - name: Commit research outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/phase11_weekly/output
+          git diff --cached --quiet || git commit -m "research: record phase 11W backtest output"
+          git push
