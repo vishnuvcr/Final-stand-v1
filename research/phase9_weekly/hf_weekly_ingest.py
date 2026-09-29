@@ -287,7 +287,9 @@ def main() -> None:
             if selected_strikes else opt.head(0)
         )
 
-        entry_complete = all(x is not None for x in (k1, k2, k3, p1, p2, p3))
+        entry_complete = all(x is not None and x > 0 for x in (p1, p2, p3)) and all(
+            x is not None for x in (k1, k2, k3)
+        )
         lock_complete = len(selected_strikes) == 3 and lock_rows.height == 3
 
         target_error = None
