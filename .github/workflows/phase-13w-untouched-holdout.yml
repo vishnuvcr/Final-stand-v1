@@ -2,6 +2,7 @@ name: Phase 13W - Untouched Weekly Holdout
 # Trigger marker: phase13w-active
 # Manual/automatic holdout execution gate
 # Data interface fix trigger
+# Diagnostic alignment trigger
 
 on:
   push:
