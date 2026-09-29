@@ -1,0 +1,41 @@
+name: Phase 18W - Exhaustive Data Recovery
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [phase-18w-data-recovery]
+    paths:
+      - 'research/phase18w_data_recovery/**'
+      - '.github/workflows/phase-18w-data-recovery.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  source-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -q huggingface_hub pandas pyarrow requests
+      - name: Inventory public Hugging Face datasets
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: python research/phase18w_data_recovery/source_probe.py
+      - name: Upload audit artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase18w-source-audit
+          path: research/phase18w_data_recovery/output/
+          if-no-files-found: error
+      - name: Commit audit output
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/phase18w_data_recovery/output
+          git diff --cached --quiet || git commit -m 'phase18w: record public source inventory'
+          git push
