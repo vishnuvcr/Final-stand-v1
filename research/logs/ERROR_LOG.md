@@ -276,3 +276,11 @@
 - Impact: The workflow file became syntactically invalid for Actions; no empirical result was generated.
 - Resolution: Restored the exact job-level indentation and committed the correction. The research code and registered parameters were unchanged.
 - Prevention: Validate YAML indentation whenever workflow files are modified, even for trigger-only changes.
+
+
+### E-0057 — Phase 17W variant jobs omitted a required runtime dependency
+- Observation: Workflow run 36624505188 successfully completed Phase 9 preparation, all 8 expiry-input shards, and merged the frozen inputs, but all 8 variant jobs failed during test collection with ModuleNotFoundError: No module named 'huggingface_hub'.
+- Impact: The 224 empirical evaluations did not execute and no result was admitted.
+- Diagnosis: strike_alternatives.py imports huggingface_hub at module load time, while the executed variant-job environment did not contain that package.
+- Resolution: Ensure the variant-job install step explicitly installs the same pinned huggingface_hub>=0.36,<0.37 dependency as the prepare/build jobs; no research parameters are changed.
+- Prevention: Run the exact CI import/test command in every job environment and keep runtime imports covered by that job's dependency installation.
