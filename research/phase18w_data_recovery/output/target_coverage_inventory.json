@@ -1,0 +1,37 @@
+{
+  "generated_utc": "2026-09-29T20:50:47.464736+00:00",
+  "target_cycles": 63,
+  "sources": [
+    {
+      "id": "HF-01",
+      "repo": "rissin/nse-options-intraday",
+      "metadata_status": "ok",
+      "file_count": 65,
+      "sha": "8f7739cab3f38abdcbc6332a6d0a83e1341326e3",
+      "nifty_intraday_year_files": [
+        "upstox_intraday/NIFTY/NIFTY_2022.parquet",
+        "upstox_intraday/NIFTY/NIFTY_2023.parquet",
+        "upstox_intraday/NIFTY/NIFTY_2024.parquet",
+        "upstox_intraday/NIFTY/NIFTY_2025.parquet",
+        "upstox_intraday/NIFTY/NIFTY_2026.parquet"
+      ]
+    },
+    {
+      "id": "HF-02",
+      "repo": "artist-23/nifty-options-data",
+      "metadata_status": "ok",
+      "file_count": 85,
+      "sha": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "weekly_schema_files_present": 42
+    },
+    {
+      "id": "HF-03",
+      "repo": "thetrademarkk/india-index-options-1m",
+      "metadata_status": "ok",
+      "file_count": 3337,
+      "sha": "0f4800e43e6f96cec0794369d78eb4d3c4211ef5",
+      "target_expiry_files_present": 63,
+      "target_expiry_files_missing": []
+    }
+  ]
+}
