@@ -1,7 +1,7 @@
 # Phase 17W — K1/K2 Strike Alternatives
 
 ## State
-Active — the phase has been expanded to a preregistered 224-configuration family: 8 K1 rules × 4 K2 rules × 7 K3 multipliers.
+Closed — 224 registered configurations evaluated; no variant passed the preregistered promotion gate.
 
 ## Why this phase exists
 The weekly strategy's K1/K2 selection has a material structural effect on K3, D, entry cash flow and risk. The current implementation uses OTM1 + NEXT1. The user requested testing of alternatives.
