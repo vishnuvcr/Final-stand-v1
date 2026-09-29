@@ -159,3 +159,9 @@
 - Impact: Supplemental analysis did not start; no empirical result was altered.
 - Resolution: Split the compile and test commands into separate YAML run lines and set the workflow to cancel superseded runs. Output/log path filters were added to prevent self-triggered reruns.
 - Prevention: Keep multi-command workflow steps as explicit shell lines and review the rendered command from the Actions log before accepting CI status.
+
+### E-0041 — First compile-step remediation did not render as a YAML multiline block
+- Observation: The intended split between `py_compile` and the supplemental test command was committed as an indented continuation under a scalar `run:` line rather than a `run: |` block.
+- Impact: The next Phase 12 run still failed at the compile step before analysis.
+- Resolution: Re-fetched the committed workflow, verified the rendered YAML text, and replaced the compile step with an explicit multiline shell block.
+- Prevention: Inspect the committed workflow file after every YAML patch and verify that every multi-command `run` step uses the block-scalar form.
