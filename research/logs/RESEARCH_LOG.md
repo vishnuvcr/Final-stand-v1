@@ -64,3 +64,9 @@
 - Added data attribution and redistribution notes and kept third-party raw files out of the public repository.
 - Hardened the GitHub Actions cache key and download timeout settings for the HF workflow.
 - Current result: Phase 9W is ready for execution, but no empirical pass/fail result has been claimed because the workflow has not been executed in the available tool environment.
+
+## 2026-09-29 — Phase 10W margin/cost branch formalized
+- Created phase-10w-mechanics-margin-costs from the Phase 9 weekly data-gate branch.
+- Formalized dated cost schedules and the historical SPAN/margin measurement protocol.
+- NSE documents SPAN risk arrays and historical margin-report infrastructure. citeturn10search0turn10search7
+- No margin-relief conclusion has been admitted.
