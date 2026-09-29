@@ -42,3 +42,9 @@ The free samples prove that the desired schema exists, but do not establish free
 
 ## Current conclusion
 After the first public-source audit, no complete free historical NIFTY options L1/L2 quote archive has been qualified. The strongest free evidence is limited to evaluation samples. The next step is to determine whether a small legitimate paid historical extract, rather than a broad commercial archive, can cover the exact weekly cycles required.
+## Paid-source research update
+- TrueData is now the highest-priority targeted inquiry: its current documentation states NSE F&O historical data can include Level-1 best bid/ask history, but pricing is customized and historical retention/expired-contract coverage must be confirmed for the exact study dates.
+- NSE is the official fallback. Current domestic pricing lists ₹1,10,000/year/site for historical F&O trade data and ₹12,50,000/year/site for historical F&O order-and-trade data, excluding taxes/levies.
+- TickBytes is a strong technical alternative because its feed contains top-5 bid/ask depth, but the complete historical archive is subscription/licensed.
+- Options Data is not suitable for the bid/ask gate because its published files explicitly exclude bid/ask.
+- A minimum-extract specification and vendor inquiry have been written; no purchase has been made.
