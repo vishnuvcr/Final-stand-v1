@@ -68,3 +68,10 @@ No strategy parameter or holdout state was changed. The next zero-cost test is a
 - Added `API_PROBE_PROTOCOL.md` and a credential-safe `api_capability_probe.py` scaffold.
 - No credentials were requested from or written to the repository. No strategy or holdout data were accessed.
 - Current gate remains **FREE HISTORICAL BBO: NOT QUALIFIED**.
+
+## 2026-09-30 — Phase 15W closure decision
+- The free-source search is now treated as exhausted for the current protocol: no free historical NIFTY weekly-options BBO archive was qualified across GitHub, Hugging Face, Kaggle, Zenodo, public broker/API routes and public exchange documentation.
+- Angel One SmartAPI was additionally assessed as a free historical OHLC/OI route; it does not provide the historical BBO needed for executable-fill validation and expired-contract coverage remains insufficient for the study requirement.
+- Therefore the BBO gate is formally closed as **unqualified**, not failed. No synthetic quotes, OHLC-as-BBO substitution, or paid-data assumption will be introduced.
+- Phase 15W is closed without purchasing commercial data. The frozen strategy and untouched holdout remain unchanged.
+- Next phase: **Phase 16W Capital and Margin Validation**, using official NSE historical SPAN/risk-parameter/report infrastructure where accessible, plus broker-cost and capital-requirement reconstruction. Quote validation remains a documented limitation unless a separately authorized paid dataset is obtained.
