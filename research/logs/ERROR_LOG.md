@@ -105,3 +105,9 @@
 - Impact: The Phase 13 job stopped before dependency installation; no empirical data were processed.
 - Resolution: Removed pip caching from the Phase 9/11/12/13 workflows. Hugging Face data caching remains enabled.
 - Prevention: Do not enable setup-python dependency caching unless the repository contains a supported dependency lock/manifest file.
+
+### E-0023 — Hugging Face Hub tree API incompatibility
+- Observation: The first networked Phase 13 run reached data ingestion but failed because Hugging Face Hub 0.36.2 rejected list_repo_tree(path=...).
+- Impact: No empirical cycles were ingested.
+- Resolution: Changed the call to path_in_repo=... and pinned the workflow dependency to the 0.36.x series.
+- Prevention: Pin external SDK major/minor compatibility and run the ingestion smoke test in CI before empirical processing.
