@@ -182,3 +182,10 @@
 - Observation: Multiple string-normalization attempts still yielded zero matched option rows despite typed Datetime source data.
 - Resolution: Replaced cross-phase timestamp string comparisons with timezone-aware Python datetime values compared directly against the typed Polars timestamp column.
 - Rationale: This removes representation ambiguity without changing trade timestamps.
+
+
+### E-0034 — Polars timezone literal normalized to UTC
+- Observation: Python +05:30 datetimes were materialized by Polars as UTC and could not compare directly with the Asia/Kolkata source column.
+- Impact: Typed timestamp diagnostics failed before evaluating entry/lock rows.
+- Resolution: Convert parsed timestamps to ZoneInfo(Asia/Kolkata) before constructing Polars literals.
+- Prevention: Cross-phase timestamp tests must assert timezone metadata as well as instant equality.
