@@ -98,3 +98,9 @@
 - Impact: No weekly cycles were processed.
 - Resolution: Enabled Polars fixed-offset timezone validation override at process start, followed by explicit normalization to Asia/Kolkata already present in the ingestion code.
 - Prevention: Treat third-party parquet timezone metadata as an ingestion compatibility surface and normalize it before strategy timestamps are compared.
+
+### E-0025 — Weekly lock price fields were referenced before assignment
+- Observation: The live Phase 13 ingestion run reached CycleRecord construction and raised NameError for lock_p1.
+- Impact: Data ingestion stopped after reaching cycle processing; no backtest result was produced.
+- Resolution: Explicitly derive lock_p1, lock_p2 and lock_p3 from the validated lock rows before building the cycle record.
+- Prevention: Keep manifest fields covered by executable integration tests that exercise at least one complete cycle.
