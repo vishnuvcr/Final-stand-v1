@@ -117,3 +117,9 @@
 - Impact: No empirical cycles were ingested.
 - Resolution: Changed the call to path_in_repo=... and pinned the workflow dependency to the 0.36.x series.
 - Prevention: Pin external SDK major/minor compatibility and run the ingestion smoke test in CI before empirical processing.
+
+### E-0024 — Polars rejected fixed-offset timezone metadata in HF parquet
+- Observation: The next Phase 13 run reached the parquet read and failed on timestamp metadata '+05:30' under Polars 1.44.
+- Impact: No weekly cycles were processed.
+- Resolution: Enabled Polars fixed-offset timezone validation override at process start, followed by explicit normalization to Asia/Kolkata already present in the ingestion code.
+- Prevention: Treat third-party parquet timezone metadata as an ingestion compatibility surface and normalize it before strategy timestamps are compared.
