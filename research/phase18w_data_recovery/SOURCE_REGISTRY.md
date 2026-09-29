@@ -19,3 +19,9 @@
 | EX-01 | NSE SPAN/risk files | historical margin parameters | Capital validation | Access probe |
 
 No source is admitted until provenance, contract identity, timestamps, coverage, duplicates and conflicts pass validation.
+
+## Additional source discoveries — 2026-09-30
+- Upstox officially exposes expired option contracts and expired historical candles at 1-minute resolution; access requires Upstox Plus. citeturn1search0turn1search1
+- ICICI Breeze public GitHub pipelines demonstrate a practical route for downloading years of NIFTY weekly options at 1-minute OHLCV + OI, subject to the user's own Breeze credentials/API access. citeturn1search5turn1search10
+- TickBytes advertises Level-1/Level-2 tick, 1-second and 1-minute NIFTY option-chain archives, but its full archive is subscriber/private rather than freely downloadable. citeturn1search9
+- HF-03 explicitly warns that illiquid/far strikes can be sparse or absent; therefore 63/63 expiry-file presence does not establish complete strategy coverage. citeturn0search0turn0search4
