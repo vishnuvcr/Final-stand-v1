@@ -72,3 +72,9 @@ Phase 17W maximum usable coverage was 39/63 for the registered family. This rema
 - **Issue:** The restored spot-interface script created fixed-offset `+05:30` datetimes, which Polars normalized as UTC and rejected against the parquet’s named `Asia/Kolkata` timestamp type.
 - **Impact:** Spot slicing failed before the empirical backtest.
 - **Correction:** Use Python `zoneinfo.ZoneInfo('Asia/Kolkata')` for entry/lock timestamps. This restores the intended local-clock semantics without changing any observation.
+
+
+## E19-009 — 2026-09-30
+- **Issue:** The complete 224-variant empirical run finished successfully, but GitHub rejected the commit because `variant_option_bars.parquet` is 344.80 MB, above the 100 MB repository-file limit.
+- **Impact:** The empirical outputs were generated but not persisted to the branch by that run; no statistical result was discarded conceptually, and no strategy calculation failed.
+- **Correction:** Store the large parquet as a GitHub Actions artifact and commit the reproducible CSV/JSON summaries, trade files, manifests, and provenance to the Phase-19 branch. This avoids Git LFS dependency while retaining the large derived dataset for the run.
