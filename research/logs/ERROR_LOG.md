@@ -141,3 +141,10 @@
 - Impact: Direct execution of the Phase 11 unit-test script would raise NameError.
 - Resolution: Moved the function definition before the __main__ block.
 - Prevention: Keep executable test definitions above the entrypoint and run the repository test script in CI.
+
+
+### E-0028 — Phase 13 workflow still used Phase 11 default data paths
+- Observation: Although the intended fix was documented in E-0026, the committed Phase 13 workflow still invoked `weekly_backtest.py` without explicit manifest/options/spot arguments. The backtest therefore read absent default files and emitted zero trades for every stop candidate.
+- Impact: Candidate CSVs contained only headers; holdout selection failed with `KeyError: mean_net_rupees`. No empirical performance result was produced.
+- Resolution: Patch the Phase 13 workflow to pass the Phase 9 manifest, selected option bars and selected spot bars explicitly at the phase boundary.
+- Prevention: CI workflows must pass all cross-phase data-interface paths explicitly; a documented fix is not considered complete until the committed workflow is inspected and the next run confirms nonzero executable cycles.
