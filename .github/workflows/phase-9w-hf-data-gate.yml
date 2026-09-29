@@ -1,6 +1,9 @@
 name: Phase 9W - Hugging Face Weekly Data Gate
 
 on:
+  push:
+    branches:
+      - phase-9w-hf-data-gate
   workflow_dispatch:
     inputs:
       max_expiries:
@@ -25,6 +28,7 @@ concurrency:
 
 jobs:
   ingest:
+    if: github.event_name == 'workflow_dispatch' || !startsWith(github.event.head_commit.message, 'research: record phase 9W HF data gate output')
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
