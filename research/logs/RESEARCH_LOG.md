@@ -178,3 +178,14 @@
 - Holdout chronology is anchored to the exact 63-cycle Phase 9/13 baseline calendar; holdout statistics are descriptive only.
 - Added a manual GitHub Actions workflow with an automatic push trigger for reproducible execution.
 - No empirical result has yet been admitted from Phase 17W.
+
+
+## 2026-09-30 — Phase 17W K3 multiplier expansion
+- User requested that alternative K3 multipliers/target values be tested across the existing K1/K2 combinations.
+- Re-read the Phase 17W plan/status and logs before changing the registered family.
+- Expanded the preregistered family from 32 K1/K2 configurations to **224 K1/K2/K3 configurations**: 8 K1 rules × 4 K2 rules × 7 K3 premium multipliers.
+- Registered K3 target multipliers: 0.5, 1.0, 1.5, 2.0, 2.5, 3.0 and 4.0 times D, where D=P1-P2.
+- The current frozen strategy is preserved as control OTM1_NEXT1_K3M2.
+- All other strategy mechanics remain frozen; holdout chronology and Phase 13 evidence remain locked.
+- Workflow concurrency was added so an older Phase 17W run is superseded when the expanded-family run starts.
+- The 224-variant family remains one fixed multiple-testing family with Holm adjustment; no post-observation expansion is permitted.
