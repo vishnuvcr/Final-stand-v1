@@ -230,3 +230,9 @@
 - Impact: No SPAN file was admitted from that run.
 - Diagnosis: The independent downloader pattern is documented for NSE SPAN archives, but historical availability/naming may differ by year or archive host; the first URL must not be assumed valid for every year.
 - Resolution: Replace single-pattern acquisition with a bounded candidate-URL probe across the documented NSE archive hosts/paths and record every attempted URL/status. No margin result will be produced until a dated file is actually retrieved and verified.
+
+### E-0062 — Static NSE SPAN archive probe exhausted without historical files
+- Observation: Run 36627668048 tested six candidate NSE archive URL patterns for each required year (2024, 2025, 2026); all returned HTTP 404. The acquisition manifest contains 18 failed URL attempts and zero dated SPAN members.
+- Impact: No historical SPAN snapshot was admitted, so no capital/margin number is reported as empirical evidence.
+- Interpretation: NSE publicly lists F&O SPAN BOD, four intraday, and EOD historical reports, but the accessible static archive paths tested here do not expose the requested 2024–2026 files. The remaining route requires the dynamic historical-report download/session mechanism or licensed historical risk data.
+- Resolution: Close Phase 16W with a quantified margin-data gap rather than inventing capital requirements. Keep the strategy parameters and holdout unchanged.
