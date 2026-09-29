@@ -206,3 +206,8 @@
 - Impact: It would be invalid to treat the public samples as evidence that the full 63-cycle historical bid/ask archive is freely available.
 - Resolution: Classify the sources as schema-qualified but archive-unqualified; do not alter the frozen backtest or claim quote-validated historical performance.
 - Prevention: Require date coverage, exact-contract coverage, completeness and licensing checks before admitting an execution dataset into Phase 15W.
+### E-0045 — Free-source schema/archive confusion during expanded audit
+- Observation: Several public projects expose bid/ask fields in schemas, sample files or live APIs, while their historical data files are not publicly archived or expired-contract access is restricted.
+- Impact: A schema hit could be incorrectly classified as a free historical BBO archive.
+- Resolution: Added a four-level qualification standard (quote-qualified, schema-qualified, OHLC-qualified, rejected) and required date/contract/completeness/licensing checks.
+- Prevention: Do not admit any execution source until an actual historical file/API response for the study's expired NIFTY contracts is observed and reproducibly ingested.
