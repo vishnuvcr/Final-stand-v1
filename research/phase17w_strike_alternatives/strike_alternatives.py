@@ -433,7 +433,7 @@ def main() -> None:
     cache_dir = Path(args.hf_cache)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    build_result = build_variants(
+    cycle_df, option_df, _ = build_variants(
         args.max_expiries,
         args.start_date,
         args.end_date,
@@ -441,12 +441,29 @@ def main() -> None:
         out_dir,
         os.getenv("HF_REVISION", "main"),
     )
-    cycle_df, option_df, baseline_expiries = build_result
 
+    baseline_manifest_path = Path("research/phase9_weekly/output/weekly_cycle_manifest.csv")
     spot_path = Path("research/phase9_weekly/output/selected_weekly_spot_bars.parquet")
     if not spot_path.exists():
         raise RuntimeError("Missing Phase 9 selected spot bars. Build the frozen Phase 9 data interface first.")
     spot_df = pl.read_parquet(spot_path)
+
+    baseline_manifest = pl.read_csv(baseline_manifest_path)
+    baseline_expiries = (
+        baseline_manifest
+        .filter(pl.col("status") == "USABLE_OHLC")
+        .sort("target_expiry")["target_expiry"]
+        .cast(pl.String)
+        .to_list()
+    )
+    if len(baseline_expiries) != 63:
+        raise RuntimeError(
+            f"Phase 9 baseline calendar mismatch: expected 63 usable cycles, got {len(baseline_expiries)}"
+        )
+    (out_dir / "baseline_calendar.json").write_text(
+        json.dumps(baseline_expiries, indent=2),
+        encoding="utf-8",
+    )
 
     train_set, validation_set, holdout_set = split_cutoffs(baseline_expiries)
     results = run_variants(cycle_df, option_df, spot_df, out_dir)
