@@ -29,3 +29,14 @@
 - Paytm Money currently states ₹10 brokerage per unique executed F&O order. citeturn6search8
 - NSE's SPAN documentation confirms portfolio-based scenario margining and daily risk-parameter files; exact historical margin requires the relevant dated files. citeturn6search3turn6search1
 - Phase status: 9W blocked pending qualified intraday data; 10W active and mechanics framework implemented.
+
+
+## 2026-09-29 — Phase 10W analytical mechanics result
+- A non-empirical Black–Scholes stress illustration was performed to examine weekly target-strike discreteness.
+- The key diagnostic added is target error: |actual K3 premium - target premium| / target premium.
+- The analysis shows that the exact 2× premium-difference target can be materially unattainable on a discrete weekly strike grid, especially close to expiry.
+- This does not establish profitability or unprofitability; it establishes a measurement requirement.
+- The weekly pre-lock position remains a bull call ladder with theoretically unbounded upside loss; the K2 lock transforms it into a bounded-risk K1/K3 bull call spread.
+- Phase 10W mechanics and cost/margin framework are implemented.
+- Phase 9W empirical data remains blocked pending qualified intraday historical quote data.
+- No live-trading conclusion has been authorized.
