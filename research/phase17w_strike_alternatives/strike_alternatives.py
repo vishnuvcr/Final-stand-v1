@@ -27,7 +27,17 @@ from research.phase9_weekly.hf_weekly_ingest import (
     require_columns,
     trading_dates,
 )
-from research.phase11_weekly.weekly_backtest import (\n    CostConfig,\n    TradeResult,\n    cost_rupees,\n    entry_cf,\n    exit_locked_cf,\n    exit_prelock_cf,\n    intrinsic,\n    lock_cf,\n    lot_size_for_expiry,\n)
+from research.phase11_weekly.weekly_backtest import (
+    CostConfig,
+    TradeResult,
+    cost_rupees,
+    entry_cf,
+    exit_locked_cf,
+    exit_prelock_cf,
+    intrinsic,
+    lock_cf,
+    lot_size_for_expiry,
+)
 
 IST = ZoneInfo("Asia/Kolkata")
 K1_RULES = ["OTM1", "OTM2", "OTM3", "ATM_NEAREST", "ATM_UP", "ITM1", "ITM2", "ITM3"]
