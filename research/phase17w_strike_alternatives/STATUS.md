@@ -35,7 +35,8 @@ ALTERNATIVE BACKTEST: OPTIMIZED AFTER RUNNER CANCELLATION; FORCE-TRIGGERING CLEA
 - Previous 32-variant workflow runs were superseded by the registered K3 expansion.
 - Current registered family: 224 configurations.
 - Phase 9 data gate remains fixed at 63 usable baseline cycles.
-- Latest corrected run will cancel older in-progress Phase 17W runs through workflow concurrency.
+- Run 36625523052 completed input construction/merge but variant evaluation hit runner memory limits (E-0059); no empirical result was admitted.
+- Memory-bounded variant execution was committed at d63931f7213a24c90da4d959cd1004ac97bc0571; the next push-triggered run is the validation run.
 - No alternative empirical result has been admitted yet.
 
 ## Exit state
