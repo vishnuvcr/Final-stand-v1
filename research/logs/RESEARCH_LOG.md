@@ -52,3 +52,15 @@
 - Phase 10W mechanics and cost/margin framework are implemented.
 - Phase 9W empirical data remains blocked pending qualified intraday historical quote data.
 - No live-trading conclusion has been authorized.
+
+
+## 2026-09-29 — Phase 9W calendar, execution and cross-check hardening
+- Added an expiry-calendar control that excludes the latest expiry in each calendar month from the weekly sample, treating it as the monthly contract.
+- Reconciled the historical NIFTY weekly expiry-day regime to NSE circulars: Thursday-era through August 28, 2025 and Tuesday-era after the changeover. The earlier March Monday proposal is treated as superseded by the later June circular.
+- Removed intrabar look-ahead from 10:00 strike selection by using the 10:00 bar open rather than its close.
+- Added positive-volume filters at entry and lock.
+- Added explicit K1/K2/K3 lock-time price fields to the weekly cycle manifest.
+- Added an independent 2025 Hugging Face cross-check against rissin/nse-options-intraday for selected entry and lock observations.
+- Added data attribution and redistribution notes and kept third-party raw files out of the public repository.
+- Hardened the GitHub Actions cache key and download timeout settings for the HF workflow.
+- Current result: Phase 9W is ready for execution, but no empirical pass/fail result has been claimed because the workflow has not been executed in the available tool environment.
