@@ -245,3 +245,19 @@ The weekly branch stops after:
 Phase 8W → Phase 9W data → Phase 10W mechanics/costs → Phase 11W backtest → Phase 12W robustness → Phase 13W untouched holdout → Phase 14W manuscript.
 
 No endless optimization is allowed.
+
+
+## 15. Weekly target-error diagnostic
+
+For every empirical cycle calculate:
+
+`target_error = |premium(K3) - 2*(premium(K1)-premium(K2))| / [2*(premium(K1)-premium(K2))]`
+
+This is a mandatory descriptive variable because weekly strikes are discrete and very short-dated OTM premiums can make the requested target unattainable.
+
+Report target error by:
+- days to expiry;
+- IV;
+- liquidity;
+- spot/strike distance;
+- volatility regime.
