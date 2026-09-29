@@ -31,6 +31,15 @@ NSE currently documents four weekly NIFTY 50 option expiries excluding monthly c
 ## Phase 9W current data finding
 Hugging Face now provides a feasible primary research source with expiry-partitioned 1-minute NIFTY options and a separate 1-minute NIFTY spot file. The dataset documentation explicitly describes OHLC rather than bid/ask, so the empirical phase will not silently treat OHLC as observed order-book execution.
 
-The next gate is a 52–104 expiry pilot with source checksums, strike completeness, entry/lock coverage, target-error diagnostics and an overlapping-source comparison.
+The active Phase 9 branch now:
+- excludes monthly expiries from the weekly experimental universe;
+- preserves the prior weekly expiry across the pilot-window boundary;
+- removes 10:00 intrabar look-ahead by using bar-open prices;
+- records K1/K2/K3 at entry and lock;
+- cross-checks 2025 prices against a second Hugging Face source;
+- captures source revisions and SHA-256 metadata;
+- uses HF_TOKEN plus the Hugging Face cache in a manual GitHub Actions workflow.
+
+The next gate is a 52–104 weekly-expiry pilot with source checksums, strike completeness, entry/lock coverage, target-error diagnostics and an independent cross-source comparison.
 
 No weekly profitability result has been established.
