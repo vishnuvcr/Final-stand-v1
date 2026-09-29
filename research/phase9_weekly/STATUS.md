@@ -4,7 +4,7 @@
 phase-9w-hf-data-gate
 
 ## State
-Ready for workflow execution; empirical gate not yet run in this session.
+Workflow execution has been triggered by the one-time push runner; awaiting GitHub Actions result.
 
 ## Implemented
 
