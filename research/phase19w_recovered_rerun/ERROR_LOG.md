@@ -66,3 +66,9 @@ Phase 17W maximum usable coverage was 39/63 for the registered family. This rema
 - **Issue:** The execution bridge invoked a recovery helper that attempted to reconstruct Phase 9 spot bars from HF-03 and failed on Polars timezone parsing of `+05:30`.
 - **Impact:** No empirical results were produced.
 - **Correction:** Removed the helper invocation. The bridge already restores the exact frozen Phase 9 `selected_weekly_spot_bars.parquet` artifact, so reconstruction is unnecessary and would introduce an avoidable data-path deviation.
+
+
+## E19-008 — 2026-09-30
+- **Issue:** The restored spot-interface script created fixed-offset `+05:30` datetimes, which Polars normalized as UTC and rejected against the parquet’s named `Asia/Kolkata` timestamp type.
+- **Impact:** Spot slicing failed before the empirical backtest.
+- **Correction:** Use Python `zoneinfo.ZoneInfo('Asia/Kolkata')` for entry/lock timestamps. This restores the intended local-clock semantics without changing any observation.
