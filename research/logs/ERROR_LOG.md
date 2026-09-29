@@ -73,3 +73,10 @@
 - Impact: No partial repository mutation occurred.
 - Resolution: Reissued the patch using quoted strings with escaped dollar-brace sequences.
 - Prevention: Never place raw GitHub Actions expressions inside JavaScript template literals; use plain quoted strings or escaped sequences.
+
+
+### E-0015 — Workflow patch string parsing
+- Observation: A workflow-edit orchestration string again parsed a raw GitHub Actions expression inside a JavaScript template literal and failed before the repository write.
+- Impact: No partial repository mutation occurred.
+- Resolution: Reissued the patch using quoted strings; the workflow update then succeeded.
+- Prevention: For GitHub Actions files, use non-template string literals whenever the payload contains GitHub Actions expressions.
