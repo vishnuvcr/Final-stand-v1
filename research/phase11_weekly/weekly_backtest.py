@@ -99,7 +99,7 @@ def _timestamp_text_expr(column: str = "timestamp") -> pl.Expr:
     return (
         pl.col(column).cast(pl.String)
         .str.replace(r" ", "T")
-        .str.replace(r"\\+0530$", "+05:30")
+        .str.replace(r"\+0530$", "+05:30")
     )
 
 
