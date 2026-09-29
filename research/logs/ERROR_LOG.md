@@ -86,3 +86,9 @@
 - Impact: The creator's margin-drop claim remains untested.
 - Resolution: Formalized the required Phase 10 protocol and kept margin conclusions pending.
 - Prevention: Do not substitute generic margin percentages for dated exchange risk arrays.
+
+### E-0021 — Phase 10 log files already existed
+- Observation: The branch inherited the repository-wide research and error logs, so create-file was rejected for those two paths.
+- Impact: No partial log mutation; the three Phase 10 protocol files were created successfully.
+- Resolution: Appended the Phase 10 entries through update-file using the current blob SHA.
+- Prevention: Check inherited branch file manifests before create-file operations.
