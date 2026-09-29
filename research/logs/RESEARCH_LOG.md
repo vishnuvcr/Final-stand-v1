@@ -194,3 +194,10 @@
 - Run 36625523052 completed the frozen 63-cycle input construction and merge, but the 224-variant evaluation stage hit GitHub-hosted runner memory limits (exit 137/143) before any admissible aggregate result.
 - Logged E-0059. Refactored the variant runner to lazy-scan the merged parquet and process one registered variant at a time, retaining the same strategy, 224-variant registry, 63-cycle split, 50-point stop, 0.50-point/leg slippage, cost model and holdout lock.
 - A new push-triggered workflow run is required to empirically validate the memory fix; no result has been admitted yet.
+
+## 2026-09-30 — Phase 17W 224-variant results and closure
+- Run 36626050986 completed the full registered 224-configuration family after the E-0059 memory-bounded refactor.
+- All 8 variant chunks passed deterministic tests/audits; aggregate validation confirmed 224 unique variants, 63-cycle baseline chronology and 8,736 reconstructed trade rows.
+- No variant passed the preregistered promotion gate. Maximum variant coverage was 39/63; 0/224 passed Holm-adjusted training significance at 0.05.
+- No alternative was promoted. Phase 17W is closed without a second optimization loop; the Phase 13 holdout remains locked.
+- The complete aggregate is preserved as workflow artifact 11060372488 and summarized in research/phase17w_strike_alternatives/RESULTS.md.
