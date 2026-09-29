@@ -78,7 +78,7 @@ jobs:
           HF_REVISION: main
           HF_HOME: ~/.cache/huggingface
         run: |
-          python research/phase17w_strike_alternatives/strike_alternatives.py --max-expiries "${{ inputs.max_expiries || '104' }}" --start-date "2024-01-01" --end-date "2026-12-31" --hf-cache ~/.cache/huggingface --output-dir research/phase17w_strike_alternatives/output
+          python -m research.phase17w_strike_alternatives.strike_alternatives --max-expiries "${{ inputs.max_expiries || '104' }}" --start-date "2024-01-01" --end-date "2026-12-31" --hf-cache ~/.cache/huggingface --output-dir research/phase17w_strike_alternatives/output
       - name: Audit baseline control
         run: |
           python - <<'PY'
