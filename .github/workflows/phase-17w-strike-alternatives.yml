@@ -1,0 +1,110 @@
+name: Phase 17W - K1/K2 Strike Alternatives
+
+on:
+  push:
+    branches:
+      - phase-17w-strike-alternatives
+    paths-ignore:
+      - 'research/logs/RESEARCH_LOG.md'
+      - 'research/logs/ERROR_LOG.md'
+      - 'research/phase17w_strike_alternatives/STATUS.md'
+  workflow_dispatch:
+    inputs:
+      max_expiries:
+        description: "Weekly expiry files"
+        required: true
+        default: "104"
+
+permissions:
+  contents: write
+
+jobs:
+  alternatives:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install stack
+        run: |
+          python -m pip install --upgrade pip
+          pip install "huggingface_hub>=0.36,<0.37" "polars>=1.20,<2" "pyarrow>=18,<23" "numpy>=2,<3" pytest
+      - name: Cache Hugging Face data
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-phase17w-v1-\${{ inputs.max_expiries || '104' }}
+          restore-keys: |
+            hf-phase17w-v1-
+            hf-phase16w-v1-
+            hf-phase13w-v1-
+            hf-phase12w-v1-
+            hf-phase9w-v2-
+      - name: Verify token
+        env:
+          HF_TOKEN: \${{ secrets.HF_TOKEN }}
+        run: test -n "$HF_TOKEN"
+      - name: Compile tests
+        run: |
+          python -m py_compile research/phase17w_strike_alternatives/strike_alternatives.py
+          python -m pytest -q research/phase17w_strike_alternatives/test_strike_alternatives.py
+      - name: Build frozen Phase 9 data interface
+        env:
+          HF_TOKEN: \${{ secrets.HF_TOKEN }}
+          HF_REVISION: main
+          HF_HOME: ~/.cache/huggingface
+        run: |
+          rm -rf research/phase9_weekly/output
+          python research/phase9_weekly/hf_weekly_ingest.py --max-expiries "\${{ inputs.max_expiries || '104' }}" --start-date "2024-01-01" --end-date "2026-12-31" --output-dir research/phase9_weekly/output --hf-cache ~/.cache/huggingface
+      - name: Interface smoke checks
+        run: |
+          python - <<'PY'
+          import polars as pl
+          m = pl.read_csv("research/phase9_weekly/output/weekly_cycle_manifest.csv")
+          s = pl.read_parquet("research/phase9_weekly/output/selected_weekly_spot_bars.parquet")
+          u = m.filter(pl.col("status")=="USABLE_OHLC")
+          print("Phase 9 usable cycles:", u.height)
+          print("Phase 9 total candidate cycles:", m.height)
+          print("Phase 9 spot rows:", s.height)
+          assert u.height == 63, f"Expected 63 usable baseline cycles, got {u.height}"
+          PY
+      - name: Run 32 K1/K2 variants
+        env:
+          HF_TOKEN: \${{ secrets.HF_TOKEN }}
+          HF_REVISION: main
+          HF_HOME: ~/.cache/huggingface
+        run: |
+          python research/phase17w_strike_alternatives/strike_alternatives.py --max-expiries "\${{ inputs.max_expiries || '104' }}" --start-date "2024-01-01" --end-date "2026-12-31" --hf-cache ~/.cache/huggingface --output-dir research/phase17w_strike_alternatives/output
+      - name: Audit baseline control
+        run: |
+          python - <<'PY'
+          import json
+          p="research/phase17w_strike_alternatives/output/variant_summary.json"
+          rows=json.load(open(p))
+          assert len(rows) == 32
+          b=next(x for x in rows if x["variant_id"]=="OTM1_NEXT1")
+          print(json.dumps(b,indent=2))
+          assert b["training"]["n"] > 0
+          assert b["validation"]["n"] > 0
+          PY
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase-17w-k1-k2-alternatives-\${{ github.run_number }}
+          path: |
+            research/phase17w_strike_alternatives/output/variant_summary.json
+            research/phase17w_strike_alternatives/output/variant_registry.json
+            research/phase17w_strike_alternatives/output/baseline_calendar.json
+            research/phase17w_strike_alternatives/output/all_variant_trades.csv
+          retention-days: 60
+      - name: Commit machine-readable results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/phase17w_strike_alternatives/output/variant_summary.json research/phase17w_strike_alternatives/output/variant_registry.json research/phase17w_strike_alternatives/output/baseline_calendar.json
+          git diff --cached --quiet || git commit -m "research: record phase 17W K1/K2 alternative results"
+          git push
