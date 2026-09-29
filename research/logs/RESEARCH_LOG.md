@@ -64,3 +64,13 @@
 - Added data attribution and redistribution notes and kept third-party raw files out of the public repository.
 - Hardened the GitHub Actions cache key and download timeout settings for the HF workflow.
 - Current result: Phase 9W is ready for execution, but no empirical pass/fail result has been claimed because the workflow has not been executed in the available tool environment.
+
+## 2026-09-29 — Phase 11/12 cost and settlement hardening
+- Re-read the active branch status, research log and error log before changes.
+- Verified with current NSE documentation that NIFTY index options are cash-settled using the closing value of the underlying index on the last trading day. citeturn9search0turn1search1
+- Identified and corrected the Phase 11 expiry-path bug: the selected NIFTY spot file already extended through expiry, but the backtest had been returning the lock timestamp as the expiry exit timestamp.
+- Corrected option transaction-cost modelling: NSE option transaction charges are 0.0495% before 01-Oct-2024 and 0.03503% thereafter; STT is 0.0625% before 01-Oct-2024, 0.10% through 31-Mar-2026, and 0.15% from 01-Apr-2026. citeturn5search3turn3search10
+- Updated SEBI turnover fee to the currently documented 0.0001% and added the published option IPFT rate proxy of 0.000005% to the cost model. citeturn7search0turn5search5
+- Paytm Money currently states ₹10 brokerage per unique executed F&O order; the model retains this broker-specific input. citeturn2search0
+- Phase 12 now explicitly states that rupee P&L is not a return-on-capital measure until historical SPAN/peak-margin series are integrated.
+- No profitability conclusion was admitted.
