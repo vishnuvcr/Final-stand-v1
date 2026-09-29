@@ -224,3 +224,9 @@
 - Impact: capital validation cannot be presented as executable-fill validation.
 - Resolution: carry the BBO limitation forward explicitly; use Phase 16W only for capital/margin reconstruction and risk normalization.
 - Prevention: keep BBO and capital evidence as separate evidence classes in the manuscript.
+
+### E-0061 — Initial yearly NSE SPAN archive URL pattern returned 404
+- Observation: Phase 16W run 36627393038 reached the acquisition step but NSE returned HTTP 404 for the first-year archive URL `https://nsearchives.nseindia.com/archives/nsccl/span/nsccl.2023.s.zip`.
+- Impact: No SPAN file was admitted from that run.
+- Diagnosis: The independent downloader pattern is documented for NSE SPAN archives, but historical availability/naming may differ by year or archive host; the first URL must not be assumed valid for every year.
+- Resolution: Replace single-pattern acquisition with a bounded candidate-URL probe across the documented NSE archive hosts/paths and record every attempted URL/status. No margin result will be produced until a dated file is actually retrieved and verified.
