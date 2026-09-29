@@ -1,7 +1,7 @@
 # Phase 17W — K1/K2 Strike Alternatives
 
 ## State
-Initialized — pending workflow execution.
+Active — empirical workflow run 36616140975 is executing the 32-configuration family.
 
 ## Why this phase exists
 The weekly strategy's K1/K2 selection has a material structural effect on K3, D, entry cash flow and risk. The current implementation uses OTM1 + NEXT1. The user requested testing of alternatives.
@@ -18,7 +18,7 @@ The weekly strategy's K1/K2 selection has a material structural effect on K3, D,
 8 K1 rules x 4 K2 rules = 32 configurations.
 
 ## Current gate
-ALTERNATIVE BACKTEST: PENDING.
+ALTERNATIVE BACKTEST: RUNNING.
 
 ## Planned sequence
 1. Re-read protocol and verify branch artifacts.
@@ -29,6 +29,12 @@ ALTERNATIVE BACKTEST: PENDING.
 6. Compute centered moving-block bootstrap p-values on training data and Holm-adjust across 32 variants.
 7. Apply the preregistered promotion gate without using holdout outcomes.
 8. Update results, logs, main README and downstream-phase recommendation.
+
+## Latest execution
+- Workflow: 36616140975
+- Phase 9 data gate: 63 usable cycles observed
+- Unit tests: 9 passed
+- Variant engine: running
 
 ## Exit state
 The phase closes after the 32-configuration family is evaluated and the promotion gate is applied. No second optimization loop is opened automatically.
