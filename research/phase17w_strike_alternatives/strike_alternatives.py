@@ -463,6 +463,7 @@ def _fast_backtest_cycle(
     expiry_spot_close: float | None,
     cfg: CostConfig,
     stop_loss: float = 50.0,
+    precomputed_wide: pl.DataFrame | None = None,
 ):
     """Vectorized equivalent of Phase 11 backtest_cycle for one 3-leg slice.
 
@@ -480,19 +481,22 @@ def _fast_backtest_cycle(
     slip = cfg.slippage_points_per_leg
     entry_ts, lock_ts = cycle["entry_timestamp"], cycle["lock_timestamp"]
 
-    base = options.select(["timestamp", "strike", "open"]).with_columns(
-        pl.col("timestamp").cast(pl.String).str.replace(r" ", "T").str.slice(0, 19)
-    )
-    wide = (
-        base.pivot(
-            on="strike",
-            on_columns=[k1, k2, k3],
-            index="timestamp",
-            values="open",
-            aggregate_function="first",
+    if precomputed_wide is None:
+        base = options.select(["timestamp", "strike", "open"]).with_columns(
+            pl.col("timestamp").cast(pl.String).str.replace(r" ", "T").str.slice(0, 19)
         )
-        .sort("timestamp")
-    )
+        wide = (
+            base.pivot(
+                on="strike",
+                on_columns=[k1, k2, k3],
+                index="timestamp",
+                values="open",
+                aggregate_function="first",
+            )
+            .sort("timestamp")
+        )
+    else:
+        wide = precomputed_wide
     if wide.height == 0:
         return None
 
@@ -616,6 +620,29 @@ def run_variants(
         as_dict=True,
     ) if option_df.height else {}
 
+    # Precompute one timestamp × strike matrix per expiry. The prior implementation
+    # rebuilt a Polars pivot for every variant-cycle pair, which dominated runtime.
+    expiry_wide: dict[str, pl.DataFrame] = {}
+    if option_df.height:
+        expiry_keys = option_df.select("target_expiry").unique().to_series().to_list()
+        for expiry_key in expiry_keys:
+            part = option_df.filter(pl.col("target_expiry") == expiry_key)
+            base = (
+                part.select(["timestamp", "strike", "open"])
+                .unique(["timestamp", "strike"], keep="first")
+                .with_columns(
+                    pl.col("timestamp").cast(pl.String).str.replace(r" ", "T").str.slice(0, 19)
+                )
+            )
+            expiry_wide[str(expiry_key)] = (
+                base.pivot(
+                    on="strike",
+                    index="timestamp",
+                    values="open",
+                    aggregate_function="first",
+                ).sort("timestamp")
+            )
+
     spot_keyed = (
         spot_df
         .sort("timestamp")
@@ -642,6 +669,7 @@ def run_variants(
                 spot_close.get(row["target_expiry"]),
                 cfg,
                 stop_loss=50.0,
+                precomputed_wide=expiry_wide.get(str(row["target_expiry"])),
             )
             if result is None:
                 continue
