@@ -28,6 +28,7 @@ jobs:
         env:
           HF_TOKEN: ${{secrets.HF_TOKEN}}
           HF_REVISION: 0f4800e43e6f96cec0794369d78eb4d3c4211ef5
+          PYTHONPATH: ${{github.workspace}}
         run: |
           python research/phase17w_strike_alternatives/strike_alternatives.py \
             --variant-start 0 \
