@@ -19,3 +19,9 @@ Known environment limitation: direct outbound internet from the local container 
 - **Issue:** A prior HF-03 run remained reported as `in_progress` with a stale timestamp while a clean replacement run was triggered.
 - **Impact:** Its state cannot be treated as evidence of successful or failed recovery.
 - **Correction:** A new recovery run was triggered from the latest branch commit with `cancel-in-progress: true`.
+
+
+## E18-004 — 2026-09-30
+- **Issue:** The serialized HF-03 recovery run remained `in_progress` in the 224-variant coverage step for substantially longer than expected, with no artifacts or live logs exposed.
+- **Impact:** Recovery was not admitted and Phase 19 was correctly held. The state was treated as a performance/stall defect, not a data-quality conclusion.
+- **Correction:** Replaced repeated full-DataFrame filtering inside the 224×63 loop with timestamp-level strike/open maps and direct dictionary lookups. The concurrency group remains enabled so the corrected commit supersedes the stale run.
