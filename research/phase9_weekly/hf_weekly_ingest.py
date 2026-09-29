@@ -327,9 +327,10 @@ def main() -> None:
 
         selected_strikes = [k for k in (k1, k2, k3) if k is not None]
 
+        expiry_ts = datetime.combine(expiry, datetime.max.time().replace(microsecond=0), IST)
         spot_slice = index_df.filter(
             (pl.col("timestamp") >= entry_ts)
-            & (pl.col("timestamp") <= lock_ts)
+            & (pl.col("timestamp") <= expiry_ts)
         ).with_columns(
             pl.lit(expiry.isoformat()).alias("target_expiry"),
             pl.lit(entry_ts.isoformat()).alias("entry_timestamp"),
