@@ -31,7 +31,7 @@ jobs:
       - name: Install stack
         run: |
           python -m pip install --upgrade pip
-          pip install "huggingface_hub>=0.34,<1" "polars>=1.20,<2" "pyarrow>=18,<23" "numpy>=2,<3"
+          pip install "huggingface_hub>=0.36,<0.37" "polars>=1.20,<2" "pyarrow>=18,<23" "numpy>=2,<3"
 
       - name: Cache Hugging Face data
         uses: actions/cache@v4
