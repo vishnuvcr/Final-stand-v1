@@ -212,6 +212,8 @@ def build_variants(
     out_dir: Path,
     revision: str,
     baseline_manifest_path: Path | None = None,
+    expiry_start: int = 0,
+    expiry_end: int | None = None,
 ) -> tuple[pl.DataFrame, pl.DataFrame, list[str]]:
     token = os.getenv("HF_TOKEN") or None
     api = HfApi(token=token)
@@ -226,15 +228,16 @@ def build_variants(
     window = [(d, p) for d, p in weekly_catalog if start <= d <= end]
     if baseline_manifest_path is not None:
         manifest = pl.read_csv(baseline_manifest_path)
-        wanted = set(
+        wanted_ordered = (
             manifest.filter(pl.col("status") == "USABLE_OHLC")
             .sort("target_expiry")["target_expiry"]
             .cast(pl.String)
             .to_list()
         )
+        if len(wanted_ordered) != 63:
+            raise RuntimeError(f"Frozen baseline calendar mismatch during variant build: expected 63, got {len(wanted_ordered)}")
+        wanted = set(wanted_ordered[expiry_start:expiry_end])
         expiry_files = [(d, p) for d, p in window if d.isoformat() in wanted]
-        if len(expiry_files) != 63:
-            raise RuntimeError(f"Frozen baseline calendar mismatch during variant build: expected 63, got {len(expiry_files)}")
     else:
         expiry_files = window[-max_expiries:]
     if not expiry_files:
@@ -723,6 +726,8 @@ def main() -> None:
     ap.add_argument("--built-input-dir", default=None)
     ap.add_argument("--build-only", action="store_true")
     ap.add_argument("--baseline-manifest", default=None)
+    ap.add_argument("--expiry-start", type=int, default=0)
+    ap.add_argument("--expiry-end", type=int, default=None)
     args = ap.parse_args()
     if args.variant_start < 0 or args.variant_start >= len(VARIANT_IDS):
         raise ValueError("variant-start is outside the registered 224-variant family")
@@ -748,6 +753,8 @@ def main() -> None:
             out_dir,
             os.getenv("HF_REVISION", "main"),
             Path(args.baseline_manifest) if args.baseline_manifest else None,
+            args.expiry_start,
+            args.expiry_end,
         )
     if args.build_only:
         raise SystemExit(0)
