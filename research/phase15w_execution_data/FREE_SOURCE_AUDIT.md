@@ -27,3 +27,6 @@ Therefore the samples must not be substituted for the 63-cycle historical sample
 - NSE historical data subscription: https://www.nseindia.com/static/market-data/eod-historical-data-subscription
 - NSE real-time data specification: https://www.nseindia.com/static/market-data/real-time-data-subscription
 - NSE historical reports: https://www.nseindia.com/static/resources/historical-reports-capital-market-daily-monthly-archives
+| SauMStats NIFTY market data engine | 2024 historical + 2026 live | No; explicitly states bid/ask unavailable | 1-min | Historical Kaggle data is OHLC-based | N/A | **Not qualified** |
+
+Additional search result: the SauMStats NIFTY engine explicitly documents that its historical data have no bid/ask and that market price is proxied by close price. This independently supports the distinction between free intraday OHLC archives and historical quote archives.
