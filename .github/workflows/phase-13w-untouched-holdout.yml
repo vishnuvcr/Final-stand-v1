@@ -62,7 +62,7 @@ jobs:
           rm -rf research/phase13_weekly/input
           mkdir -p research/phase13_weekly/input
           for stop in 25 50 75 100 150 200 300; do
-            python research/phase11_weekly/weekly_backtest.py --slippage-points "0.50" --stop-loss-points "$stop" --output "research/phase13_weekly/input/trades_slip_0.50_stop_${stop}.csv"
+            python research/phase11_weekly/weekly_backtest.py --manifest "research/phase9_weekly/output/weekly_cycle_manifest.csv" --options "research/phase9_weekly/output/selected_weekly_option_bars.parquet" --spot "research/phase9_weekly/output/selected_weekly_spot_bars.parquet" --slippage-points "0.50" --stop-loss-points "$stop" --output "research/phase13_weekly/input/trades_slip_0.50_stop_${stop}.csv"
           done
       - name: Apply frozen training-only selection
         run: python research/phase13_weekly/holdout.py
