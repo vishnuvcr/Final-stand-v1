@@ -60,3 +60,11 @@ After the first public-source audit, no complete free historical NIFTY options L
 **FREE HISTORICAL BBO DATASET: NOT QUALIFIED.**
 
 No strategy parameter or holdout state was changed. The next zero-cost test is an empirical probe of any user-authorized free API credentials for expired NIFTY contracts, followed by exact coverage validation against the frozen cycle set.
+
+## API probe gate — 2026-09-30
+- ICICI Breeze and Dhan are confirmed as historical OHLC/coverage routes, not historical BBO routes. citeturn2search1turn1search0
+- Upstox provides expired 1-minute OHLC but its expired-instrument endpoints require Plus. citeturn0search0turn0search2
+- TrueData remains the only documented candidate found whose historical tick interface explicitly supports bid/ask fields and expired symbols; exact archive coverage still requires authenticated/vendor verification.
+- Added `API_PROBE_PROTOCOL.md` and a credential-safe `api_capability_probe.py` scaffold.
+- No credentials were requested from or written to the repository. No strategy or holdout data were accessed.
+- Current gate remains **FREE HISTORICAL BBO: NOT QUALIFIED**.
