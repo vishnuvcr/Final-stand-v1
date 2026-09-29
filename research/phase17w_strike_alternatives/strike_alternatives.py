@@ -611,8 +611,10 @@ def run_variants(
     option_df: pl.DataFrame,
     spot_df: pl.DataFrame,
     out_dir: Path,
+    variant_subset: list[str] | None = None,
 ) -> pl.DataFrame:
     cfg = CostConfig()
+    variants_to_run = variant_subset or VARIANT_IDS
     rows: list[dict] = []
     usable = cycle_df.filter(pl.col("status") == "USABLE_OHLC")
     option_partitions = option_df.partition_by(
@@ -656,7 +658,7 @@ def run_variants(
         if r["close"] is not None
     }
 
-    for variant in VARIANT_IDS:
+    for variant in variants_to_run:
         cycles = usable.filter(pl.col("variant_id") == variant).sort("target_expiry")
         local_results: list[dict] = []
         for row in cycles.iter_rows(named=True):
@@ -703,7 +705,15 @@ def main() -> None:
     ap.add_argument("--end-date", default="2026-12-31")
     ap.add_argument("--hf-cache", default=os.path.expanduser("~/.cache/huggingface"))
     ap.add_argument("--output-dir", default="research/phase17w_strike_alternatives/output")
+    ap.add_argument("--variant-start", type=int, default=0)
+    ap.add_argument("--variant-end", type=int, default=None)
     args = ap.parse_args()
+    if args.variant_start < 0 or args.variant_start >= len(VARIANT_IDS):
+        raise ValueError("variant-start is outside the registered 224-variant family")
+    variant_end = len(VARIANT_IDS) if args.variant_end is None else args.variant_end
+    if variant_end <= args.variant_start or variant_end > len(VARIANT_IDS):
+        raise ValueError("variant-end is outside the registered 224-variant family")
+    selected_variants = VARIANT_IDS[args.variant_start:variant_end]
 
     out_dir = Path(args.output_dir)
     cache_dir = Path(args.hf_cache)
@@ -742,7 +752,7 @@ def main() -> None:
     )
 
     train_set, validation_set, holdout_set = split_cutoffs(baseline_expiries)
-    results = run_variants(cycle_df, option_df, spot_df, out_dir)
+    results = run_variants(cycle_df, option_df, spot_df, out_dir, selected_variants)
 
     rows: list[dict] = []
     pvals: list[tuple[str, float | None]] = []
@@ -752,7 +762,7 @@ def main() -> None:
         "holdout": holdout_set,
     }
 
-    for variant in VARIANT_IDS:
+    for variant in selected_variants:
         variant_results = results.filter(pl.col("variant_id") == variant).sort("target_expiry")
         rec: dict = {"variant_id": variant}
         for split_name, expiry_set in split_map.items():
@@ -807,6 +817,8 @@ def main() -> None:
         json.dumps(
             {
                 "variants": len(rows),
+                "variant_start": args.variant_start,
+                "variant_end": variant_end,
                 "baseline_calendar_n": len(baseline_expiries),
                 "promotable": [
                     x["variant_id"] for x in rows if x["promotable_to_capital_phase"]
