@@ -80,3 +80,9 @@
 - Impact: No partial repository mutation occurred.
 - Resolution: Reissued the patch using quoted strings; the workflow update then succeeded.
 - Prevention: For GitHub Actions files, use non-template string literals whenever the payload contains GitHub Actions expressions.
+
+### E-0018 — Runtime could not execute a direct Git clone for local verification
+- Observation: The container runtime could not resolve github.com, so a local clone of the research branch was unavailable.
+- Impact: Local execution of the updated unit tests could not be performed in this environment.
+- Resolution: Repository changes were made through the GitHub connector and the workflow remains the execution authority. No empirical result was claimed.
+- Prevention: Keep deterministic unit tests in the repository and rely on GitHub Actions for networked data execution; verify workflow artifacts before admitting results.
