@@ -148,3 +148,10 @@
 - Impact: Candidate CSVs contained only headers; holdout selection failed with `KeyError: mean_net_rupees`. No empirical performance result was produced.
 - Resolution: Patch the Phase 13 workflow to pass the Phase 9 manifest, selected option bars and selected spot bars explicitly at the phase boundary.
 - Prevention: CI workflows must pass all cross-phase data-interface paths explicitly; a documented fix is not considered complete until the committed workflow is inspected and the next run confirms nonzero executable cycles.
+
+
+### E-0029 — Phase 13 zero-trade result persisted after explicit path correction
+- Observation: Run 36596109078 successfully ingested 100 expiry candidates and 63 USABLE_OHLC cycles, but all seven Phase 11 candidate backtests still returned zero trades.
+- Impact: The earlier path-only diagnosis was insufficient; no empirical result can be admitted.
+- Resolution: Added a CI data-interface diagnostic that reports manifest status counts, option/spot row counts, and exact entry/lock/expiry-row availability for representative USABLE_OHLC cycles before candidate generation.
+- Prevention: Cross-phase interfaces must be validated by observed row-level compatibility, not only by filesystem paths.
