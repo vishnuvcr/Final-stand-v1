@@ -13,8 +13,9 @@ jobs:
           python-version: '3.12'
       - name: Unit-test weekly mechanics
         run: |
-          python -m unittest discover research/phase8_weekly -p 'test_*.py' || true
-          python -m py_compile research/phase8_weekly/phase8_weekly_engine.py
+          cd research/phase8_weekly
+          python test_phase8_weekly_engine.py
+          python -m py_compile phase8_weekly_engine.py
       - name: Verify cost and margin documentation
         run: |
           test -f research/phase8_weekly/COST_MARGIN_MODEL.md
