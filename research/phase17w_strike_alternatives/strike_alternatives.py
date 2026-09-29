@@ -218,7 +218,7 @@ def build_variants(
     dates = trading_dates(index_df)
 
     cycles: list[VariantCycle] = []
-    selected_rows: list[pl.DataFrame] = []
+    selected_specs: list[tuple[str, str, str, float, float, float, str, str, str]] = []
     baseline_expiries: list[str] = []
 
     for expiry, source_path in expiry_files:
@@ -344,21 +344,59 @@ def build_variants(
                 )
 
                 if status == "USABLE_OHLC":
-                    selected_rows.append(
-                        opt.filter(
-                            pl.col("strike").is_in([k1, k2, k3])
-                            & pl.col("option_type").str.to_uppercase().is_in(["CE", "CALL"])
-                        ).with_columns(
-                            pl.lit(variant_id).alias("variant_id"),
-                            pl.lit(expiry.isoformat()).alias("target_expiry"),
-                            pl.lit(entry_ts.isoformat()).alias("entry_timestamp"),
-                            pl.lit(lock_ts.isoformat()).alias("lock_timestamp"),
+                    selected_specs.append(
+                        (
+                            variant_id,
+                            str(k1),
+                            str(k2),
+                            float(k3),
+                            expiry.isoformat(),
+                            entry_ts.isoformat(),
+                            lock_ts.isoformat(),
+                            str(source_path),
+                            str(expiry.isoformat()),
                         )
                     )
 
         prior_expiry = expiry
 
     cycle_df = pl.DataFrame([asdict(x) for x in cycles])
+
+    # Performance guard: filter each source option file once across all strikes needed
+    # by the 32 registered variants, then attach variant labels to the small selected slice.
+    # This avoids scanning every full expiry parquet 32 times.
+    selected_rows: list[pl.DataFrame] = []
+    for expiry, source_path in expiry_files:
+        source_specs = [s for s in selected_specs if s[8] == expiry.isoformat()]
+        if not source_specs:
+            continue
+        local = hf_hub_download(
+            repo_id=DATASET_REPO,
+            filename=source_path,
+            repo_type=DATASET_TYPE,
+            revision=resolved_revision,
+            token=token,
+            cache_dir=str(cache_dir),
+        )
+        opt = pl.read_parquet(local).with_columns(
+            pl.col("timestamp").cast(pl.Datetime(time_zone="Asia/Kolkata"))
+        )
+        needed_strikes = sorted({float(s) for spec in source_specs for s in spec[1:4]})
+        base = opt.filter(
+            pl.col("strike").cast(pl.Float64).is_in(needed_strikes)
+            & pl.col("option_type").str.to_uppercase().is_in(["CE", "CALL"])
+        )
+        for variant_id, sk1, sk2, sk3, expiry_s, entry_s, lock_s, _, _ in source_specs:
+            strikes = [float(sk1), float(sk2), float(sk3)]
+            selected_rows.append(
+                base.filter(pl.col("strike").is_in(strikes)).with_columns(
+                    pl.lit(variant_id).alias("variant_id"),
+                    pl.lit(expiry_s).alias("target_expiry"),
+                    pl.lit(entry_s).alias("entry_timestamp"),
+                    pl.lit(lock_s).alias("lock_timestamp"),
+                )
+            )
+
     option_df = pl.concat(selected_rows, how="diagonal") if selected_rows else pl.DataFrame()
     out_dir.mkdir(parents=True, exist_ok=True)
     cycle_df.write_csv(out_dir / "variant_cycle_manifest.csv")
@@ -383,16 +421,17 @@ def run_variants(
     cfg = CostConfig()
     rows: list[dict] = []
     usable = cycle_df.filter(pl.col("status") == "USABLE_OHLC")
+    option_partitions = option_df.partition_by(
+        ["variant_id", "target_expiry"],
+        as_dict=True,
+    ) if option_df.height else {}
 
     for variant in VARIANT_IDS:
         cycles = usable.filter(pl.col("variant_id") == variant).sort("target_expiry")
         local_results: list[dict] = []
         for row in cycles.iter_rows(named=True):
-            option_slice = option_df.filter(
-                (pl.col("variant_id") == variant)
-                & (pl.col("target_expiry") == row["target_expiry"])
-            )
-            if option_slice.height == 0:
+            option_slice = option_partitions.get((variant, row["target_expiry"]))
+            if option_slice is None or option_slice.height == 0:
                 continue
             result = backtest_cycle(row, option_slice, spot_df, stop_loss=50.0, cfg=cfg)
             if result is None:
