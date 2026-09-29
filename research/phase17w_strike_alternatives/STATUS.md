@@ -18,7 +18,8 @@ The weekly strategy's K1/K2 selection has a material structural effect on K3, D,
 8 K1 rules × 4 K2 rules × 7 K3 multipliers = 224 configurations.
 
 ## Current gate
-ALTERNATIVE BACKTEST: RUNNING / restarting after registered K3 expansion.
+
+ALTERNATIVE BACKTEST: OPTIMIZED AFTER RUNNER CANCELLATION; READY FOR RE-RUN
 
 ## Planned sequence
 1. Re-read protocol and verify branch artifacts.
