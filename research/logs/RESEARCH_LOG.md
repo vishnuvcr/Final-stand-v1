@@ -153,3 +153,10 @@
 - The most important new schema source is ayyararyan/nse-options-pipeline; its BBO fields are documented, but its actual NSEI-Data input is explicitly not tracked in Git.
 - No strategy, holdout, cost or parameter state was changed.
 - Next action: empirical probe of any user-authorized free API credentials, then exact contract/date coverage validation.
+
+## 2026-09-30 — Phase 15W API capability gate
+- Re-checked the phase plan, status and logs before proceeding.
+- Verified official/API documentation for ICICI Breeze, Dhan and Upstox; these provide historical OHLC/coverage routes but not historical BBO in the documented response. citeturn2search1turn1search0turn0search0
+- TrueData documentation remains the most directly aligned candidate because historical tick retrieval can include bid/ask and expired symbols, but exact old-date coverage must be verified with authenticated access.
+- Added an API probe protocol and credential-safe scaffold. No credentials were stored and no strategy/holdout data were accessed.
+- Phase 15W remains blocked only at the authenticated historical-BBO access gate; free archive discovery is complete for the current search scope.
