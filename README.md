@@ -3,7 +3,7 @@
 ## Active research reset
 **The active strategy research has been reset from monthly to weekly NIFTY expiries.**
 
-Active branch: `phase-9w-hf-data-gate`
+Active branch: `phase-13w-untouched-holdout`
 
 Archived/superseded branch: `phase-8-video-call-ladder` — monthly-expiry design, retained for auditability only.
 
@@ -13,7 +13,7 @@ Test the same core video-derived call-ladder-to-spread strategy as a **weekly tr
 NSE currently documents four weekly NIFTY 50 index-option expiry contracts excluding monthly contracts, with weekly expiry on Tuesday or the previous trading day if Tuesday is a holiday, and a new serial weekly contract introduced after expiry.
 
 Research branch:
-https://github.com/vishnuvcr/Final-stand-v1/tree/phase-9w-hf-data-gate
+https://github.com/vishnuvcr/Final-stand-v1/tree/phase-13w-untouched-holdout
 
 ## Reset decision
 The monthly experiment is not being mechanically converted into weekly data. The weekly branch has a new:
@@ -27,11 +27,11 @@ The monthly experiment is not being mechanically converted into weekly data. The
 
 ## Active weekly phase map
 - 8W — Weekly strategy definition ✅
-- 9W — Weekly Hugging Face point-in-time data 🟡 active
-- 10W — Mechanics, margin and costs
-- 11W — Weekly backtest
-- 12W — Robustness / CPCV / PBO / DSR
-- 13W — Untouched weekly holdout
+- 9W — Weekly Hugging Face point-in-time data ✅ implemented; empirical execution pending verification
+- 10W — Mechanics, margin and costs 🟡 hardening / historical SPAN integration pending
+- 11W — Weekly backtest ✅ implemented and cost/settlement hardened
+- 12W — Robustness / CPCV / PBO / DSR 🟡 pipeline implemented; empirical execution pending verification
+- 13W — Untouched weekly holdout 🟡 active
 - 14W — Final research manuscript
 
 ## Research governance
