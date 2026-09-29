@@ -116,10 +116,10 @@ def exact_row(df: pl.DataFrame, ts: datetime) -> pl.DataFrame:
     return df.filter(pl.col("timestamp") == ts)
 
 
-def close_value(row: pl.DataFrame) -> float | None:
+def open_value(row: pl.DataFrame) -> float | None:
     if row.height != 1:
         return None
-    x = row["close"][0]
+    x = row["open"][0]
     return float(x) if x is not None else None
 
 
@@ -130,8 +130,8 @@ def choose_strikes(entry_calls: pl.DataFrame, spot: float):
         return None, None, None, None, None, None, None
 
     k1, k2 = upper[0], upper[1]
-    p1 = close_value(entry_calls.filter(pl.col("strike") == k1))
-    p2 = close_value(entry_calls.filter(pl.col("strike") == k2))
+    p1 = open_value(entry_calls.filter(pl.col("strike") == k1))
+    p2 = open_value(entry_calls.filter(pl.col("strike") == k2))
     if p1 is None or p2 is None:
         return k1, k2, None, p1, p2, None, None
 
@@ -143,14 +143,14 @@ def choose_strikes(entry_calls: pl.DataFrame, spot: float):
     c = (
         entry_calls
         .filter(pl.col("strike") > k2)
-        .with_columns((pl.col("close") - target).abs().alias("distance"))
+        .with_columns((pl.col("open") - target).abs().alias("distance"))
         .sort(["distance", "strike"])
     )
     if c.height == 0:
         return k1, k2, None, p1, p2, target, None
 
     k3 = float(c["strike"][0])
-    p3 = float(c["close"][0])
+    p3 = float(c["open"][0])
     return k1, k2, k3, p1, p2, target, p3
 
 
@@ -224,7 +224,12 @@ def main() -> None:
         )
         source_sha = sha256_file(Path(local))
         manifest["expiry_files"].append(
-            {"expiry": expiry.isoformat(), "path": source_path, "sha256": source_sha}
+            {
+                "expiry": expiry.isoformat(),
+                "path": source_path,
+                "sha256": source_sha,
+                "size_bytes": Path(local).stat().st_size,
+            }
         )
 
         opt = pl.read_parquet(local).with_columns(
@@ -258,10 +263,11 @@ def main() -> None:
         lock_ts = datetime.combine(lock_day, datetime.min.time(), IST).replace(hour=14, minute=0)
 
         spot_row = exact_row(index_df, entry_ts)
-        spot = close_value(spot_row)
+        spot = open_value(spot_row)
 
         entry_calls = opt.filter(
             (pl.col("timestamp") == entry_ts)
+            & (pl.col("volume") > 0)
             & (pl.col("option_type").str.to_uppercase().is_in(["CE", "CALL"]))
         )
 
@@ -274,6 +280,7 @@ def main() -> None:
         lock_rows = (
             opt.filter(
                 (pl.col("timestamp") == lock_ts)
+                & (pl.col("volume") > 0)
                 & pl.col("strike").is_in(selected_strikes)
                 & pl.col("option_type").str.to_uppercase().is_in(["CE", "CALL"])
             )
@@ -314,7 +321,13 @@ def main() -> None:
                 target_error,
                 entry_complete,
                 lock_complete,
-                lock_rows.height,
+                (
+                    opt.filter(
+                        (pl.col("timestamp") >= entry_ts)
+                        & pl.col("strike").is_in(selected_strikes)
+                        & pl.col("option_type").str.to_uppercase().is_in(["CE", "CALL"])
+                    ).height
+                ),
                 "USABLE_OHLC" if entry_complete and lock_complete else "INCOMPLETE",
                 "1-minute OHLC reconstruction; source has no historical bid/ask field.",
             )
