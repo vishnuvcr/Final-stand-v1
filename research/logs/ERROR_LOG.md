@@ -255,3 +255,9 @@
 - Impact: This created unnecessary repeated I/O/CPU and risked an excessively long CI execution for the finite 32-configuration experiment.
 - Resolution: Reworked the engine to read each expiry source once for variant-path extraction, filter to the union of required strikes, and partition the combined option bars by (variant, expiry) before backtesting.
 - Prevention: For finite multi-variant studies, share immutable data reads and pre-partition variant inputs before running the common backtest kernel.
+
+### E-0054 — Phase 17W scope expanded from K1/K2 to K1/K2/K3
+- Observation: The user requested K3 multiplier/value alternatives after the initial 32-configuration K1/K2 registration.
+- Impact: Continuing with the 32-configuration run would not satisfy the requested experimental scope.
+- Resolution: Expanded the preregistered family to 224 configurations (8 K1 × 4 K2 × 7 K3 multipliers) before admitting any empirical alternative result. The historical Phase 13 control remains unchanged.
+- Prevention: Register the complete strategy-definition dimension set before evaluating or promoting any alternative.
