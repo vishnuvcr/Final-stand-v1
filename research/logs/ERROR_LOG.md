@@ -292,3 +292,4 @@
 - Diagnosis: The CI variant stage intentionally restores the frozen Phase 9 interface as an artifact; the engine still assumed the source-tree output directory from the prepare job.
 - Resolution: Resolve the Phase 9 interface from the source-tree path when present, otherwise from prepared/phase9. No strategy, split, execution, cost, or variant parameters changed.
 - Prevention: Treat restored artifacts as first-class inputs and test both source-tree and CI-restored interface paths.
+[object Object]
