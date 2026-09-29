@@ -24,5 +24,39 @@
 ### E-0007 — Two script-string escaping errors during repository updates
 - Observation: Two JavaScript orchestration scripts contained unescaped backticks/template-literal content and failed before repository writes.
 - Impact: No partial repository mutation occurred from those failed calls.
+- Resolution: Rewrote the affected strings using ordinary strings and simpler payload construction.
+- Prevention: Avoid nested template literals in repository-update scripts; use plain strings for code/document payloads.
+
+### E-0008 — GitHub fetch schema mismatch
+- Observation: A repository-root fetch call used repository/path/ref arguments against a fetch action that requires an approved public GitHub URL.
+- Impact: No repository mutation occurred.
+- Resolution: Switched to the dedicated file-fetch action for branch files.
+- Prevention: Inspect the action schema before using generic GitHub fetch operations.
+
+### E-0009 — Missing .gitignore is not evidence of a broken repository
+- Observation: A direct fetch of .gitignore returned GitHub 404.
+- Impact: None; the file simply is not present on the active weekly branch.
+- Resolution: Continued without inventing a .gitignore and used explicit cache/output paths in the Phase 9 workflow.
+- Prevention: Treat 404s on optional repository files as an observed repository state, not as a reason to create speculative files.
+
+### E-0010 — Bulk Phase 9 write string parse failure
+- Observation: A multi-file JavaScript payload failed because Markdown backticks were interpreted by the orchestration runtime.
+- Impact: No partial repository mutation occurred from that call.
+- Resolution: Split the write into safe serialized content and removed nested backtick interpolation.
+- Prevention: Use plain-string payloads for repository artifacts that contain Markdown/code fencing.
+
+### E-0011 — GitHub Actions expression interpolation in orchestration string
+- Observation: A workflow payload contained GitHub expressions of the form ${{ ... }}, which the JavaScript template literal parser interpreted before the GitHub write.
+- Impact: No repository mutation occurred from that failed call.
+- Resolution: Escaped the dollar-brace sequence in the orchestration source so the literal GitHub expression reaches the workflow file.
+- Prevention: Always escape ${{ in JavaScript template strings used to create GitHub Actions workflows.
+
+### E-0012 — GitHub update-file argument name mismatch
+- Observation: An update call used content_sha, while the action schema requires sha for the current blob identifier.
+- Impact: No partial repository mutation occurred.
+- Resolution: Retried with the exact schema field sha.
+- Prevention: Use the returned fetch_file blob SHA and the action's declared argument names verbatim.
+- Observation: Two JavaScript orchestration scripts contained unescaped backticks/template-literal content and failed before repository writes.
+- Impact: No partial repository mutation occurred from those failed calls.
 - Resolution: Rewrote the affected strings using ordinary string concatenation.
 - Prevention: Avoid nested template literals in repository-update scripts; use plain strings for code/document payloads.
