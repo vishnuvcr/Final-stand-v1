@@ -41,10 +41,14 @@ def choose_k2(strikes,spot,k1,rule):
     gap=abs(spot-k1)
     return min(up,key=lambda x:(abs((x-k1)-gap),x)) if up else None
 
-def get_open(df,ts,strike):
-    q=df[(df.timestamp==ts)&(df.strike==strike)&(df.option_type.astype(str).str.upper().isin(['CE','C']))]
-    q=q[q.volume.fillna(0)>0]
-    return float(q.open.iloc[0]) if len(q) else None
+def build_open_map(df, ts):
+    q=df[(df.timestamp==ts)&(df.option_type.astype(str).str.upper().isin(['CE','C']))].copy()
+    q=q[q.volume.fillna(0)>0].dropna(subset=['open'])
+    return dict(zip(q.strike.astype(float), q.open.astype(float)))
+
+def nearest_k3(strikes, opens, k2, target):
+    above=[x for x in strikes if x>k2 and x in opens]
+    return min(above,key=lambda x:(abs(opens[x]-target),x)) if above else None
 
 spot_path=Path(local)/'index/NIFTY.parquet'
 spot=pd.read_parquet(spot_path); spot['timestamp']=pd.to_datetime(spot['timestamp'])
@@ -58,8 +62,8 @@ for _,cy in manifest.iterrows():
     ent=df[(df.timestamp==entry_ts)&(df.option_type.astype(str).str.upper().isin(['CE','C']))].copy()
     ent=ent[ent.volume.fillna(0)>0].dropna(subset=['open'])
     strikes=sorted(ent.strike.astype(float).unique())
-    lq=df[(df.timestamp==lock_ts)&(df.option_type.astype(str).str.upper().isin(['CE','C']))].copy()
-    lq=lq[lq.volume.fillna(0)>0].dropna(subset=['open'])
+    entry_opens=build_open_map(df, entry_ts)
+    lock_opens=build_open_map(df, lock_ts)
     valid=0
     for k1r in K1_RULES:
         k1=choose_k1(strikes,entry_spot,k1r)
@@ -68,11 +72,10 @@ for _,cy in manifest.iterrows():
             for m in MULTS:
                 k3=None; p1=p2=None
                 if k2 is not None:
-                    p1=get_open(df,entry_ts,k1); p2=get_open(df,entry_ts,k2)
+                    p1=entry_opens.get(float(k1)); p2=entry_opens.get(float(k2))
                     if p1 is not None and p2 is not None and p1-p2>0:
-                        target=m*(p1-p2); above=sorted(x for x in strikes if x>k2)
-                        if above: k3=min(above,key=lambda x:(abs(get_open(df,entry_ts,x)-target) if get_open(df,entry_ts,x) is not None else 1e99,x))
-                ok=all(x is not None for x in [k1,k2,k3]) and all(get_open(df,entry_ts,x) is not None for x in [k1,k2,k3]) and all(get_open(df,lock_ts,x) is not None for x in [k1,k2,k3])
+                        target=m*(p1-p2); k3=nearest_k3(strikes, entry_opens, k2, target)
+                ok=all(x is not None for x in [k1,k2,k3]) and all(float(x) in entry_opens for x in [k1,k2,k3]) and all(float(x) in lock_opens for x in [k1,k2,k3])
                 if ok: valid+=1
                 if k1r=='OTM1' and k2r=='NEXT1' and abs(m-2.0)<1e-9: control.append({'target_expiry':expiry,'entry_spot':entry_spot,'k1':k1,'k2':k2,'k3':k3,'valid':ok})
     rows.append({'target_expiry':expiry,'entry_timestamp':str(entry_ts),'lock_timestamp':str(lock_ts),'entry_strikes':len(strikes),'valid_variants':valid,'coverage_rate':valid/224.0})
