@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -97,7 +98,7 @@ def exit_locked_cf(p1: float, p3: float, slip: float) -> float:
 
 
 def _timestamp_value(timestamp: str) -> datetime:
-    return datetime.fromisoformat(str(timestamp).replace(" ", "T"))
+    return datetime.fromisoformat(str(timestamp).replace(" ", "T")).astimezone(ZoneInfo("Asia/Kolkata"))
 
 
 def marks_at(df: pl.DataFrame, timestamp: str, strikes: list[float]) -> dict[float, float]:
