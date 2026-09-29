@@ -237,3 +237,9 @@
 - Impact: The workflow file would not evaluate inputs/secrets correctly.
 - Resolution: Replaced the stored escaped markers with native GitHub Actions expression syntax and committed the corrected workflow before relying on empirical execution.
 - Prevention: Inspect committed workflow text after creation and validate that every expression is stored exactly as ${{ ... }}.
+
+### E-0051 — Second Phase 17W workflow expression escape survived the first patch
+- Observation: GitHub Actions run 36615776492 showed --max-expiries received the literal value \\104 because a shell backslash still preceded the expression marker.
+- Impact: The first Phase 17W empirical run stopped before data ingestion; no variant result was produced.
+- Resolution: Removed every remaining backslash before GitHub Actions expressions and verified the committed YAML contains native expressions such as ${{ inputs.max_expiries || '104' }}.
+- Prevention: Inspect the rendered workflow text and the first shell command line in CI logs before treating a workflow run as an empirical result.
