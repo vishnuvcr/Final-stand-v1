@@ -23,11 +23,32 @@ jobs:
         with:
           path: ~/.cache/huggingface
           key: phase19w-hf03-0f4800e43-${{hashFiles('research/phase17w_strike_alternatives/VARIANT_REGISTRY.md')}}
-      - run: pip install -q huggingface_hub polars numpy pandas pyarrow
+      - run: pip install -q "huggingface_hub>=0.36,<0.37" "polars>=1.20,<2" "pyarrow>=18,<23" "numpy>=2,<3" pandas
+      - name: Rebuild frozen Phase 9 interface
+        env:
+          HF_TOKEN: ${{secrets.HF_TOKEN}}
+          HF_REVISION: 0f4800e43e6f96cec0794369d78eb4d3c4211ef5
+          HF_HOME: ~/.cache/huggingface
+          PYTHONPATH: ${{github.workspace}}
+        run: |
+          rm -rf research/phase9_weekly/output
+          python research/phase9_weekly/hf_weekly_ingest.py \
+            --max-expiries 104 \
+            --start-date 2024-01-01 \
+            --end-date 2026-12-31 \
+            --output-dir research/phase9_weekly/output \
+            --hf-cache ~/.cache/huggingface
+          python - <<'PY'
+          import polars as pl
+          m=pl.read_csv("research/phase9_weekly/output/weekly_cycle_manifest.csv")
+          assert m.filter(pl.col("status")=="USABLE_OHLC").height == 63
+          assert pl.read_parquet("research/phase9_weekly/output/selected_weekly_spot_bars.parquet").height > 0
+          PY
       - name: Run fixed 224-variant rerun
         env:
           HF_TOKEN: ${{secrets.HF_TOKEN}}
           HF_REVISION: 0f4800e43e6f96cec0794369d78eb4d3c4211ef5
+          HF_HOME: ~/.cache/huggingface
           PYTHONPATH: ${{github.workspace}}
         run: |
           python research/phase17w_strike_alternatives/strike_alternatives.py \
@@ -41,7 +62,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: phase19w-recovered-results
-          path: research/phase19w_recovered_rerun/output/
+          path: |
+            research/phase19w_recovered_rerun/output/
+            research/phase9_weekly/output/
           if-no-files-found: error
       - name: Commit empirical results
         run: |
