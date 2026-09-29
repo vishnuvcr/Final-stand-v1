@@ -222,12 +222,13 @@ def main():
     ap.add_argument("--spot", default="research/phase9_weekly/output/selected_weekly_spot_bars.parquet")
     ap.add_argument("--output", default="research/phase11_weekly/output/trade_results.csv")
     ap.add_argument("--stop-loss-points", type=float, default=None)
+    ap.add_argument("--slippage-points", type=float, default=0.25)
     args = ap.parse_args()
 
     cycles = pl.read_csv(args.manifest)
     options = pl.read_parquet(args.options)
     spot = pl.read_parquet(args.spot)
-    cfg = CostConfig()
+    cfg = CostConfig(slippage_points_per_leg=args.slippage_points)
     results = []
 
     for row in cycles.iter_rows(named=True):
