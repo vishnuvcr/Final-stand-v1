@@ -54,7 +54,8 @@ jobs:
             hf-phase9w-v2-
 
       - name: Compile
-        run: python -m py_compile research/phase9_weekly/hf_weekly_ingest.py research/phase11_weekly/weekly_backtest.py research/phase12_weekly/robustness.py research/phase12_weekly/robustness_supplement.py research/phase12_weekly/test_robustness_supplement.py
+        run: |
+          python -m py_compile research/phase9_weekly/hf_weekly_ingest.py research/phase11_weekly/weekly_backtest.py research/phase12_weekly/robustness.py research/phase12_weekly/robustness_supplement.py research/phase12_weekly/test_robustness_supplement.py
           python research/phase12_weekly/test_robustness_supplement.py
 
       - name: Verify HF token
