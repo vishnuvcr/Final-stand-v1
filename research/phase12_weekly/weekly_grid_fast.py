@@ -7,7 +7,9 @@ from dataclasses import asdict
 from pathlib import Path
 
 import polars as pl
+import sys
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'phase11_weekly'))
 from weekly_backtest import CostConfig, TradeResult, cost_rupees, exit_locked_cf, exit_prelock_cf, entry_cf, lock_cf, intrinsic, lot_size_for_expiry
 
 
