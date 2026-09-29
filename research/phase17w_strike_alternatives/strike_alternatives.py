@@ -707,6 +707,8 @@ def main() -> None:
     ap.add_argument("--output-dir", default="research/phase17w_strike_alternatives/output")
     ap.add_argument("--variant-start", type=int, default=0)
     ap.add_argument("--variant-end", type=int, default=None)
+    ap.add_argument("--built-input-dir", default=None)
+    ap.add_argument("--build-only", action="store_true")
     args = ap.parse_args()
     if args.variant_start < 0 or args.variant_start >= len(VARIANT_IDS):
         raise ValueError("variant-start is outside the registered 224-variant family")
@@ -719,14 +721,21 @@ def main() -> None:
     cache_dir = Path(args.hf_cache)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    cycle_df, option_df, _ = build_variants(
-        args.max_expiries,
-        args.start_date,
-        args.end_date,
-        cache_dir,
-        out_dir,
-        os.getenv("HF_REVISION", "main"),
-    )
+    if args.built_input_dir:
+        built_dir = Path(args.built_input_dir)
+        cycle_df = pl.read_csv(built_dir / "variant_cycle_manifest.csv")
+        option_df = pl.read_parquet(built_dir / "variant_option_bars.parquet")
+    else:
+        cycle_df, option_df, _ = build_variants(
+            args.max_expiries,
+            args.start_date,
+            args.end_date,
+            cache_dir,
+            out_dir,
+            os.getenv("HF_REVISION", "main"),
+        )
+    if args.build_only:
+        raise SystemExit(0)
 
     baseline_manifest_path = Path("research/phase9_weekly/output/weekly_cycle_manifest.csv")
     spot_path = Path("research/phase9_weekly/output/selected_weekly_spot_bars.parquet")
