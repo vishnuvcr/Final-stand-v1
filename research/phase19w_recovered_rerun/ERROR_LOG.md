@@ -14,3 +14,9 @@ Phase 17W maximum usable coverage was 39/63 for the registered family. This rema
 - **Impact:** No local empirical result was produced and no local result was substituted for the GitHub Actions/HF pipeline.
 - **Correction:** The empirical rerun remains delegated to GitHub Actions, where `HF_TOKEN` and the existing cache are available.
 - **Prevention:** Treat network-isolated local execution as a diagnostic only; do not reinterpret it as source-data unavailability.
+
+
+## E19-003 — 2026-09-30
+- **Issue:** The first automatic Phase 19 trigger failed before job creation because `hashFiles()` was used in a job-level `if` expression.
+- **Impact:** No empirical computation ran and no result was produced.
+- **Correction:** Removed the unsupported job-level gate. The committed `ADMISSION.md` is now the explicit repository admission record; the workflow retains both manual and push triggers.
