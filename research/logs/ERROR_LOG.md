@@ -211,3 +211,9 @@
 - Impact: A schema hit could be incorrectly classified as a free historical BBO archive.
 - Resolution: Added a four-level qualification standard (quote-qualified, schema-qualified, OHLC-qualified, rejected) and required date/contract/completeness/licensing checks.
 - Prevention: Do not admit any execution source until an actual historical file/API response for the study's expired NIFTY contracts is observed and reproducibly ingested.
+
+### E-0046 — Authenticated API access boundary
+- Observation: The strongest remaining BBO-capable route requires authenticated/vendor access; the project has no authorized TrueData/Dhan/Breeze/Upstox credentials available to this session.
+- Impact: An empirical historical-BBO probe cannot be honestly executed yet.
+- Resolution: Added a credential-safe probe protocol and scaffold. No credentials are fabricated or requested in repository files.
+- Prevention: Treat missing authentication as a blocking data-access condition, not as evidence of data absence; do not substitute OHLC for BBO.
