@@ -3,7 +3,6 @@ from __future__ import annotations
 import argparse
 import json
 from datetime import datetime
-from zoneinfo import ZoneInfo
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -97,13 +96,17 @@ def exit_locked_cf(p1: float, p3: float, slip: float) -> float:
     return -(p1 - slip) + (p3 + slip)
 
 
-def _timestamp_value(timestamp: str) -> datetime:
-    return datetime.fromisoformat(str(timestamp).replace(" ", "T")).astimezone(ZoneInfo("Asia/Kolkata"))
+def _timestamp_key(timestamp: str) -> str:
+    return str(timestamp).replace(" ", "T")[:19]
+
+
+def _timestamp_key_expr(column: str = "timestamp") -> pl.Expr:
+    return pl.col(column).cast(pl.String).str.replace(r" ", "T").str.slice(0, 19)
 
 
 def marks_at(df: pl.DataFrame, timestamp: str, strikes: list[float]) -> dict[float, float]:
     rows = df.filter(
-        (pl.col("timestamp") == pl.lit(_timestamp_value(timestamp)))
+        (_timestamp_key_expr() == _timestamp_key(timestamp))
         & pl.col("strike").is_in(strikes)
     )
     return {float(r["strike"]): float(r["open"]) for r in rows.iter_rows(named=True)}
@@ -129,8 +132,8 @@ def backtest_cycle(cycle: dict, options: pl.DataFrame, spot: pl.DataFrame, stop_
     orders = 3
 
     pre = options.filter(
-        (pl.col("timestamp") > pl.lit(_timestamp_value(entry_ts)))
-        & (pl.col("timestamp") < pl.lit(_timestamp_value(lock_ts)))
+        (_timestamp_key_expr() > _timestamp_key(entry_ts))
+        & (_timestamp_key_expr() < _timestamp_key(lock_ts))
         & pl.col("strike").is_in([k1, k2, k3])
     ).select(["timestamp", "strike", "open"]).sort("timestamp")
 
@@ -143,7 +146,7 @@ def backtest_cycle(cycle: dict, options: pl.DataFrame, spot: pl.DataFrame, stop_
             mtm = net_cf + m[k1] - m[k2] - m[k3]
             if mtm <= -abs(stop_loss):
                 later = options.filter(
-                    (pl.col("timestamp") > pl.lit(_timestamp_value(ts)))
+                    (_timestamp_key_expr() > _timestamp_key(ts))
                     & pl.col("strike").is_in([k1, k2, k3])
                 ).select(["timestamp", "strike", "open"]).sort("timestamp")
                 if later.height:
@@ -174,7 +177,7 @@ def backtest_cycle(cycle: dict, options: pl.DataFrame, spot: pl.DataFrame, stop_
     orders += 1
 
     post = options.filter(
-        (pl.col("timestamp") > pl.lit(_timestamp_value(lock_ts)))
+        (_timestamp_key_expr() > _timestamp_key(lock_ts))
         & pl.col("strike").is_in([k1, k3])
     ).select(["timestamp", "strike", "open"]).sort("timestamp")
 
