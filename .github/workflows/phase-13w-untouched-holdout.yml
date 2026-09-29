@@ -75,10 +75,14 @@ jobs:
           usable = m.filter(pl.col("status")=="USABLE_OHLC")
           for row in usable.head(5).iter_rows(named=True):
               ets=str(row["entry_timestamp"]); lts=str(row["lock_timestamp"]); strikes=[float(row["k1"]),float(row["k2"]),float(row["k3"])]
-              er=o.filter((pl.col("timestamp").cast(pl.String)==ets)&pl.col("strike").is_in(strikes)).height
-              lr=o.filter((pl.col("timestamp").cast(pl.String)==lts)&pl.col("strike").is_in(strikes)).height
+              from datetime import datetime
+              etv=datetime.fromisoformat(ets); ltv=datetime.fromisoformat(lts)
+              er_all=o.filter(pl.col("timestamp")==pl.lit(etv))
+              lr_all=o.filter(pl.col("timestamp")==pl.lit(ltv))
+              er=er_all.filter(pl.col("strike").is_in(strikes)).height
+              lr=lr_all.filter(pl.col("strike").is_in(strikes)).height
               se=s.filter(pl.col("timestamp").cast(pl.String).str.starts_with(str(row["target_expiry"]))).height
-              print("cycle",row["target_expiry"],"entry_rows",er,"lock_rows",lr,"expiry_spot_rows",se,"entry_ts",ets,"lock_ts",lts,"strikes",strikes)
+              print("cycle",row["target_expiry"],"entry_all_rows",er_all.height,"entry_rows",er,"entry_strikes",er_all.select("strike").unique().to_series().to_list(),"lock_all_rows",lr_all.height,"lock_rows",lr,"lock_strikes",lr_all.select("strike").unique().to_series().to_list(),"expiry_spot_rows",se,"entry_ts",ets,"lock_ts",lts,"strikes",strikes)
           PY
       - name: Generate frozen-rule candidates
         run: |
