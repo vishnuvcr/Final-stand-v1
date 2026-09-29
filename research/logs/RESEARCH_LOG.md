@@ -189,3 +189,8 @@
 - All other strategy mechanics remain frozen; holdout chronology and Phase 13 evidence remain locked.
 - Workflow concurrency was added so an older Phase 17W run is superseded when the expanded-family run starts.
 - The 224-variant family remains one fixed multiple-testing family with Holm adjustment; no post-observation expansion is permitted.
+
+## 2026-09-30 — Phase 17W memory-bounded rerun
+- Run 36625523052 completed the frozen 63-cycle input construction and merge, but the 224-variant evaluation stage hit GitHub-hosted runner memory limits (exit 137/143) before any admissible aggregate result.
+- Logged E-0059. Refactored the variant runner to lazy-scan the merged parquet and process one registered variant at a time, retaining the same strategy, 224-variant registry, 63-cycle split, 50-point stop, 0.50-point/leg slippage, cost model and holdout lock.
+- A new push-triggered workflow run is required to empirically validate the memory fix; no result has been admitted yet.
