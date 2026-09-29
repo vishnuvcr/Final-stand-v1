@@ -1,5 +1,6 @@
 name: Phase 13W - Untouched Weekly Holdout
 # Trigger marker: phase13w-active
+# Manual/automatic holdout execution gate
 
 on:
   push:
