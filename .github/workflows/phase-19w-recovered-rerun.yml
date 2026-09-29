@@ -1,5 +1,9 @@
 name: Phase 19W - Recovered Data Empirical Rerun
 
+concurrency:
+  group: phase19w-recovered-rerun
+  cancel-in-progress: true
+
 on:
   workflow_dispatch:
   push:
