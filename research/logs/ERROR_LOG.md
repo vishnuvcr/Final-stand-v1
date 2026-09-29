@@ -243,3 +243,9 @@
 - Impact: The first Phase 17W empirical run stopped before data ingestion; no variant result was produced.
 - Resolution: Removed every remaining backslash before GitHub Actions expressions and verified the committed YAML contains native expressions such as ${{ inputs.max_expiries || '104' }}.
 - Prevention: Inspect the rendered workflow text and the first shell command line in CI logs before treating a workflow run as an empirical result.
+
+### E-0052 — Phase 17W module import path
+- Observation: Workflow run 36615889752 successfully rebuilt the 63-cycle Phase 9 interface, then the variant engine failed with ModuleNotFoundError: research when invoked as a script by path.
+- Impact: No alternative backtests were executed.
+- Resolution: Changed the workflow to invoke the engine as the module research.phase17w_strike_alternatives.strike_alternatives from repository root, matching the existing test import path.
+- Prevention: In CI, invoke repository-internal Python modules with -m when they import sibling research packages unless package path setup is explicit.
