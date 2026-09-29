@@ -3,12 +3,18 @@ name: Phase 12W - Weekly Robustness
 
 concurrency:
   group: phase12w-robustness-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 on:
   push:
     branches:
       - phase-12w-robustness
+    paths-ignore:
+      - 'research/logs/**'
+      - 'research/phase12_weekly/STATUS.md'
+      - 'research/phase12_weekly/robustness.json'
+      - 'research/phase12_weekly/robustness_supplement.json'
+      - 'research/phase12_weekly/input/**'
   workflow_dispatch:
     inputs:
       max_expiries:
