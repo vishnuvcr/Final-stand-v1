@@ -11,7 +11,7 @@ The prior monthly-expiry Phase 8 is retained for auditability but has been super
 | 1–7 — Prior research | 🟡 Preserved | Historical project artifacts |
 | 8M — Monthly strategy | ⚪ Archived | Superseded by weekly reset |
 | 8W — Weekly strategy definition | ✅ Complete | Weekly objective, cycle and controls frozen |
-| 9W — Weekly PIT data | 🟡 Blocked/Pending | Official data sources identified; historical intraday quote access still required |
+| 9W — Weekly PIT data | 🟡 Active | Hugging Face 1-minute option/spot sources available; OHLC execution reconstruction is being validated and true bid/ask remains a separate quality tier |
 | 10W — Mechanics/margin/costs | 🟡 Active | Mechanics engine and cost/margin framework implemented; exact historical margin pending |
 | 11W — Weekly backtest | ⏳ Pending | Depends on 10W |
 | 12W — Robustness | ⏳ Pending | Depends on 11W |
