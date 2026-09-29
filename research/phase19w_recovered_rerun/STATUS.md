@@ -16,3 +16,6 @@
 
 
 **Execution trigger correction:** A normal repository commit is being used to trigger the admitted workflow after workflow-file-only push events produced no jobs.
+
+
+**Workflow activation:** Phase 19 workflow is now installed on the default branch; execution is being triggered from this research branch.
