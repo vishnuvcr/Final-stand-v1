@@ -62,3 +62,17 @@ Canonical files are maintained inside the respective phase branches. The researc
 - TrueData remains the directly BBO-capable historical candidate; exact historical expired-weekly coverage still requires authenticated verification.
 - [API probe protocol](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-15w-execution-data-discovery/research/phase15w_execution_data/API_PROBE_PROTOCOL.md)
 - [Expanded free-source audit](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-15w-execution-data-discovery/research/phase15w_execution_data/FREE_SOURCE_AUDIT_EXPANDED.md)
+
+
+## Phase 15W closure and Phase 16W transition — 2026-09-30
+- Phase 15W free historical-BBO discovery is closed: no qualifying free historical NIFTY weekly-options BBO archive was found across the documented GitHub, Hugging Face, Kaggle, Zenodo, public broker/API and NSE-source scope.
+- Angel One SmartAPI is retained only as a potential free OHLC/OI cross-check; it does not resolve historical BBO validation.
+- No commercial quote data were purchased, no credentials were stored, and the strategy/holdout remain unchanged.
+- **Phase 16W — Capital and Margin Validation: 🔄 active**
+- Phase 16W uses official NSE historical SPAN/risk-parameter and margin-report infrastructure where accessible to reconstruct peak capital requirements and capital-normalized diagnostics.
+- [Phase 16W branch](https://github.com/vishnuvcr/Final-stand-v1/tree/phase-16w-capital-validation)
+- [Phase 16W plan](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-16w-capital-validation/research/phase16w_capital_validation/PHASE_PLAN.md)
+- [Phase 16W source protocol](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-16w-capital-validation/research/phase16w_capital_validation/SOURCE_PROTOCOL.md)
+
+### Phase 16W evidence boundary
+Capital/margin reconstruction is a separate evidence layer from execution validation. Until a qualified historical bid/ask archive is obtained, all performance results remain **OHLC-reconstructed**, even if historical capital requirements are successfully reconstructed.
