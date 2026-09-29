@@ -28,9 +28,11 @@ These are payoff identities, not evidence of profitability.
 
 ## Canonical files
 - [Project instructions](PROJECT_INSTRUCTIONS.md)
+- [Master research plan](RESEARCH_PLAN.md)
 - [Phase 8 strategy specification](research/phase8/STRATEGY_SPEC.md)
 - [Phase 8 research protocol](research/phase8/RESEARCH_PROTOCOL.md)
 - [Phase 8 research questions](research/phase8/RESEARCH_QUESTIONS.md)
+- [Phase 8 literature review](research/phase8/LITERATURE_REVIEW.md)
 - [Research log](research/logs/RESEARCH_LOG.md)
 - [Error log](research/logs/ERROR_LOG.md)
 - [Manual Phase 8 workflow](.github/workflows/phase-8-video-call-ladder.yml)
