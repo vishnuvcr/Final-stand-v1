@@ -36,3 +36,9 @@ The free samples prove that the desired schema exists, but do not establish free
 - Check exact coverage against the Phase 9W weekly-cycle dates and option contracts.
 - If no qualifying free archive is found, quantify the minimum paid extract required.
 - Preserve the frozen strategy and holdout throughout.
+## Additional search result
+- SauMStats NIFTY market-data engine was checked as an independent candidate; its documentation explicitly says bid/ask quotes are not available and market price is proxied by close.
+- This candidate is therefore rejected for quote-based execution validation.
+
+## Current conclusion
+After the first public-source audit, no complete free historical NIFTY options L1/L2 quote archive has been qualified. The strongest free evidence is limited to evaluation samples. The next step is to determine whether a small legitimate paid historical extract, rather than a broad commercial archive, can cover the exact weekly cycles required.
