@@ -224,3 +224,10 @@
 - Impact: capital validation cannot be presented as executable-fill validation.
 - Resolution: carry the BBO limitation forward explicitly; use Phase 16W only for capital/margin reconstruction and risk normalization.
 - Prevention: keep BBO and capital evidence as separate evidence classes in the manuscript.
+
+
+### E-0049 — Strategy-definition scope change required a separate validation phase
+- Observation: The user requested explicit testing of alternative K1/K2 definitions after the frozen weekly strategy had already been used for Phase 13W holdout evidence.
+- Impact: Silently changing K1/K2 would invalidate comparability with the frozen evidence and could contaminate the locked holdout selection.
+- Resolution: Created Phase 17W as a separate preregistered strategy-definition validation phase. The Phase 13W control remains immutable and the final holdout is descriptive only for this new family.
+- Prevention: Treat any change that alters K1, K2, K3 construction, timing, stop or execution assumptions as a new registered experiment rather than editing prior results.
