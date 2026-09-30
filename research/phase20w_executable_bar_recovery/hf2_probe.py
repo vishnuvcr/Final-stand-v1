@@ -17,7 +17,7 @@ for off in range(-10,11):
     for exp in missing:
         q=d.filter((pl.col("date").cast(pl.String).str.slice(0,10)==exp)&pl.col("ist").is_in([f"{exp}T10:00:00",f"{exp}T14:00:00"]))
         if q.height:
-            rows.append({"file":tag,"expiry":exp,"entry_lock_rows":q.height,"strikes":q["strike_price"].n_unique(),"entry_lock_timestamps":q["ist"].unique().to_list()})
+            rows.append({"file":tag,"expiry":exp,"entry_lock_rows":q.height,"strikes":q["strike_price"].n_unique(),"entry_lock_timestamps":"|".join(sorted(map(str,q["ist"].unique().to_list())))})
 pl.DataFrame(rows).write_csv(OUT/"hf2_exact_entry_lock_probe.csv")
 summary=pl.DataFrame(rows).group_by("expiry").agg(pl.col("entry_lock_rows").sum(),pl.col("strikes").max()).sort("expiry")
 summary.write_csv(OUT/"hf2_exact_entry_lock_summary.csv")
