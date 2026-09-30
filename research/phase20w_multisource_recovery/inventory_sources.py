@@ -1,24 +1,30 @@
-import json, os, re
+import json, os, urllib.parse, requests
 from pathlib import Path
-from huggingface_hub import HfApi
-
-SOURCES=[
- {"id":"RECOVERY-1","repo":"johnwick3690/stocks","revision":"main","kind":"dataset"},
- {"id":"RECOVERY-2","repo":"artist-23/nifty-options-data","revision":"45e0a043f34f3f40f9694e52a944297803c2af8b","kind":"dataset"},
- {"id":"RECOVERY-3","repo":"rissin/nse-options-intraday","revision":"8f7739cab3f38abdcbc6332a6d0a83e1341326e3","kind":"dataset"},
-]
 TARGET=json.loads(Path("research/phase19w_recovered_rerun/output/baseline_calendar.json").read_text())
 OUT=Path("research/phase20w_multisource_recovery/output"); OUT.mkdir(parents=True,exist_ok=True)
-api=HfApi(token=os.getenv("HF_TOKEN") or None)
+session=requests.Session()
+headers={"Authorization":f"Bearer {os.getenv('HF_TOKEN','')}"} if os.getenv("HF_TOKEN") else {}
+
+sources=[
+ {"id":"RECOVERY-1","repo":"johnwick3690/stocks","revision":"main","base":"https://huggingface.co/datasets/johnwick3690/stocks/resolve/main/nifty%20historical%20data/nifty%2050%201min%20options%20weekly%20expiries/"},
+ {"id":"RECOVERY-2","repo":"artist-23/nifty-options-data","revision":"main","base":None},
+ {"id":"RECOVERY-3","repo":"rissin/nse-options-intraday","revision":"main","base":None},
+]
 report={"targets":TARGET,"sources":[]}
-for s in SOURCES:
-    info=api.repo_info(s["repo"],repo_type=s["kind"],revision=s["revision"])
-    files=api.list_repo_files(s["repo"],repo_type=s["kind"])
-    parquet=[f for f in files if f.lower().endswith(".parquet")]
-    matches={}
-    for d in TARGET:
-        hits=[f for f in parquet if d in f or d.replace("-","") in f or d.replace("-","_") in f]
-        if hits: matches[d]=hits[:25]
-    report["sources"].append({**s,"parquet_file_count":len(parquet),"resolved_sha":getattr(info,"sha",None),"target_file_matches":matches,"sample_parquet_files":parquet[:100]})
+for s in sources:
+    item={**s,"probes":{}}
+    if s["id"]=="RECOVERY-1":
+        for d in TARGET:
+            fn=f"{d.replace('-','')}_WEEK.parquet"
+            url=s["base"]+urllib.parse.quote(fn)
+            try:
+                rr=session.get(url,headers=headers,stream=True,allow_redirects=True,timeout=30)
+                item["probes"][d]={"status":rr.status_code,"content_length":rr.headers.get("content-length"),"final_url":rr.url}
+                rr.close()
+            except Exception as ex:
+                item["probes"][d]={"error":type(ex).__name__+":"+str(ex)}
+    else:
+        item["probes"]={"status":"DEFERRED","reason":"No verified path template yet; retain registered source for next schema discovery step."}
+    report["sources"].append(item)
 Path(OUT/"source_inventory.json").write_text(json.dumps(report,indent=2))
-print(json.dumps({s["id"]:{"parquet_file_count":s["parquet_file_count"],"target_dates_matched":len(s["target_file_matches"])} for s in report["sources"]},indent=2))
+print(json.dumps({s["id"]:({"matched":sum(1 for v in s["probes"].values() if isinstance(v,dict) and v.get("status")==200)} if isinstance(s.get("probes"),dict) else {}) for s in report["sources"]},indent=2))
