@@ -1,0 +1,11 @@
+{
+  "variant_count": 224,
+  "min_valid_rate_all_63": 0.6507936507936508,
+  "max_valid_rate_all_63": 1.0,
+  "mean_valid_rate_all_63": 0.9085884353741497,
+  "variants_meeting_50_of_63_validity_floor": 168,
+  "variants_below_50_of_63_validity_floor": 56,
+  "validity_floor": 0.7936507936507936,
+  "validity_floor_passed_for_all_variants": false,
+  "coverage_gate_passed": true
+}

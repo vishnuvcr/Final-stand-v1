@@ -1,0 +1,62 @@
+{
+  "source": "rissin/nse-options-intraday",
+  "source_revision": "8f7739cab3f38abdcbc6332a6d0a83e1341326e3",
+  "source_file": "upstox_intraday/NIFTY/NIFTY_2026.parquet",
+  "source_sha256": "bae9943b2fa99ee9c1214fb7c695b84f9f661a050a5cd04d9c5c2ffc7bc59f73",
+  "spot_interface": "work/combined/phase9_weekly/output/selected_weekly_spot_bars.parquet",
+  "spot_sha256": "a743a458210d4a83a7bf66414b1699f6c47a66decb01378b48244c15e57e61f8",
+  "targets": [
+    {
+      "target_expiry": "2026-01-13",
+      "prior_expiry": "2025-12-23",
+      "entry_timestamp": "2026-01-07T10:00:00+05:30",
+      "lock_timestamp": "2026-01-12T14:00:00+05:30",
+      "entry_spot": 26138.95,
+      "entry_strike_count": 49,
+      "source_rows": 133231,
+      "usable_variants": 224
+    },
+    {
+      "target_expiry": "2026-02-10",
+      "prior_expiry": "2026-01-20",
+      "entry_timestamp": "2026-02-04T10:00:00+05:30",
+      "lock_timestamp": "2026-02-09T14:00:00+05:30",
+      "entry_spot": 25779.55,
+      "entry_strike_count": 66,
+      "source_rows": 152128,
+      "usable_variants": 224
+    },
+    {
+      "target_expiry": "2026-03-10",
+      "prior_expiry": "2026-02-17",
+      "entry_timestamp": "2026-03-04T10:00:00+05:30",
+      "lock_timestamp": "2026-03-09T14:00:00+05:30",
+      "entry_spot": 24325.8,
+      "entry_strike_count": 85,
+      "source_rows": 168515,
+      "usable_variants": 224
+    },
+    {
+      "target_expiry": "2026-04-13",
+      "prior_expiry": "2026-03-24",
+      "entry_timestamp": "2026-04-08T10:00:00+05:30",
+      "lock_timestamp": "2026-04-10T14:00:00+05:30",
+      "entry_spot": 23898.8,
+      "entry_strike_count": 71,
+      "source_rows": 133028,
+      "usable_variants": 224
+    },
+    {
+      "target_expiry": "2026-05-12",
+      "prior_expiry": "2026-04-21",
+      "entry_timestamp": "2026-05-06T10:00:00+05:30",
+      "lock_timestamp": "2026-05-11T14:00:00+05:30",
+      "entry_spot": 24140.6,
+      "entry_strike_count": 63,
+      "source_rows": 146598,
+      "usable_variants": 224
+    }
+  ],
+  "variant_count": 224,
+  "all_targets_224_usable": true
+}
