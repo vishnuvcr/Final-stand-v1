@@ -1,0 +1,30 @@
+name: Phase 20W - Targeted HF2 Entry Lock Probe
+on:
+  workflow_dispatch:
+  push:
+    branches: [phase-20w-executable-bar-recovery]
+    paths: ['research/phase20w_executable_bar_recovery/hf2_probe.py','.github/workflows/phase-20w-hf2-probe.yml']
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: phase-20w-executable-bar-recovery}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: pip install -q huggingface_hub polars pyarrow
+      - name: Probe exact IST entry and lock
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_CACHE: ~/.cache/huggingface
+        run: python research/phase20w_executable_bar_recovery/hf2_probe.py
+      - name: Commit probe
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/phase20w_executable_bar_recovery/output/hf2_exact_entry_lock_*
+          git diff --cached --quiet || git commit -m 'phase20w: record targeted HF2 entry-lock probe'
+          git push origin HEAD:phase-20w-executable-bar-recovery
