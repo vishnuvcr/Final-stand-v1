@@ -9,4 +9,4 @@ State: **ACTIVE — 22.1 and 22.2 complete; 22.3 configuration freeze complete; 
 - No new holdout opened.
 - No Phase 21W configuration selected post hoc.
 
-Next gate: continue official NSE/licensed and public archive acquisition routes; admit only reproducible timestamped executable quote/depth data. No new holdout until admission.
+Next gate: prioritize authorized NSE full-order/full-trade acquisition; TrueData extended Bid/Ask and GFDL archival routes remain secondary candidates. Admit only reproducible timestamped executable quote/depth data. No new holdout until admission.
