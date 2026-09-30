@@ -88,3 +88,14 @@ Capital/margin reconstruction is a separate evidence layer from execution valida
 - [Phase 17W plan](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-17w-strike-alternatives/research/phase17w_strike_alternatives/PHASE_PLAN.md)
 - [Phase 17W variant registry](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-17w-strike-alternatives/research/phase17w_strike_alternatives/VARIANT_REGISTRY.md)
 
+
+
+## Phase 19W — Recovered-data 224-variant rerun — 2026-09-30
+- **Status: COMPLETE — no capital promotion.** Authoritative GitHub Actions run [36642638097](https://github.com/vishnuvcr/Final-stand-v1/actions/runs/36642638097) completed all 224 preregistered variants successfully.
+- Recovered coverage: 13,956/14,112 variant-cycle cells (98.895%); strategy-level usable coverage was 36/63 cycles (57.143%) for every variant, producing 21 training, 7 validation and 8 holdout observations.
+- 193/224 variants had positive training means; 136/224 positive validation means; 180/224 positive holdout means. However, **0/224 passed the frozen promotion gate**. No Holm-adjusted training p-value was <0.05.
+- The binding limitation is contract-level historical coverage and executable evidence, not inability to run the strategy computation.
+- Full derived option bars are preserved in workflow artifact [phase19w-recovered-results-issue-bridge](https://github.com/vishnuvcr/Final-stand-v1/actions/runs/36642638097#artifacts), while repository-safe summaries/trades are committed on the [Phase 19W branch](https://github.com/vishnuvcr/Final-stand-v1/tree/phase-19w-recovered-rerun).
+- [Phase 19W result](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-19w-recovered-rerun/research/phase19w_recovered_rerun/PHASE_RESULT.md)
+- **Phase 20W — Multi-Source Contract Recovery: 🔄 prepared**. It will exhaust the registered public fallback sources for the remaining contract-level gaps before any further strategy conclusion.
+- [Phase 20W branch](https://github.com/vishnuvcr/Final-stand-v1/tree/phase-20w-multisource-recovery) · [Phase 20W plan](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-20w-multisource-recovery/research/phase20w_multisource_recovery/PHASE_PLAN.md)
