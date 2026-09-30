@@ -15,7 +15,7 @@ Recover the five missing holdout cycles needed to complete the frozen Phase-17/1
 - Original train/validation/holdout chronology and statistical gate remain frozen.
 
 ## Source order
-1. Public Hugging Face `rissin/nse-options-intraday` NIFTY 1-minute archive, pinned to revision `78b1c5468255d18cf492984bfe6fe4e3ac874d7c`.
+1. Public Hugging Face `rissin/nse-options-intraday` NIFTY 1-minute archive; resolve `main` at run start, verify the exact NIFTY 2026 file exists, then persist the resolved commit SHA and file SHA-256 before admission.
 2. Upstox expired-option historical candles/API, if credentials/data entitlement permit.
 3. ICICI Breeze historical option data.
 4. Dhan expired-options data.
@@ -29,3 +29,7 @@ A cycle is admitted only if all required legs for a variant have exact entry and
 
 ## Exit criteria
 Every feasible source route is audited; access limitations are documented; an exact five-expiry coverage matrix is produced; recovered bars are provenance-pinned; then the frozen 224-variant rerun proceeds only if all 224 variants have valid executable bars for all five recovered expiries. If no free source satisfies the contract, broker/API access requirements are recorded as a blocking external dependency rather than weakening the frozen design.
+
+
+## Source pinning rule
+The public source may resolve its current `main` revision only at the beginning of a run. The exact resolved commit SHA and downloaded file SHA-256 must be written to the source manifest. A later update to the dataset does not alter an already completed run.
