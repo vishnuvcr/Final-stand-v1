@@ -124,3 +124,11 @@
 - **Impact:** no merged input was written; the final rerun remained pending.
 - **Correction:** `align_to_schema` now casts existing external columns to the exact frozen base Parquet schema, not only fills missing columns.
 - **Evidence:** run 36715341754, job 109886769584.
+
+
+## E21X-018 — Coverage validation incorrectly blocked artifact publication on per-variant validity floor
+
+- **Observed:** the complete 63-cycle rerun finished successfully, but the publication gate failed because at least one variant had `valid_rate_all_63 < 50/63`.
+- **Impact:** final rerun outputs were discarded before artifact upload, despite the core 63-expiry coverage being complete and the engine itself returning a full 224-variant summary.
+- **Correction:** validation now treats 63-expiry coverage and 224-variant presence as the hard publication gates, while recording the 50/63 validity-floor result as an explicit diagnostic in `final_validation_summary.json`. Variants below the floor remain ineligible for any downstream promotion analysis.
+- **Evidence:** run 36715815962, job 109888329116; the rerun step completed successfully and validation failed immediately afterward.
