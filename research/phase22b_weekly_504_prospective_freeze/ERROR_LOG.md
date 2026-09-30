@@ -23,3 +23,8 @@
 - Observed: RISSIN contains only 7 of the weekly expiries in the requested post-Phase-21 window.
 - Risk: deriving the prior expiry from available source files would incorrectly move entry dates backward whenever an expiry file is missing.
 - Correction: the prospective builder now derives the prior weekly expiry from the frozen Tuesday weekly calendar relation (target expiry minus 7 days) for this period. Missing source files cause a missing cycle, not a calendar shift.
+
+## E22B-006 — RISSIN timestamp timezone mismatch in lazy filtering
+- Observed: the annual RISSIN file reports timestamps with a +05:30 timezone representation that Polars would not directly compare with an Asia/Kolkata literal inside the lazy scan.
+- Impact: prospective data extraction stopped before cycle construction.
+- Correction: the annual file is now date-filtered using its canonical date field before collection; timestamps are normalized only after materialization.
