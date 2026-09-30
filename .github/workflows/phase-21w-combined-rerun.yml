@@ -17,7 +17,7 @@ jobs:
     timeout-minutes: 240
     concurrency:
       group: phase21w-combined-rerun
-      cancel-in-progress: true
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
         with:
