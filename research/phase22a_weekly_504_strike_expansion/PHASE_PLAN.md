@@ -1,7 +1,7 @@
 # Phase 22A — Weekly 504-Configuration Strike-Range Expansion
 
 ## Status
-ACTIVE — protocol frozen; full 504-configuration weekly backtest queued on the frozen 63-expiry Phase-21 data interface.
+**COMPLETE — 504/504 configurations tested across all 63 weekly expiries; 0/504 passed the capital-promotion gate.**
 
 ## Research question
 When the strategy is treated explicitly as a weekly-horizon weekly-expiry trade, what happens when the K1 strike-selection range is extended from OTM/ITM 1–3 to OTM/ITM 1–8 while leaving K2, K3, entry/lock timing, stop, slippage and transaction-cost rules unchanged?
@@ -28,7 +28,7 @@ Test the complete pre-registered 504-configuration family rather than selecting 
 | K3 | 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 4.0 | 7 |
 | Total | | 504 |
 
-No configuration will be added after results are inspected.
+No configuration was added or removed after results were inspected.
 
 ## Weekly trade protocol
 - Trading horizon: weekly.
@@ -40,7 +40,7 @@ No configuration will be added after results are inspected.
 - Paytm Money/NSE transaction-cost model: unchanged from the registered engine.
 
 ## Data boundary
-The primary run uses the immutable Phase-21 recovery dataset revision already admitted for the 63-expiry experiment. This isolates the effect of widening K1 from the effect of changing the historical source.
+The primary run used the immutable Phase-21 recovery dataset interface already admitted for the 63-expiry experiment. This isolates the effect of widening K1 from the effect of changing the historical source.
 
 This phase is a parameter-expansion study, not a fresh unseen-data claim. A future period after the Phase-21 sample remains the appropriate untouched external validation period.
 
@@ -54,22 +54,22 @@ For every configuration:
 
 The existing 224-family promotion result is not retroactively changed.
 
-## Data-quality gates
-- exact three-leg OHLC observations at frozen timestamps;
-- no synthetic bars;
-- no strike substitution;
-- no cross-source leg mixing;
-- no interpolation;
-- complete provenance and SHA-256;
-- explicit per-configuration coverage diagnostics.
+## Final outcome
+
+- 504/504 configurations executed successfully.
+- 504/504 had 63/63 valid weekly cycles.
+- 323/504 raw bootstrap p-values were below 0.05.
+- 0/504 Holm-adjusted p-values were below 0.05.
+- 0/504 configurations passed the capital-promotion gate.
 
 ## Exit criteria
-Phase 22A is complete when:
-1. all 504 configuration IDs are generated deterministically;
-2. all 504 are executed or explicitly fail coverage/contract checks;
-3. the 504-family statistical summary and parameter surfaces are written;
-4. errors and corrections are logged;
-5. a manuscript-style result and README status are updated.
+
+All exit criteria are satisfied:
+1. all 504 configuration IDs were generated deterministically;
+2. all 504 were executed successfully;
+3. the 504-family statistical summary and parameter surfaces were written;
+4. errors and corrections were logged;
+5. manuscript-style results and README status were updated.
 
 ## Interpretation boundary
-Positive P&L or a high Sharpe in this historical extension is descriptive evidence only. It does not establish future profitability or executable bid/ask performance.
+Positive P&L or high Sharpe in this historical expansion is descriptive evidence only. It does not establish future profitability or executable bid/ask performance.
