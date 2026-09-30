@@ -92,7 +92,7 @@ def main() -> None:
         raise RuntimeError("Base frozen bars unexpectedly already contain external target expiries")
 
     merged_bars_path = out / "variant_option_bars.parquet"
-    pl.concat([base_bars, pl.LazyFrame(ext_bars)], how="vertical_relaxed").sink_parquet(
+    pl.concat([base_bars, ext_bars.lazy()], how="vertical_relaxed").sink_parquet(
         merged_bars_path,
         compression="zstd",
         maintain_order=False,
@@ -156,7 +156,7 @@ def main() -> None:
     print(json.dumps(coverage, indent=2))
 
     # Copy the exact frozen Phase-9 interfaces used by the backtester.
-    phase9_out = out.parent / "phase9_weekly" / "output"
+    phase9_out = out / "phase9_weekly" / "output"
     phase9_out.mkdir(parents=True, exist_ok=True)
     import shutil
     shutil.copy2(baseline_path, phase9_out / "weekly_cycle_manifest.csv")
