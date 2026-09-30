@@ -37,3 +37,9 @@ No Phase-20 execution errors yet.
 - **Issue:** Five missing 2026 target cycles have no frozen Phase-9 entry spot, and HF-02 ends in 2025.
 - **Impact:** Those five cycles cannot yet be admitted without an exact 10:00 IST NIFTY spot source.
 - **Correction:** For 2024–2025 missing cycles only, recover the exact entry spot from HF-02's contemporaneous `spot` field while keeping option legs single-source. The five 2026 cycles remain explicitly unresolved rather than using daily-close proxies.
+
+
+## E20-005 — 2026-09-30
+- **Issue:** HF-02 final-bar extraction passed timestamp bounds to Polars `is_between` as expressions instead of literals.
+- **Impact:** Recovery stopped after source loading and strike-selection, before writing recovered bars.
+- **Correction:** Wrap the entry/expiry bounds with `pl.lit(...)`. No source, timestamp, strike-selection, or admission rule changes.
