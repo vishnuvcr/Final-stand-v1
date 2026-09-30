@@ -1,25 +1,34 @@
-# Phase 21W External Full-Strike Recovery Error Log
+# Phase 21W External Recovery Error Log
 
-## E21X-001 — 2026-09-30
-- **Issue:** Earlier external source audit recorded broker/API routes as not tested.
-- **Correction:** Expanded the audit with current endpoint/documentation evidence and separated documentary qualification from empirical admission.
+## Resolved during resume
 
-## E21X-002 — 2026-09-30
-- **Issue:** A public dataset with a matching per-expiry 1-minute option schema could be overlooked if only broker APIs were considered.
-- **Correction:** Added thetrademarkk/india-index-options-1m as a candidate route and created a deterministic five-expiry probe.
+### E21X-001 — Recovery scope was broader than the actual unresolved set
+- **Observed:** Older phase text described a larger missing-cycle population.
+- **Correction:** Read the frozen Phase 21 combined coverage.json and narrowed the live recovery target to exactly five missing expiries.
+- **Prevention:** Future source probes must derive their target set from the latest frozen coverage contract.
 
-## E21X-003 — 2026-09-30
-- **Issue:** Public dataset presence does not guarantee full-strike coverage or acceptable licensing for later capital use.
-- **Correction:** Probe exact missing expiries, record provenance, and carry the dataset's CC-BY-NC-4.0 / educational-use limitation into admission criteria.
+### E21X-002 — External recovery initially attempted to rebuild the spot interface
+- **Observed:** The first recovery script draft downloaded a second NIFTY spot source.
+- **Correction:** Changed the script to consume the exact frozen Phase 9 selected spot-bar artifact instead.
+- **Reason:** Avoids changing the spot source while recovering only option bars.
+- **Prevention:** External recovery may replace only the explicitly missing option-cycle cells.
 
-## E21X-004 — 2026-09-30
-- **Issue:** The first public-HF probe reached the downloaded parquet but Polars rejected the dataset's fixed-offset timestamp metadata (+05:30).
-- **Impact:** No source-level probe rows were produced in run 36710896827.
-- **Correction:** Reuse the repository's established fixed-offset timezone compatibility setting by setting POLARS_IGNORE_TIMEZONE_PARSE_ERROR=1 before importing Polars; timestamps remain explicitly treated as IST in the probe.
-- **Prevention:** Third-party parquet ingestion probes must apply the same timezone-compatibility contract already validated in Phase 13W before reading schemas.
+### E21X-003 — Workflow output path mismatch
+- **Observed:** The merge script initially wrote the Phase 9 interface outside the final-input directory.
+- **Correction:** Changed the destination to work/final_input/phase9_weekly/output.
+- **Prevention:** Final rerun validates all required interface paths before execution.
 
-## E21X-006 — 2026-09-30
-- **Issue:** The external recovery status had drifted from the frozen 37/12/14 chronological split to 60/20/20.
-- **Impact:** This could have contaminated the definition of training, validation and untouched holdout during recovery.
-- **Correction:** Restore 37/12/14 everywhere and add an explicit frozen-split check before external backtest integration.
-- **Prevention:** Recovery branches may fill missing observations but may not redefine experimental chronology; validate the split before every downstream rerun.
+### E21X-004 — Workflow commit identity typo
+- **Observed:** The first workflow draft contained a malformed bot email.
+- **Correction:** Replaced it with the standard github-actions bot noreply address.
+- **Prevention:** Workflow YAML is compiled/validated before the research run.
+
+## Open risks
+
+### E21X-005 — RISSIN schema/timestamp compatibility
+- **Risk:** The public dataset's timestamp representation may require parsing/normalization on the runner.
+- **Control:** Recovery script validates exact 10:00/14:00 bars, duplicate keys and all 224 variants for each target before admission.
+
+### E21X-006 — RISSIN strike coverage
+- **Risk:** The dataset card warns that some illiquid/far strikes can be sparse.
+- **Control:** Every one of the 224 variants must pass exact entry/lock coverage on all five targets; otherwise the route is rejected rather than patched.
