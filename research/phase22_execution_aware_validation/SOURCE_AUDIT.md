@@ -46,3 +46,15 @@ No purchase or external credential use is authorized by this phase plan.
 The audit has now covered official NSE historical order/trade products, public OHLC archives, broker APIs with current depth, broker expired-contract historical candles, and public GitHub snapshot schemas. No reproducible, freely accessible historical NIFTY option bid/ask/depth archive has yet been admitted for Phase 22. The official NSE historical order/trade route remains the authoritative candidate, while broker live-depth APIs could support a future prospective collection study but cannot reconstruct past quotes.
 
 No new holdout is opened until an admissible historical execution dataset exists.
+
+
+## 22.1C — TrueData historical bid/ask route (2026-09-30)
+
+- TrueData states that its Market Data API supports NSE Futures & Options and that historical data are available with or without Bid/Ask history. Its documentation describes Level-1 best bid/ask as part of the feed. citeturn3search8turn3search0
+- The TrueData historical client code exposes tick-history retrieval with a bidask flag, supporting historical tick responses containing bid, bid quantity, ask and ask quantity. citeturn3search1
+- This makes TrueData the strongest currently identified vendor route for satisfying the Phase 22 execution-data contract, subject to actual access, coverage verification, licensing and reproducible download.
+- No TrueData credentials are present in the research protocol, and no paid subscription has been authorized. Therefore no TrueData data are admitted yet.
+
+### Route status
+
+**Strong candidate — access pending.** If an authorized trial/subscription or existing credential becomes available, the first acquisition test should use a small historical NIFTY weekly-expiry sample and verify exact timestamp, expiry, strike, CE/PE, bid/ask, bid/ask quantity, and source provenance before any full acquisition.
