@@ -1,0 +1,19 @@
+{
+  "weekly_expiries": 8,
+  "weekly_expiry_list": [
+    "2026-05-19",
+    "2026-06-02",
+    "2026-06-09",
+    "2026-06-16",
+    "2026-06-23",
+    "2026-07-07",
+    "2026-07-14",
+    "2026-07-21"
+  ],
+  "usable_cycle_rows": 4032,
+  "expected_cycle_rows": 4032,
+  "all_504_present": true,
+  "positive_holdout": 376,
+  "holm_lt_05": 0,
+  "min_holm": null
+}

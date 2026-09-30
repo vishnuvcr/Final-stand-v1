@@ -1,0 +1,38 @@
+{
+  "rissin_repo": "rissin/nse-options-intraday",
+  "rissin_file": "upstox_intraday/NIFTY/NIFTY_2026.parquet",
+  "rissin_requested_revision": "main",
+  "rissin_resolved_revision": "8f7739cab3f38abdcbc6332a6d0a83e1341326e3",
+  "rissin_sha256": "bae9943b2fa99ee9c1214fb7c695b84f9f661a050a5cd04d9c5c2ffc7bc59f73",
+  "spot_repo": "Jitendra12421/AlargeDatabase",
+  "spot_file": "INDDEX FILES/NIFTY_minute.parquet",
+  "spot_revision": "3420f004d1b4ce56975b06fcd594e0787cd6a83e",
+  "spot_sha256": "e275584bcdbcc3fc01e530bc83adbafac3da8eabe55cc280a06c7ada517394a0",
+  "fallback_spot_repo": "technovusin/nifty50-historical-data",
+  "fallback_spot_file": "1min/2026/NIFTY50_1min_20260101_to_20260908.csv",
+  "fallback_spot_revision": "cd169a991ccfc8979e718ae5ebeb1891a788107d",
+  "fallback_spot_sha256": "8578d7e4d4a5d13acc5183601a298b3b778a4289e7fb70691364907303eb51ff",
+  "fallback_spot_used": true,
+  "trademarkk_repo": "thetrademarkk/india-index-options-1m",
+  "trademarkk_revision": "51ca58c",
+  "option_fallback_expiries": [],
+  "option_fallback_sha256": {},
+  "requested_start": "2026-05-19",
+  "requested_end": "2026-08-04",
+  "weekly_expiries": [
+    "2026-05-19",
+    "2026-06-02",
+    "2026-06-09",
+    "2026-06-16",
+    "2026-06-23",
+    "2026-07-07",
+    "2026-07-14",
+    "2026-07-21"
+  ],
+  "monthly_expiries_excluded": [
+    "2026-05-26",
+    "2026-06-30",
+    "2026-07-28",
+    "2026-08-04"
+  ]
+}

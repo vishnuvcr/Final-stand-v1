@@ -1,0 +1,52 @@
+{
+  "family_size": 504,
+  "k1_rules": [
+    "OTM1",
+    "OTM2",
+    "OTM3",
+    "OTM4",
+    "OTM5",
+    "OTM6",
+    "OTM7",
+    "OTM8",
+    "ATM_NEAREST",
+    "ATM_UP",
+    "ITM1",
+    "ITM2",
+    "ITM3",
+    "ITM4",
+    "ITM5",
+    "ITM6",
+    "ITM7",
+    "ITM8"
+  ],
+  "k2_rules": [
+    "NEXT1",
+    "NEXT2",
+    "NEXT3",
+    "MIRROR_GAP"
+  ],
+  "k3_multipliers": [
+    0.5,
+    1.0,
+    1.5,
+    2.0,
+    2.5,
+    3.0,
+    4.0
+  ],
+  "weekly_expiries": [
+    "2026-05-19",
+    "2026-06-02",
+    "2026-06-09",
+    "2026-06-16",
+    "2026-06-23",
+    "2026-07-07",
+    "2026-07-14",
+    "2026-07-21"
+  ],
+  "start_date": "2026-05-19",
+  "end_date": "2026-08-04",
+  "new_holdout": true,
+  "selection_before_holdout": false
+}
