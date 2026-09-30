@@ -9,7 +9,7 @@ OUT=Path("research/phase20w_executable_bar_recovery/output"); OUT.mkdir(parents=
 CACHE=os.getenv("HF_CACHE","~/.cache/huggingface"); token=os.getenv("HF_TOKEN")
 REV="45e0a043f34f3f40f9694e52a944297803c2af8b"
 K1=["OTM1","OTM2","OTM3","ATM_NEAREST","ATM_UP","ITM1","ITM2","ITM3"]; K2=["NEXT1","NEXT2","NEXT3","MIRROR_GAP"]; K3=[0.5,1,1.5,2,2.5,3,4]
-base=pl.read_csv("research/phase9_weekly/output/weekly_cycle_manifest.csv").head(63).with_columns(pl.col("target_expiry").cast(pl.String))
+base=pl.DataFrame({"target_expiry": json.loads(Path("research/phase19w_recovered_rerun/output/baseline_calendar.json").read_text())}).with_columns(pl.col("target_expiry").cast(pl.String))
 trade=pl.read_csv("research/phase19w_recovered_rerun/output/trades_ITM3_NEXT1_K3M4.csv").filter(pl.col("target_expiry").is_in(base["target_expiry"]))
 missing=[x for x in base["target_expiry"].to_list() if x not in set(trade["target_expiry"].to_list())]
 def k1(s,spot,r):
