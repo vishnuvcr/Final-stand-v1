@@ -49,3 +49,8 @@
 - **Issue:** The prepared HF-03 interface built successfully, but persisting its large files into the branch failed.
 - **Impact:** The preparation workflow ended without a reusable branch copy.
 - **Correction:** Use the successful preparation run artifact as the transport layer and consume it from Phase 21. No source or strategy change.
+
+## E21-010 — 2026-09-30
+- **Issue:** HF-02 recovered bars expose `expiry` while the HF-03 interface expects the same field under the frozen target-expiry schema.
+- **Impact:** Overlay stopped at schema validation.
+- **Correction:** Map `expiry` from `target_expiry` for HF-02 rows; no date values are changed.
