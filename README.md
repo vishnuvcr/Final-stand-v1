@@ -1,12 +1,13 @@
 # Final Stand v1 — Market Inefficiency Research
 
-## Latest research status — 2026-09-29
+## Latest research status — 2026-09-30
 
-**Weekly NIFTY strategy research has completed the empirical protocol through Phase 14W manuscript synthesis.**
+**Weekly NIFTY strategy research has completed Phase 22A's full 504-configuration retrospective expansion. Phase 22W prospective execution-aware validation remains active.**
 
 ### Phase status
 
-- Phase 21W — final five-expiry external recovery and 63-expiry frozen rerun: ✅ complete; 224 variants rerun, 0 promoted
+- Phase 21W — final five-expiry external recovery and 63-expiry frozen rerun: ✅ complete; 12,822 admitted cells, 224 variants rerun, 0 promoted
+- Phase 22A — weekly 504-configuration strike-range expansion: ✅ complete; 504/504 tested, 0 promoted
 
 - Phase 8W — weekly strategy definition: ✅
 - Phase 9W — HF weekly data gate: ✅ 63 usable weekly cycles
@@ -102,16 +103,35 @@ Capital/margin reconstruction is a separate evidence layer from execution valida
 - **Phase 20W — Multi-Source Contract Recovery: 🔄 prepared**. It will exhaust the registered public fallback sources for the remaining contract-level gaps before any further strategy conclusion.
 - [Phase 20W branch](https://github.com/vishnuvcr/Final-stand-v1/tree/phase-20w-multisource-recovery) · [Phase 20W plan](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-20w-multisource-recovery/research/phase20w_multisource_recovery/PHASE_PLAN.md)
 
-## Phase 21W — Frozen 224-variant combined rerun and final five-cycle recovery — 2026-09-30
+## Phase 21W — Final 63-expiry recovery result — 2026-09-30
 
-- **Combined rerun status:** complete for 58/63 frozen weekly expiries.
-- Combined input coverage: **11,702 / 14,112** variant-cycle cells, with zero overlap between the admitted HF-03 and HF-02 sources.
-- The five unresolved expiries are **2026-01-13, 2026-02-10, 2026-03-10, 2026-04-13 and 2026-05-12**. All five are in the holdout segment, so the current 224-variant results are not yet the final 63-cycle holdout evidence.
-- Current 224-variant rerun: 193/224 positive training means, 136/224 positive validation means, 185/224 positive holdout means on the currently executable cycles; **0/224 passed the frozen promotion gate** and the minimum Holm-adjusted training p-value was 0.07464.
-- A new public recovery candidate has been qualified for automated testing: rissin/nse-options-intraday, pinned to revision 78b1c5468255d18cf492984bfe6fe4e3ac874d7c. Its dataset card documents NIFTY 1-minute intraday coverage from October 2024 through 2026 with expiry, strike, option type, OHLC and volume fields.
-- The Phase 21 external-recovery workflow now tests all five missing expiries, requires all 224 variants to pass exact entry/lock coverage, merges only the missing cells, and then reruns the unchanged frozen engine.
-- No commercial data access has been purchased and no strategy parameter, split, stop, slippage or cost assumption has been changed.
+- **Final status: COMPLETE.** The five previously missing weekly expiries were recovered and the full 63-expiry, 224-configuration rerun completed.
+- Final admitted coverage: **12,822 variant-cycle cells** across 63 weekly expiries.
+- The final frozen 224-family had **0/224 capital-promotion passes**; minimum Holm-adjusted training p-value was approximately 0.074642.
+- Historical results remain OHLC-reconstructed rather than verified bid/ask fills.
 - [Phase 21W combined rerun branch](https://github.com/vishnuvcr/Final-stand-v1/tree/phase-21w-combined-frozen-rerun)
 - [Phase 21W external recovery branch](https://github.com/vishnuvcr/Final-stand-v1/tree/phase-21w-external-full-strike-recovery)
-- [Phase 21W recovery targets](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-21w-external-full-strike-recovery/research/phase21w_external_full_strike_recovery/RECOVERY_TARGETS.md)
-- [Phase 21W external recovery workflow](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-21w-external-full-strike-recovery/.github/workflows/phase-21w-source-audit.yml)
+
+## Phase 22A — Weekly 504-configuration strike-range expansion — 2026-09-30
+
+- **Status: COMPLETE.** All **504 configurations** were tested across all **63 weekly expiries**.
+- K1 was extended to **OTM1–OTM8 and ITM1–ITM8**, while ATM_NEAREST and ATM_UP were retained. K2 and K3 families were unchanged.
+- Every configuration had **63/63 valid OHLC cycles**.
+- Positive training P&L: **414/504**; positive validation P&L: **239/504**; positive historical-holdout P&L: **308/504**.
+- Mean historical-holdout P&L: **₹33,113.91** per configuration total; mean annualized weekly Sharpe: **1.6885**.
+- Raw bootstrap p<0.05: 323/504; **Holm-adjusted p<0.05: 0/504**; minimum adjusted p: **0.167944**.
+- **0/504 configurations passed the capital-promotion gate.**
+- Descriptive surface pattern: deeper OTM rules weakened beyond OTM3; deeper ITM, NEXT2/NEXT3 and larger K3 values showed higher retrospective sample averages.
+- This phase is not a new unseen-data result. The historical holdout was already exposed during Phase 21W, and all results remain OHLC-reconstructed.
+- [Phase 22A branch](https://github.com/vishnuvcr/Final-stand-v1/tree/phase-22a-weekly-504-strike-expansion)
+- [Phase 22A plan](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-22a-weekly-504-strike-expansion/research/phase22a_weekly_504_strike_expansion/PHASE_PLAN.md)
+- [Phase 22A results](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-22a-weekly-504-strike-expansion/research/phase22a_weekly_504_strike_expansion/RESULTS.md)
+- [Phase 22A parameter-surface analysis](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-22a-weekly-504-strike-expansion/research/phase22a_weekly_504_strike_expansion/PARAMETER_SURFACE_ANALYSIS.md)
+- [Phase 22A manuscript](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-22a-weekly-504-strike-expansion/research/phase22a_weekly_504_strike_expansion/FINAL_MANUSCRIPT.md)
+- [Phase 22A workflow run](https://github.com/vishnuvcr/Final-stand-v1/actions/runs/36741881293)
+
+## Phase 22W — Prospective execution-aware validation — 2026-09-30
+
+- **Status: ACTIVE.** Execution-data acquisition remains the main blocker to opening a genuinely new execution-aware holdout.
+- The 504-family result is preserved as a retrospective parameter-surface layer; no configuration is promoted or selected post hoc.
+- Historical bid/ask/depth, liquidity and margin evidence remain separate gates before deployment interpretation.
