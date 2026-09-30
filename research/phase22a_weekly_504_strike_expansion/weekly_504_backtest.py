@@ -266,19 +266,21 @@ def build_variants_504(
         )
 
         if expiry in EXTERNAL_TARGETS:
+            external_end_ts = datetime.combine(
+                date.fromisoformat(expiry),
+                time(16, 0),
+                IST,
+            )
+            external_entry_lit = pl.lit(entry_ts).cast(
+                pl.Datetime(time_unit="us", time_zone="Asia/Kolkata")
+            )
+            external_end_lit = pl.lit(external_end_ts).cast(
+                pl.Datetime(time_unit="us", time_zone="Asia/Kolkata")
+            )
             opt = rissin_df.filter(
                 (pl.col("target_expiry") == expiry)
-                & (pl.col("timestamp") >= pl.lit(entry_ts))
-                & (
-                    pl.col("timestamp")
-                    <= pl.lit(
-                        datetime.combine(
-                            date.fromisoformat(expiry),
-                            time(16, 0),
-                            IST,
-                        )
-                    )
-                )
+                & (pl.col("timestamp") >= external_entry_lit)
+                & (pl.col("timestamp") <= external_end_lit)
             )
             source_file = RISSIN_FILE
             source_sha = rissin_sha
