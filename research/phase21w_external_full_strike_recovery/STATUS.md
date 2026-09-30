@@ -24,3 +24,8 @@ Frozen constraints:
 
 Next gate: source-level probe of the Rissin 2026 NIFTY parquet, followed by exact frozen variant reconstruction for the five dates only.
 - The prior `78b1c54` pin produced a 404 because that historical revision did not contain the NIFTY 2026 parquet. The recovery route now validates file existence at the resolved current revision before downloading.
+
+
+## Live probe status
+
+The first live RISSIN probe reached the data-reader stage but failed on the source parquet timezone metadata (+05:30). That parser compatibility issue has been corrected in the current branch head. The corrected workflow has not yet been dispatched because the available GitHub connector can modify repository files but does not expose workflow-dispatch; the push-based trigger is suppressed for connector-created commits. No empirical conclusion has been advanced on this basis.
