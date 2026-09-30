@@ -39,3 +39,8 @@
 - **Issue:** HF-02 recovered bars lack `option_type`.
 - **Impact:** Overlay construction stopped before coverage validation.
 - **Correction:** Set `option_type='CALL'`, matching the HF-02 recovery file and the frozen call-side strike-selection experiment.
+
+## E21-008 — 2026-09-30
+- **Issue:** GitHub cancelled two Phase-21 runs during the expensive HF-03 interface rebuild before the overlay stage.
+- **Impact:** No combined empirical result from those runs.
+- **Correction:** Split Phase 21 into a one-time HF-03 interface preparation job and a lightweight combined rerun job that reuses the persisted interface. This removes repeated long rebuilds while preserving the pinned source and frozen inputs.
