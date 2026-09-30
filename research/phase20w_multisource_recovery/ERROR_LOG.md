@@ -54,3 +54,9 @@ No Phase 20 execution errors yet.
 - **Issue:** Direct `hf_hub_download` also returned 404 for the verified public LFS file.
 - **Impact:** Hub REST acquisition cannot currently be used from the GitHub runner for Recovery-1.
 - **Correction:** Test the underlying Git/LFS transport with a sparse clone and path-specific LFS fetch. This still retrieves the original pinned parquet without synthetic transformation.
+
+
+## E20-009 — 2026-09-30
+- **Issue:** Git/LFS fallback reached Hugging Face but failed because Git attempted an interactive username prompt on the runner.
+- **Impact:** No LFS object was fetched.
+- **Correction:** The probe now supplies the existing HF token to the Git HTTPS URL internally without printing it, then fetches only the target parquet through LFS.
