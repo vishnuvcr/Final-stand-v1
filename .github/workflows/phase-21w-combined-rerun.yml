@@ -1,0 +1,77 @@
+name: Phase 21W - Combined Recovered Frozen Rerun
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [phase-21w-combined-recovered-rerun]
+    paths:
+      - 'research/phase21w_combined_recovered_rerun/**'
+      - '.github/workflows/phase-21w-combined-rerun.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  rerun:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    concurrency:
+      group: phase21w-combined-rerun
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-21w-combined-recovered-rerun
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install tooling
+        run: pip install -q huggingface_hub polars numpy pandas pyarrow
+      - name: Restore frozen Phase 9 spot interface
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p research/phase9_weekly/output
+          curl -L --fail -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_TOKEN" https://api.github.com/repos/vishnuvcr/Final-stand-v1/actions/artifacts/11060261904/zip -o /tmp/p9.zip
+          unzip -o /tmp/p9.zip -d research/phase9_weekly/output
+          test -f research/phase9_weekly/output/selected_weekly_spot_bars.parquet
+      - name: Build primary HF3 input
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_REVISION: 0f4800e43e6f96cec0794369d78eb4d3c4211ef5
+          HF_CACHE: ~/.cache/huggingface
+          PYTHONPATH: ${{ github.workspace }}
+          POLARS_IGNORE_TIMEZONE_PARSE_ERROR: '1'
+        run: |
+          python research/phase17w_strike_alternatives/strike_alternatives.py             --variant-start 0 --variant-end 224             --hf-cache ~/.cache/huggingface             --baseline-manifest research/phase21w_combined_recovered_rerun/frozen_63_manifest.csv             --expiry-start 0 --expiry-end 63             --build-only             --output-dir work/hf3_build
+      - name: Merge deterministic source inputs
+        run: |
+          python research/phase21w_combined_recovered_rerun/merge_inputs.py             --hf3-dir work/hf3_build             --hf2-dir research/phase20w_executable_bar_recovery/output             --manifest research/phase21w_combined_recovered_rerun/frozen_63_manifest.csv             --out-dir work/combined
+      - name: Run frozen 224-variant experiment
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+          POLARS_IGNORE_TIMEZONE_PARSE_ERROR: '1'
+        run: |
+          python research/phase17w_strike_alternatives/strike_alternatives.py             --variant-start 0 --variant-end 224             --hf-cache ~/.cache/huggingface             --built-input-dir work/combined             --baseline-manifest research/phase21w_combined_recovered_rerun/frozen_63_manifest.csv             --expiry-start 0 --expiry-end 63             --output-dir research/phase21w_combined_recovered_rerun/output
+      - name: Persist research-safe outputs
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          find research/phase21w_combined_recovered_rerun/output -type f -not -name 'variant_option_bars.parquet' -print0 | xargs -0 git add
+          git add research/phase21w_combined_recovered_rerun/frozen_63_manifest.csv
+          git diff --cached --quiet || git commit -m 'phase21w: record combined recovered rerun'
+          git fetch origin phase-21w-combined-recovered-rerun
+          git reset --soft origin/phase-21w-combined-recovered-rerun
+          git commit -m 'phase21w: record combined recovered rerun' || true
+          git push origin HEAD:phase-21w-combined-recovered-rerun
+      - name: Upload full Phase 21 outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase21w-combined-recovered-results
+          path: |
+            research/phase21w_combined_recovered_rerun/output/
+            work/combined/variant_option_bars.parquet
+            work/hf3_build/variant_option_bars.parquet
+          if-no-files-found: error
