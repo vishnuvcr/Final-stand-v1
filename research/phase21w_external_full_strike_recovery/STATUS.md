@@ -1,31 +1,50 @@
 # Phase 21W — External Full-Strike Recovery Status
 
-State: RUNNING — recovering the five missing holdout expiries without altering the frozen 224-variant experiment.
+State: **COMPLETE**
 
-Current missing expiries:
-- 2026-01-13
-- 2026-02-10
-- 2026-03-10
-- 2026-04-13
-- 2026-05-12
+Completed end-to-end workflow: GitHub Actions run **36717226605**.
 
-Current data route: Rissin nse-options-intraday. The workflow resolves the current `main` revision at run start, discovers the exact NIFTY 2026 intraday parquet, and records both the resolved commit SHA and file SHA-256 before admission. The dataset card documents NIFTY 1-minute intraday coverage through 2026 with expiry, strike, option type and OHLC/volume fields; intraday OI is unavailable and is not required by the frozen execution engine.
+## Final coverage
 
-Frozen constraints:
-- 63 weekly expiries.
-- 224 variants = 8 K1 × 4 K2 × 7 K3.
-- Chronological split remains 37/12/14 train/validation/holdout.
-- Entry 10:00 IST; lock 14:00 IST.
-- 50-point hard stop.
-- 0.50 NIFTY-point slippage per leg.
-- Existing Paytm Money/NSE transaction-cost model.
-- No synthetic interpolation, strike substitution or cross-source leg mixing.
-- External bars can fill only the five previously missing expiries; existing 58-cycle data are immutable.
+- 63/63 weekly expiries represented.
+- 12,822 admitted variant-cycle cells.
+- 58/63 base expiries were preserved unchanged.
+- Exactly five previously missing holdout expiries were recovered.
+- 1,120 external variant-cycle cells were added.
+- 0 cycle overlap and 0 duplicate external bar groups.
 
-Next gate: source-level probe of the Rissin 2026 NIFTY parquet, followed by exact frozen variant reconstruction for the five dates only.
-- The prior `78b1c54` pin produced a 404 because that historical revision did not contain the NIFTY 2026 parquet. The recovery route now validates file existence at the resolved current revision before downloading.
+## External provenance
 
+- Dataset: RISSIN / Hugging Face nse-options-intraday.
+- Immutable revision: 8f7739cab3f38abdcbc6332a6d0a83e1341326e3.
+- File: upstox_intraday/NIFTY/NIFTY_2026.parquet.
+- File SHA-256: bae9943b2fa99ee9c1214fb7c695b84f9f661a050a5cd04d9c5c2ffc7bc59f73.
+- All five targets admitted 224/224 variants using exact entry/lock observations.
 
-## Live probe status
+## Final 224-variant frozen rerun
 
-The first live RISSIN probe reached the data-reader stage but failed on the source parquet timezone metadata (+05:30). That parser compatibility issue has been corrected in the current branch head. The corrected workflow has not yet been dispatched because the available GitHub connector can modify repository files but does not expose workflow-dispatch; the push-based trigger is suppressed for connector-created commits. No empirical conclusion has been advanced on this basis.
+- Positive training total P&L: 193/224.
+- Positive validation total P&L: 136/224.
+- Positive holdout total P&L: 163/224.
+- Mean holdout annualized weekly Sharpe across variants: 2.357.
+- Minimum 63-cycle validity rate: 0.6508.
+- Mean 63-cycle validity rate: 0.9086.
+- Minimum Holm-adjusted training p-value: 0.07464.
+- Promotion-gate variants: 0/224.
+
+The frozen promotion gate remains unchanged: validity >= 50/63, sufficient training/validation sample sizes, positive training and validation means, and Holm-adjusted training p < 0.05.
+
+## Scientific conclusion
+
+Phase 21W resolves the historical-data availability gap but **does not produce a capital-phase candidate** under the preregistered frozen protocol. Positive holdout outcomes exist for many variants, but no configuration satisfies the complete promotion gate after 224-way Holm adjustment.
+
+No live-trading profitability claim is established. Historical OHLC reconstruction, explicit slippage, and transaction-cost assumptions remain important execution-model limitations.
+
+## Canonical outputs
+
+- [Final manuscript](FINAL_MANUSCRIPT.md)
+- [Final results summary](RESULTS.md)
+- [Final validation summary](output/final_validation_summary.json)
+- [Complete 224-variant summary](output/final_rerun/variant_summary.json)
+- [RISSIN source manifest](output/rissin_source_manifest.json)
+- [Error log](ERROR_LOG.md)
