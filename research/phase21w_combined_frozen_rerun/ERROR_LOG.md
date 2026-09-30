@@ -59,3 +59,8 @@
 - **Issue:** HF-02 recovered bars lack the `option_type` interface field.
 - **Impact:** Overlay construction stopped before coverage validation.
 - **Correction:** Set `option_type='CE'` because the recovered HF-02 source files are explicitly the weekly NIFTY `*_CE` files. No price/timestamp data is changed.
+
+## E21-008 — 2026-09-30
+- **Issue:** HF-02 recovered bars expose the weekly contract expiry as `expiry`, while the frozen HF-03 interface expects the same value under `target_expiry`.
+- **Impact:** Overlay construction stopped at schema validation.
+- **Correction:** Map `expiry` to `target_expiry` for recovered rows; no value transformation or contract selection is changed.
