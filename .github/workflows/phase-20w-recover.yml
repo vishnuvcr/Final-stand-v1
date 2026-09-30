@@ -26,6 +26,14 @@ jobs:
           python-version: '3.11'
       - name: Install tooling
         run: pip install -q huggingface_hub polars pandas pyarrow
+      - name: Restore frozen Phase 9 baseline
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p research/phase9_weekly/output
+          curl -L --fail -H "Accept: application/vnd.github+json" -H "Authorization: Bearer $GITHUB_TOKEN" -H "X-GitHub-Api-Version: 2026-03-10" https://api.github.com/repos/vishnuvcr/Final-stand-v1/actions/artifacts/11060261904/zip -o /tmp/p9.zip
+          unzip -o /tmp/p9.zip -d research/phase9_weekly/output
+          test -f research/phase9_weekly/output/weekly_cycle_manifest.csv
       - name: Recover missing bars
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
