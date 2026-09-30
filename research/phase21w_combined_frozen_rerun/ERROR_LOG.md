@@ -19,3 +19,8 @@
 - **Issue:** Phase-19 persisted outputs do not include the intermediate `variant_option_bars.parquet` required for exact re-execution.
 - **Impact:** A direct persisted-input overlay cannot reproduce the original OHLC backtest interface.
 - **Correction:** Rebuild the frozen HF-03 interface once from its pinned revision, then overlay admitted HF-02 cycles. The rebuild is data-interface reconstruction, not parameter retuning.
+
+## E21-005 — 2026-09-30
+- **Issue:** HF-02 recovered bars lack the derived `trading_day` field required by the HF-03 interface.
+- **Impact:** Overlay construction stopped before coverage validation.
+- **Correction:** Derive `trading_day` from the recovered bar timestamp at the adapter boundary; no timestamp or price values are modified.
