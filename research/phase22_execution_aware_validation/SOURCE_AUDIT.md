@@ -83,3 +83,11 @@ A future acquisition attempt must first obtain a small sample covering at least 
 4. Public OHLC/option-chain archives — fallback/cross-check only.
 
 No source is admitted until an actual sample for the required target dates/contracts is obtained and schema/provenance/hash checks pass.
+
+
+## 22.1D — TrueData availability qualification
+
+- TrueData's current documentation confirms historical Bid/Ask history and the required tick fields, but its standard REST historical availability page says tick history is limited to the **last 5 trading days** by default; extended history is an add-on. citeturn0search0turn0search2
+- TrueData also documents historical Bid/Ask through its WebSocket services and says its historical data are available with and without Bid/Ask history. citeturn0search5turn0search12
+- Therefore, TrueData is a **technically suitable acquisition route**, but it is not yet evidence that the complete 2024–2026 Phase 22 historical sample is accessible under a free/default account.
+- The required next acquisition test is a vendor-authorized sample covering at least one historical NIFTY weekly-expiry session. The sample must demonstrate actual historical bid/ask timestamps and contract identifiers before any bulk acquisition or holdout opening.
