@@ -56,3 +56,9 @@
 - **Observed:** The external workflow could not find a successful standalone Phase 9 artifact on its branch.
 - **Correction:** Verified that the successful Phase 21 combined artifact already contains the exact Phase 9 weekly manifest and selected spot bars. The workflow now reuses those embedded frozen files.
 - **Prevention:** Prefer the newest already-admitted composite artifact when it contains all required frozen interfaces; do not add redundant cross-workflow dependencies.
+
+
+### E21X-009 — Baseline calendar lookup pointed at the wrong artifact subdirectory
+- **Observed:** The first actual RISSIN recovery attempt stopped before Python execution because the combined artifact stores baseline_calendar.json under the Phase 21 output directory, not combined_input.
+- **Correction:** Updated the workflow lookup to search the artifact output directory.
+- **Prevention:** Artifact paths are now derived from the exact upload manifest of the successful Phase 21 combined workflow.
