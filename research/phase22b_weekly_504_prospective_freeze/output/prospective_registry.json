@@ -46,7 +46,7 @@
     "2026-07-21"
   ],
   "start_date": "2026-05-19",
-  "end_date": "2026-08-04",
+  "end_date": "2026-09-08",
   "new_holdout": true,
   "selection_before_holdout": false
 }
