@@ -1,0 +1,500 @@
+{
+  "HF1_revision": "78b1c5468255d18cf492984bfe6fe4e3ac874d7c",
+  "HF2_revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+  "HF3_revision": "0f4800e43e6f96cec0794369d78eb4d3c4211ef5",
+  "sources": {
+    "HF1_2024": {
+      "path": "upstox_intraday/NIFTY/NIFTY_2024.parquet",
+      "rows": 14592609,
+      "min_date": "2024-10-01",
+      "max_date": "2024-12-31",
+      "columns": [
+        "date",
+        "timestamp",
+        "underlying",
+        "expiry",
+        "strike",
+        "option_type",
+        "exercise_style",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "oi",
+        "settle_price",
+        "source",
+        "granularity"
+      ]
+    },
+    "HF1_2025": {
+      "path": "upstox_intraday/NIFTY/NIFTY_2025.parquet",
+      "rows": 69687860,
+      "min_date": "2025-01-01",
+      "max_date": "2025-12-31",
+      "columns": [
+        "date",
+        "timestamp",
+        "underlying",
+        "expiry",
+        "strike",
+        "option_type",
+        "exercise_style",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "oi",
+        "settle_price",
+        "source",
+        "granularity"
+      ]
+    },
+    "HF1_2026": {
+      "path": "upstox_intraday/NIFTY/NIFTY_2026.parquet",
+      "error": "RemoteEntryNotFoundError('404 Client Error. (Request ID: Root=1-6abc7597-16dcbe191b2228cb7c730cc4;73c02fc9-5a4a-473e-8184-a1af37574d05)\\n\\nEntry Not Found for url: https://huggingface.co/datasets/rissin/nse-options-intraday/resolve/78b1c5468255d18cf492984bfe6fe4e3ac874d7c/upstox_intraday/NIFTY/NIFTY_2026.parquet.')"
+    },
+    "HF2_ATM-10_CE": {
+      "path": "NIFTY/WEEK/ATM-10_CE.parquet",
+      "rows": 252634,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM-9_CE": {
+      "path": "NIFTY/WEEK/ATM-9_CE.parquet",
+      "rows": 288517,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM-8_CE": {
+      "path": "NIFTY/WEEK/ATM-8_CE.parquet",
+      "rows": 321136,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM-7_CE": {
+      "path": "NIFTY/WEEK/ATM-7_CE.parquet",
+      "rows": 362900,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM-6_CE": {
+      "path": "NIFTY/WEEK/ATM-6_CE.parquet",
+      "rows": 393210,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM-5_CE": {
+      "path": "NIFTY/WEEK/ATM-5_CE.parquet",
+      "rows": 417938,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM-4_CE": {
+      "path": "NIFTY/WEEK/ATM-4_CE.parquet",
+      "rows": 431823,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM-3_CE": {
+      "path": "NIFTY/WEEK/ATM-3_CE.parquet",
+      "rows": 443964,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM-2_CE": {
+      "path": "NIFTY/WEEK/ATM-2_CE.parquet",
+      "rows": 450619,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM-1_CE": {
+      "path": "NIFTY/WEEK/ATM-1_CE.parquet",
+      "rows": 456222,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM_CE": {
+      "path": "NIFTY/WEEK/ATM_CE.parquet",
+      "rows": 458033,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM+1_CE": {
+      "path": "NIFTY/WEEK/ATM+1_CE.parquet",
+      "rows": 457967,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM+2_CE": {
+      "path": "NIFTY/WEEK/ATM+2_CE.parquet",
+      "rows": 457666,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM+3_CE": {
+      "path": "NIFTY/WEEK/ATM+3_CE.parquet",
+      "rows": 457308,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM+4_CE": {
+      "path": "NIFTY/WEEK/ATM+4_CE.parquet",
+      "rows": 457236,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM+5_CE": {
+      "path": "NIFTY/WEEK/ATM+5_CE.parquet",
+      "rows": 457034,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM+6_CE": {
+      "path": "NIFTY/WEEK/ATM+6_CE.parquet",
+      "rows": 456780,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM+7_CE": {
+      "path": "NIFTY/WEEK/ATM+7_CE.parquet",
+      "rows": 456267,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM+8_CE": {
+      "path": "NIFTY/WEEK/ATM+8_CE.parquet",
+      "rows": 455393,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM+9_CE": {
+      "path": "NIFTY/WEEK/ATM+9_CE.parquet",
+      "rows": 454314,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    },
+    "HF2_ATM+10_CE": {
+      "path": "NIFTY/WEEK/ATM+10_CE.parquet",
+      "rows": 451999,
+      "columns": [
+        "timestamp",
+        "open",
+        "high",
+        "low",
+        "close",
+        "iv",
+        "volume",
+        "oi",
+        "strike_price",
+        "spot",
+        "datetime",
+        "date",
+        "expiry_type",
+        "strike_type",
+        "option_type"
+      ]
+    }
+  }
+}
