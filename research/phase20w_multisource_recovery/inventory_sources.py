@@ -18,7 +18,7 @@ for s in sources:
             fn=f"{d.replace('-','')}_WEEK.parquet"
             url=s["base"]+urllib.parse.quote(fn)
             try:
-                rr=session.get(url,headers=headers,stream=True,allow_redirects=True,timeout=30)
+                rr=session.get(url,stream=True,allow_redirects=True,timeout=30)
                 item["probes"][d]={"status":rr.status_code,"content_length":rr.headers.get("content-length"),"final_url":rr.url}
                 rr.close()
             except Exception as ex:
