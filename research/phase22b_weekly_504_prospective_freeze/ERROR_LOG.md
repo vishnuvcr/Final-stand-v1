@@ -38,3 +38,7 @@
 - The TradeMarkk NIFTY minute index source lacked an exact 10:00 IST spot row for a later prospective week.
 - K1 selection cannot proceed without an underlying spot observation.
 - Correction: the prospective run now uses a separately pinned NIFTY minute spot archive; option legs remain exclusively sourced from RISSIN.
+
+## E22B-009 — NIFTY minute spot schema uses date rather than timestamp
+- The pinned spot archive contains `date, open, high, low, close, volume` without a separate symbol or timestamp column.
+- Correction: the adapter treats the `date` field as the minute timestamp and applies the existing IST normalization. The file itself is pinned by revision and SHA-256.
