@@ -62,3 +62,9 @@
 - **Impact:** the source cannot yet be treated as a clean reproducible execution archive. Blindly loading it could drop or misinterpret quote observations.
 - **Correction:** retain the source as a high-priority acquisition lead. Require immutable revision/file manifest, deterministic quote-row isolation, exact contract mapping, chronological coverage validation and SHA-256 hashing before admission. No holdout opened.
 - **Additional environment issue:** direct container HTTP access to Hugging Face failed because DNS/network resolution is unavailable in the current execution environment; web-source evidence was used instead. This does not establish that the dataset itself is inaccessible to GitHub Actions, so it is not a rejection criterion.
+
+
+## E22-010 — Probe execution unavailable in current GitHub connector session
+- **Observed:** the Phase 22 manual probe workflow was created correctly, but the available GitHub connector exposes workflow inspection/rerun operations and does not expose a workflow-dispatch operation. Direct container download of the Hugging Face file also failed in this session.
+- **Impact:** the source cannot be admitted merely from the public preview; no claim of a completed Actions probe is made.
+- **Correction:** preserve the manual workflow as the reproducible next execution step. Continue source assessment only from independently verifiable public metadata/preview until a workflow run or authorized file download is available.
