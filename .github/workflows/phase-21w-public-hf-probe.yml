@@ -5,7 +5,7 @@ on:
   push:
     branches: [phase-21w-external-full-strike-recovery]
     paths:
-      - 'research/phase21w_external_full_strike_recovery/**'
+      - 'research/phase21w_external_full_strike_recovery/probe_hf_missing.py'
       - '.github/workflows/phase-21w-public-hf-probe.yml'
 
 permissions:
