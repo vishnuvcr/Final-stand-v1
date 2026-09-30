@@ -18,6 +18,7 @@ meta=c2.select(['variant_id','target_expiry','entry_timestamp','lock_timestamp',
 b2=b2.join(meta,on=key,how='left')
 if 'oi' in b2.columns: b2=b2.rename({'oi':'open_interest'})
 if 'trading_day' not in b2.columns: b2=b2.with_columns(pl.col('timestamp').str.slice(0,10).alias('trading_day'))
+if 'symbol' not in b2.columns: b2=b2.with_columns(pl.lit('NIFTY').alias('symbol'))
 b2=b2.select(b3.columns,strict=False)
 b=pl.concat([b3,b2],how='diagonal_relaxed')
 dups=b.group_by(['variant_id','target_expiry','timestamp','strike']).len().filter(pl.col('len')>1)
