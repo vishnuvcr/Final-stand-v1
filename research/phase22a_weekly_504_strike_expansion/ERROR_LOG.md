@@ -24,3 +24,12 @@
 - Observed: the downloaded Phase-21 external-recovery artifact contained the final rerun/output tree but not `research/phase9_weekly/output/weekly_cycle_manifest.csv` or `selected_weekly_spot_bars.parquet`.
 - Impact: the first corrected 504 workflow stopped at the interface-location step before the backtest.
 - Correction: use the immutable Phase-21 combined branch as the authoritative source for the frozen Phase-9 manifest and spot parquet, while retaining the pinned HF revision for option reconstruction. The workflow no longer depends on the external-recovery artifact for those two interface files.
+## E22A-006 — Frozen engine source/revision mismatch
+- Observed: the inherited Phase-17 engine's `DATASET_REPO` is `thetrademarkk/india-index-options-1m`, while the Phase-21 recovery revision `8f7739...` belongs to RISSIN. Passing that revision to the inherited builder produced a 404 revision-not-found error.
+- Impact: the first 504 backtest did not start.
+- Correction: Phase 22A now uses the exact TheTrademarkk source files for the 58 non-recovered expiries at the configured `main` revision with SHA-256 validation against the frozen Phase-9 manifest, and uses the pinned RISSIN revision only for the five externally recovered 2026 expiries.
+
+## E22A-007 — Variant-bar replication would create unnecessary memory pressure
+- Observed: an initial custom-builder design repeated every OHLC observation for every variant that used the strike.
+- Impact: the 504-family would create a much larger intermediate parquet than necessary.
+- Correction: the builder now writes each expiry/strike source observation once; the custom backtest runner maps the cycle-level variant strikes onto a shared per-expiry OHLC pivot.
