@@ -15,6 +15,9 @@ permissions:
 jobs:
   recover:
     runs-on: ubuntu-latest
+    concurrency:
+      group: phase20w-recovery
+      cancel-in-progress: true
     timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
@@ -46,6 +49,8 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           find research/phase20w_executable_bar_recovery/output -type f -not -name 'recovered_executable_bars.parquet' -print0 | xargs -0 git add
           git diff --cached --quiet || git commit -m 'phase20w: record executable-bar recovery'
+          git fetch origin phase-20w-executable-bar-recovery
+          git rebase origin/phase-20w-executable-bar-recovery
           git push origin HEAD:phase-20w-executable-bar-recovery
       - name: Upload recovered bars
         uses: actions/upload-artifact@v4
