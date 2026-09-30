@@ -57,3 +57,10 @@
 - Impact: the prospective builder aborted before any 504-family results were generated.
 - Correction: added a separately pinned public NIFTY 1-minute archive as a **gap-only causal fallback**. It is consulted only when the primary archive lacks the required observation; the same ≤5-minute causal rule is retained. Fallback source: `technovusin/nifty50-historical-data`, revision `cd169a991ccfc8979e718ae5ebeb1891a788107d`.
 - No option source, strike rule, weekly protocol, stop, slippage, cost model, or holdout boundary was changed.
+
+
+## E22B-013 — Null Holm column in summary coverage check
+- Observed: the full prospective data/backtest computation completed, but the workflow failed while evaluating `summary["holm_adjusted_p"] < 0.05` because Polars inferred the column as Null when no adjusted p-values were populated.
+- Impact: this was a reporting/serialization failure after the 504-family computation; no trades or strategy parameters were altered.
+- Correction: the coverage check now explicitly casts `holm_adjusted_p` to Float64 with null-safe handling before counting significant adjusted p-values.
+- Research interpretation: null adjusted p-values remain null; they are not converted into significant results. The next run will determine whether the holdout produced enough observations per variant for the pre-specified bootstrap test.
