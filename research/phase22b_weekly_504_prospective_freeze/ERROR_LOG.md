@@ -42,3 +42,7 @@
 ## E22B-009 — NIFTY minute spot schema uses date rather than timestamp
 - The pinned spot archive contains `date, open, high, low, close, volume` without a separate symbol or timestamp column.
 - Correction: the adapter treats the `date` field as the minute timestamp and applies the existing IST normalization. The file itself is pinned by revision and SHA-256.
+
+## E22B-010 — NIFTY minute spot timestamps are strings
+- The spot archive stores minute timestamps as strings such as `2026-05-15 10:39:00`.
+- Correction: the adapter now parses string timestamps explicitly in IST before exact 10:00 selection.
