@@ -80,3 +80,9 @@
 - **Observed:** The first successful RISSIN recovery produced 224/224 variants for each of the five target expiries, but the pre-existing 58-cycle combined input contains 11,702 executable variant-cycle cells rather than 58 x 224, because some variants are legitimately unavailable on some of those historical cycles.
 - **Correction:** Changed the merge gate to preserve the frozen partial coverage and add exactly 1,120 new cells. Final validation now uses the frozen engine's existing minimum validity requirement of 50/63 cycles per variant rather than demanding 63/63.
 - **Prevention:** Never reinterpret the registered 224 variants as a guarantee that every historical cycle is executable. Coverage must follow the frozen manifest and engine admission rules.
+
+
+### E21X-012 — Live probe had drifted to the RISSIN dataset main revision
+- **Observed:** The live recovery script resolved the RISSIN dataset current main revision instead of the preregistered pinned revision. The five-date probe therefore established data availability but was not admitted as the reproducible frozen-source result.
+- **Correction:** Restored the explicit pinned revision `78b1c5468255d18cf492984bfe6fe4e3ac874d7c` and fixed the parquet path.
+- **Admission rule:** The next run must report that exact revision and its SHA-256 before any recovered bars are admitted.
