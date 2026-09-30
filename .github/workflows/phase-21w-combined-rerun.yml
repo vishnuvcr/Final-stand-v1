@@ -5,7 +5,8 @@ on:
   push:
     branches: [phase-21w-combined-frozen-rerun]
     paths:
-      - 'research/phase21w_combined_frozen_rerun/build_combined.py'
+      - 'research/phase21w_combined_frozen_rerun/**'
+      - '.github/workflows/phase-21w-combined-rerun.yml'
 
 permissions:
   contents: write
