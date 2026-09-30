@@ -138,7 +138,7 @@ for exp in missing:
         bars=sdf.filter(pl.col("strike").is_in(reqstr)&(pl.col("timestamp")>=entry)&(pl.col("timestamp")<=f"{exp}T15:30:00"))
         bars=bars.select(["timestamp","strike","open","high","low","close","volume","oi"]).with_columns(pl.lit(exp).alias("target_expiry"))
     else:
-        bars=sdf.filter(pl.col("strike_price").is_in(reqstr)&pl.col("_ts").is_between(entry,f"{exp}T15:30:00"))
+        bars=sdf.filter(pl.col("strike_price").is_in(reqstr)&pl.col("_ts").is_between(pl.lit(entry),pl.lit(f"{exp}T15:30:00")))
         bars=bars.select([pl.col("datetime").alias("timestamp"),pl.col("strike_price").alias("strike"),"open","high","low","close","volume","oi"]).with_columns(pl.lit(exp).alias("target_expiry"))
     if bars.height: frames.append(bars)
     prov.append({"expiry":exp,"source":source_name,"revision":source_rev,"path":source_path,"usable_variants":len(usable)})
