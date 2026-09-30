@@ -41,3 +41,7 @@
 - Observed: normalized option timestamps were `Datetime(..., Asia/Kolkata)`, while Polars converted Python timezone-aware literals to UTC during comparison.
 - Impact: the 504 workflow stopped on the first weekly expiry with an incompatible timestamp comparison.
 - Correction: entry and expiry-end literals are explicitly cast to `Datetime(us, Asia/Kolkata)` before filtering. No trading timestamp changed.
+## E22A-010 — Entry timestamp literal also needed explicit IST casting
+- Observed: the first timezone correction fixed the weekly range filter but the separate exact-entry filter still used a Python datetime literal that Polars interpreted as UTC.
+- Impact: the 504 run stopped before K1/K2/K3 selection for the first expiry.
+- Correction: the entry timestamp comparison now uses the same explicit `Datetime(us, Asia/Kolkata)` cast as the range filter.
