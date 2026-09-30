@@ -48,3 +48,10 @@
 - **Observed:** Global Datafeeds documents historical NFO tick responses containing bid/ask prices and quantities, but public documentation does not establish that the complete 2024–2026 weekly-option history required by Phase 22 is freely accessible.
 - **Impact:** technically suitable schema is confirmed, but data admission and retention are unverified.
 - **Correction:** require an authorized historical sample and coverage verification before treating the source as admitted.
+
+
+## E22-008 — Intraday-only characterization was incorrect
+- **Observed:** the strategy was described in conversation as an intraday strategy with no overnight holding.
+- **Correct interpretation:** the frozen weekly protocol uses **intraday timestamps for entry and lock decisions**, but the trade has a **weekly horizon**. Entry occurs at 10:00 IST on the first trading day after the prior expiry; the lock occurs at 14:00 IST on the trading day before the target expiry; remaining exposure can continue to expiry unless the stop/exit rules terminate it earlier.
+- **Impact:** the prior conversational description incorrectly implied same-day closure and no overnight holding.
+- **Correction:** all future descriptions must call this a **weekly-expiry/weekly-horizon strategy with intraday execution timestamps**, not an intraday-only strategy. No research code or frozen parameters are changed by this clarification.
