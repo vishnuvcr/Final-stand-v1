@@ -1,0 +1,40 @@
+name: Phase 21W - Prepare HF03 Interface
+on:
+  workflow_dispatch:
+  push:
+    branches: [phase-21w-combined-frozen-rerun]
+    paths:
+      - '.github/workflows/phase-21w-prepare-hf03.yml'
+permissions:
+  contents: write
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    concurrency:
+      group: phase21w-prepare-hf03
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: phase-21w-combined-frozen-rerun}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: pip install -q 'huggingface_hub>=0.36,<0.37' 'polars>=1.20,<2' 'pyarrow>=18,<23' 'numpy>=2,<3' pandas
+      - name: Build frozen HF03 interface
+        env:
+          HF_TOKEN: ${{secrets.HF_TOKEN}}
+          HF_REVISION: 0f4800e43e6f96cec0794369d78eb4d3c4211ef5
+          HF_HOME: ~/.cache/huggingface
+          PYTHONPATH: ${{github.workspace}}
+        run: |
+          rm -rf research/phase9_weekly/output research/phase21w_combined_frozen_rerun/hf03_build
+          python research/phase9_weekly/hf_weekly_ingest.py --max-expiries 104 --start-date 2024-01-01 --end-date 2026-12-31 --output-dir research/phase9_weekly/output --hf-cache ~/.cache/huggingface
+          python research/phase17w_strike_alternatives/strike_alternatives.py --variant-start 0 --variant-end 224 --hf-cache ~/.cache/huggingface --baseline-manifest research/phase9_weekly/output/weekly_cycle_manifest.csv --expiry-start 0 --expiry-end 63 --build-only --output-dir research/phase21w_combined_frozen_rerun/hf03_build
+      - name: Persist prepared interface
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase21w-hf03-interface
+          path: |
+            research/phase9_weekly/output/
+            research/phase21w_combined_frozen_rerun/hf03_build/
+          if-no-files-found: error
