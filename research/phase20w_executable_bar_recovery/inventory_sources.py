@@ -17,6 +17,7 @@ got=set(trade["target_expiry"].cast(pl.String).to_list())
 missing=[d for d in cal if d not in got]
 # Required variant strikes for the missing cycles.
 vc=pl.read_csv("research/phase19w_recovered_rerun/output/variant_cycle_manifest.csv")
+print({"variant_cycle_rows":vc.height,"variant_cycle_unique_expiries":vc["target_expiry"].n_unique()})
 req=vc.with_columns(pl.col("target_expiry").cast(pl.String)).filter(pl.col("target_expiry").is_in(missing))
 api=HfApi(token=os.getenv("HF_TOKEN") or None)
 sources={}
