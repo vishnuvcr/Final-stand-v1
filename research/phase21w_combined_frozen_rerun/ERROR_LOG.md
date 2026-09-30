@@ -29,3 +29,8 @@
 - **Issue:** HF-02 recovered bars lack the static `symbol` field required by the HF-03 interface.
 - **Impact:** Overlay construction stopped before coverage validation.
 - **Correction:** Set `symbol='NIFTY'` for HF-02 rows at the adapter boundary, matching the source instrument; no price/timestamp field is modified.
+
+## E21-007 — 2026-09-30
+- **Issue:** HF-02 recovered bars lack `option_type` in the frozen interface.
+- **Impact:** Overlay construction stopped before coverage validation.
+- **Correction:** Set `option_type='CE'`, matching the recovered HF-02 NIFTY weekly call files. Added an explicit schema-difference guard after normalization.
