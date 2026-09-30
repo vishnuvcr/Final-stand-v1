@@ -31,3 +31,9 @@ No Phase-20 execution errors yet.
 - **Issue:** HF-02 fallback used `is_between(entry, end)` with string arguments interpreted by Polars as column expressions.
 - **Impact:** Recovery stopped when reaching the early-period HF-02 source after HF-01 processing succeeded.
 - **Correction:** Wrap timestamp bounds in `pl.lit(...)` for the HF-02 fallback. No data or selection rule changes.
+
+
+## E20-006 — 2026-09-30
+- **Issue:** Five missing 2026 target cycles have no frozen Phase-9 entry spot, and HF-02 ends in 2025.
+- **Impact:** Those five cycles cannot yet be admitted without an exact 10:00 IST NIFTY spot source.
+- **Correction:** For 2024–2025 missing cycles only, recover the exact entry spot from HF-02's contemporaneous `spot` field while keeping option legs single-source. The five 2026 cycles remain explicitly unresolved rather than using daily-close proxies.
