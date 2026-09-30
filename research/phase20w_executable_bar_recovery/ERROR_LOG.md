@@ -102,3 +102,9 @@ No Phase-20 execution errors yet.
 - **Issue:** The HF-03 NIFTY index parquet carries `+05:30` timezone metadata that current Polars rejects when loading the spot series for HF-02 reconstruction.
 - **Impact:** Reconstruction stopped before evaluating recovered option cycles.
 - **Correction:** Read only the index timestamp/open columns via PyArrow/Pandas and normalize the timestamp representation to a naive local ISO string for exact 10:00 IST matching. No index price values are altered.
+
+
+## E20-012 — 2026-09-30
+- **Issue:** An intermediate Phase-20 diagnostic used a generated 100-row Phase-9 manifest and treated its first 63 rows as the frozen calendar, yielding a transient 40-cycle gap.
+- **Impact:** That diagnostic included 13 expiries outside the actual Phase-19 frozen sample.
+- **Correction:** The authoritative Phase-20 logic is now anchored to Phase-19 `baseline_calendar.json`, exactly matching the 63 expiries used in the frozen rerun. The final 27-cycle recovery result matches that exact gap.
