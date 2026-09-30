@@ -53,7 +53,7 @@
     },
     "HF1_2026": {
       "path": "upstox_intraday/NIFTY/NIFTY_2026.parquet",
-      "error": "RemoteEntryNotFoundError('404 Client Error. (Request ID: Root=1-6abc993b-3f9f13f96ee687b31e7e90a4;a14b4619-70c4-49f0-b679-82774568d9c2)\\n\\nEntry Not Found for url: https://huggingface.co/datasets/rissin/nse-options-intraday/resolve/78b1c5468255d18cf492984bfe6fe4e3ac874d7c/upstox_intraday/NIFTY/NIFTY_2026.parquet.')"
+      "error": "RemoteEntryNotFoundError('404 Client Error. (Request ID: Root=1-6abc9b48-2edf2ca53b6608a130b36cde;6a0d5351-90ba-4d3f-9121-c0cfff89cf69)\\n\\nEntry Not Found for url: https://huggingface.co/datasets/rissin/nse-options-intraday/resolve/78b1c5468255d18cf492984bfe6fe4e3ac874d7c/upstox_intraday/NIFTY/NIFTY_2026.parquet.')"
     },
     "HF2_ATM-10_CE": {
       "path": "NIFTY/WEEK/ATM-10_CE.parquet",
@@ -74,6 +74,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609217580,
+          "datetime": "2020-12-29 04:53:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-10",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609218720,
+          "datetime": "2020-12-29 05:12:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-10",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609221540,
+          "datetime": "2020-12-29 05:59:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-10",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM-9_CE": {
@@ -95,6 +121,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213500,
+          "datetime": "2020-12-29 03:45:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-9",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213560,
+          "datetime": "2020-12-29 03:46:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-9",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-9",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM-8_CE": {
@@ -116,6 +168,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-8",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213680,
+          "datetime": "2020-12-29 03:48:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-8",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609214400,
+          "datetime": "2020-12-29 04:00:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-8",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM-7_CE": {
@@ -137,6 +215,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213500,
+          "datetime": "2020-12-29 03:45:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-7",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213560,
+          "datetime": "2020-12-29 03:46:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-7",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-7",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM-6_CE": {
@@ -158,6 +262,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213560,
+          "datetime": "2020-12-29 03:46:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-6",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-6",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609214700,
+          "datetime": "2020-12-29 04:05:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-6",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM-5_CE": {
@@ -179,6 +309,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213500,
+          "datetime": "2020-12-29 03:45:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-5",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213560,
+          "datetime": "2020-12-29 03:46:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-5",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-5",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM-4_CE": {
@@ -200,6 +356,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213500,
+          "datetime": "2020-12-29 03:45:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-4",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213560,
+          "datetime": "2020-12-29 03:46:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-4",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-4",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM-3_CE": {
@@ -221,6 +403,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213500,
+          "datetime": "2020-12-29 03:45:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-3",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213560,
+          "datetime": "2020-12-29 03:46:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-3",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-3",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM-2_CE": {
@@ -242,6 +450,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213500,
+          "datetime": "2020-12-29 03:45:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-2",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213560,
+          "datetime": "2020-12-29 03:46:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-2",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-2",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM-1_CE": {
@@ -263,6 +497,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213500,
+          "datetime": "2020-12-29 03:45:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-1",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213560,
+          "datetime": "2020-12-29 03:46:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-1",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM-1",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM_CE": {
@@ -284,6 +544,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213500,
+          "datetime": "2020-12-29 03:45:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213560,
+          "datetime": "2020-12-29 03:46:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM+1_CE": {
@@ -305,6 +591,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213500,
+          "datetime": "2020-12-29 03:45:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+1",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213560,
+          "datetime": "2020-12-29 03:46:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+1",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+1",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM+2_CE": {
@@ -326,6 +638,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213500,
+          "datetime": "2020-12-29 03:45:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+2",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213560,
+          "datetime": "2020-12-29 03:46:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+2",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+2",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM+3_CE": {
@@ -347,6 +685,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213500,
+          "datetime": "2020-12-29 03:45:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+3",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213560,
+          "datetime": "2020-12-29 03:46:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+3",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+3",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM+4_CE": {
@@ -368,6 +732,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213500,
+          "datetime": "2020-12-29 03:45:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+4",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213560,
+          "datetime": "2020-12-29 03:46:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+4",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+4",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM+5_CE": {
@@ -389,6 +779,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213500,
+          "datetime": "2020-12-29 03:45:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+5",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213560,
+          "datetime": "2020-12-29 03:46:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+5",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+5",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM+6_CE": {
@@ -410,6 +826,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213500,
+          "datetime": "2020-12-29 03:45:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+6",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213560,
+          "datetime": "2020-12-29 03:46:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+6",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+6",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM+7_CE": {
@@ -431,6 +873,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213500,
+          "datetime": "2020-12-29 03:45:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+7",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213560,
+          "datetime": "2020-12-29 03:46:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+7",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+7",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM+8_CE": {
@@ -452,6 +920,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213500,
+          "datetime": "2020-12-29 03:45:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+8",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213560,
+          "datetime": "2020-12-29 03:46:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+8",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+8",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM+9_CE": {
@@ -473,6 +967,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213500,
+          "datetime": "2020-12-29 03:45:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+9",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213560,
+          "datetime": "2020-12-29 03:46:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+9",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+9",
+          "option_type": "CALL"
+        }
       ]
     },
     "HF2_ATM+10_CE": {
@@ -494,6 +1014,32 @@
         "expiry_type",
         "strike_type",
         "option_type"
+      ],
+      "sample": [
+        {
+          "timestamp": 1609213500,
+          "datetime": "2020-12-29 03:45:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+10",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213560,
+          "datetime": "2020-12-29 03:46:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+10",
+          "option_type": "CALL"
+        },
+        {
+          "timestamp": 1609213620,
+          "datetime": "2020-12-29 03:47:00",
+          "date": "2020-12-29",
+          "expiry_type": "WEEK",
+          "strike_type": "ATM+10",
+          "option_type": "CALL"
+        }
       ]
     }
   }
