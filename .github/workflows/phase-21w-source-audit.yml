@@ -1,0 +1,33 @@
+name: Phase 21W - External Source Audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [phase-21w-external-full-strike-recovery]
+    paths:
+      - 'research/phase21w_external_full_strike_recovery/**'
+      - '.github/workflows/phase-21w-source-audit.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-21w-external-full-strike-recovery
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Record source-access audit
+        run: python research/phase21w_external_full_strike_recovery/audit_sources.py
+      - name: Commit audit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/phase21w_external_full_strike_recovery/output
+          git diff --cached --quiet || git commit -m 'phase21w: record external source audit'
+          git push origin HEAD:phase-21w-external-full-strike-recovery
