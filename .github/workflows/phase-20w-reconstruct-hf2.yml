@@ -1,0 +1,48 @@
+name: Phase 20W - Reconstruct Missing 40 Cycles From HF2
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [phase-20w-executable-bar-recovery]
+    paths:
+      - 'research/phase20w_executable_bar_recovery/reconstruct_hf2.py'
+      - '.github/workflows/phase-20w-reconstruct-hf2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  reconstruct:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    concurrency:
+      group: phase20w-hf2-reconstruct
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-20w-executable-bar-recovery
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -q huggingface_hub polars pyarrow pandas
+      - name: Reconstruct missing cycles
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_CACHE: ~/.cache/huggingface
+        run: python research/phase20w_executable_bar_recovery/reconstruct_hf2.py
+      - name: Commit manifests
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/phase20w_executable_bar_recovery/output/hf2_recovered_*
+          git diff --cached --quiet || git commit -m 'phase20w: persist HF2 recovered 40-cycle manifests'
+          git fetch origin phase-20w-executable-bar-recovery
+          git rebase origin/phase-20w-executable-bar-recovery
+          git push origin HEAD:phase-20w-executable-bar-recovery
+      - name: Upload manifests
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase20w-hf2-recovered-40-cycles
+          path: research/phase20w_executable_bar_recovery/output/hf2_recovered_*
+          if-no-files-found: error
