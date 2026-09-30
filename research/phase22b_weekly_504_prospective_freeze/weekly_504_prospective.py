@@ -36,6 +36,9 @@ RISSIN_FILE = "upstox_intraday/NIFTY/NIFTY_2026.parquet"
 SPOT_REPO = "Jitendra12421/AlargeDatabase"
 SPOT_FILE = "INDDEX FILES/NIFTY_minute.parquet"
 SPOT_REVISION = os.getenv("SPOT_REVISION", "3420f004d1b4ce56975b06fcd594e0787cd6a83e")
+FALLBACK_SPOT_REPO = "technovusin/nifty50-historical-data"
+FALLBACK_SPOT_FILE = "1min/2026/NIFTY50_1min_20260101_to_20260908.csv"
+FALLBACK_SPOT_REVISION = os.getenv("FALLBACK_SPOT_REVISION", "cd169a991ccfc8979e718ae5ebeb1891a788107d")
 
 
 def choose_k1_extended(strikes, spot, rule):
@@ -119,6 +122,10 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
         raise RuntimeError(f"Spot source missing open/close columns: {idx.columns}")
     dates = idx.select(pl.col("timestamp").dt.date().alias("d")).unique().sort("d")["d"].to_list()
 
+    fallback_path = cache / "technovusin_nifty50_2026_1min.csv"
+    fallback_used = False
+    fallback_sha256 = None
+
     lf = pl.scan_parquet(rpath)
     schema = lf.collect_schema()
     required = {"timestamp", "expiry", "strike", "option_type", "open", "volume", "underlying", "granularity"}
@@ -184,7 +191,30 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
             .head(1)
         )
         if spot_row.height != 1:
-            raise RuntimeError(f"No causal NIFTY spot row within 5 minutes before {entry_ts} for {expiry}")
+            import urllib.request
+            if not fallback_path.exists():
+                url = f"https://raw.githubusercontent.com/{FALLBACK_SPOT_REPO}/{FALLBACK_SPOT_REVISION}/{FALLBACK_SPOT_FILE}"
+                urllib.request.urlretrieve(url, fallback_path)
+            fallback_sha256 = sha256(fallback_path)
+            fidx = pl.read_csv(
+                fallback_path,
+                columns=["Timestamp", "Open"],
+                try_parse_dates=False,
+            ).rename({"Timestamp": "timestamp", "Open": "open"})
+            fidx = fidx.with_columns(
+                pl.col("timestamp").str.to_datetime(strict=False, time_zone="Asia/Kolkata"),
+                pl.col("open").cast(pl.Float64, strict=False),
+            ).filter(pl.col("timestamp").is_not_null() & pl.col("open").is_not_null())
+            spot_row = (
+                fidx.filter(pl.col("timestamp") <= ts_lit(entry_ts))
+                .filter(pl.col("timestamp") >= ts_lit(entry_ts - timedelta(minutes=5)))
+                .sort("timestamp", descending=True)
+                .head(1)
+            )
+            if spot_row.height == 1:
+                fallback_used = True
+            else:
+                raise RuntimeError(f"No causal NIFTY spot row in either pinned primary or fallback archive within 5 minutes before {entry_ts} for {expiry}")
         spot = float(spot_row["open"][0])
 
         end_ts = datetime.combine(expiry, time(16, 0), IST)
@@ -287,6 +317,11 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
         "spot_file": SPOT_FILE,
         "spot_revision": SPOT_REVISION,
         "spot_sha256": sha256(spath),
+        "fallback_spot_repo": FALLBACK_SPOT_REPO,
+        "fallback_spot_file": FALLBACK_SPOT_FILE,
+        "fallback_spot_revision": FALLBACK_SPOT_REVISION,
+        "fallback_spot_sha256": fallback_sha256,
+        "fallback_spot_used": fallback_used,
         "requested_start": start_date,
         "requested_end": end_date,
         "weekly_expiries": targets,
