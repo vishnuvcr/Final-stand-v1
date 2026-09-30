@@ -58,77 +58,61 @@ def norm_ts(x):
 api=HfApi(token=token)
 hf1_main_sha=getattr(api.repo_info("rissin/nse-options-intraday",repo_type="dataset",revision="main"),"sha",None) or "main"
 frames=[]; cycles=[]; prov=[]
+# Load HF-02 weekly files once; each is pinned to the audited revision.
+hf2_parts=[]
+for off in range(-10,11):
+    tag="ATM" if off==0 else f"ATM{off:+d}"
+    path=f"NIFTY/WEEK/{tag}_CE.parquet"
+    try:
+        local=hf_hub_download(repo_id="artist-23/nifty-options-data",filename=path,repo_type="dataset",revision=HF2_PIN,token=token,cache_dir=str(CACHE))
+        hf2_parts.append(pl.read_parquet(local))
+    except Exception as e:
+        prov.append({"source":"HF2","path":path,"error":repr(e)})
+hf2_all=pl.concat(hf2_parts,how="diagonal") if hf2_parts else None
+if hf2_all is not None:
+    hf2_all=hf2_all.with_columns((pl.col("datetime") + pl.duration(hours=5,minutes=30)).dt.strftime("%Y-%m-%dT%H:%M:%S").alias("_ts"))
+    hf2_all=hf2_all.with_columns(pl.col("date").cast(pl.String).alias("_date"))
+
 for exp in missing:
     b=need.filter(pl.col("target_expiry")==exp).row(0,named=True)
-    entry=norm_ts(b["entry_timestamp"]); lock=norm_ts(b["lock_timestamp"])
-    spot_val=b["entry_spot"]
-    if spot_val is None:
-        try:
-            spath="NIFTY/WEEK/ATM_CE.parquet"
-            slocal=hf_hub_download(repo_id="artist-23/nifty-options-data",filename=spath,repo_type="dataset",revision=HF2_PIN,token=token,cache_dir=str(CACHE))
-            sdf0=pl.read_parquet(slocal).with_columns(pl.col("datetime").cast(pl.String).str.replace(r" ","T").str.slice(0,19).alias("_ts"))
-            sv=sdf0.filter(pl.col("_ts")==entry).select("spot").drop_nulls()
-            spot_val=float(sv["spot"][0]) if sv.height else None
-        except Exception:
-            spot_val=None
-    if spot_val is None:
-        for vid in variants:
-            cycles.append({"variant_id":vid,"target_expiry":exp,"entry_timestamp":b["entry_timestamp"],"lock_timestamp":b["lock_timestamp"],"status":"UNRECOVERED_NO_ENTRY_SPOT","source":None})
-        continue
-    spot=float(spot_val)
-    source_df=None; source_name=None; source_rev=None; source_path=None
+    entry=norm_ts(b["entry_timestamp"]); lock=norm_ts(b["lock_timestamp"]); spot=float(b["entry_spot"])
+    source_df=None; source_name=None; source_rev=None; source_path=None; source_local=None
     year=int(exp[:4])
     if year>=2024:
         rev=HF1_PIN if year<2026 else hf1_main_sha
         path=f"upstox_intraday/NIFTY/NIFTY_{year}.parquet"
         try:
             local=hf_hub_download(repo_id="rissin/nse-options-intraday",filename=path,repo_type="dataset",revision=rev,token=token,cache_dir=str(CACHE))
-            source_df=None
+            table=pq.read_table(local,filters=[("expiry","=",exp),("option_type","=","CE"),("date",">=",entry[:10]),("date","<=",exp)],columns=["date","timestamp","expiry","strike","option_type","open","high","low","close","volume","oi"])
+            pdf=table.to_pandas()
+            pdf["timestamp"]=pdf["timestamp"].astype(str).str.replace(" ","T").str.slice(0,19)
+            pdf["expiry"]=pdf["expiry"].astype(str).str.slice(0,10)
+            source_df=pl.from_pandas(pdf)
             source_name="HF1"; source_rev=str(rev); source_path=path
-            source_local=local
         except Exception as e:
             prov.append({"expiry":exp,"source":"HF1","error":repr(e)})
-    # For early missing dates, use the weekly ATM-relative HF-02 source.
-    if source_df is None:
-        parts=[]
-        for off in range(-10,11):
-            tag="ATM" if off==0 else f"ATM{off:+d}"
-            path=f"NIFTY/WEEK/{tag}_CE.parquet"
-            try:
-                local=hf_hub_download(repo_id="artist-23/nifty-options-data",filename=path,repo_type="dataset",revision=HF2_PIN,token=token,cache_dir=str(CACHE))
-                parts.append(pl.read_parquet(local))
-            except Exception:
-                pass
-        if parts:
-            source_df=pl.concat(parts,how="diagonal")
-            source_name="HF2"; source_rev=HF2_PIN; source_path="NIFTY/WEEK/ATM±0..10_CE.parquet"
+    if source_df is None and hf2_all is not None:
+        source_df=hf2_all
+        source_name="HF2"; source_rev=HF2_PIN; source_path="NIFTY/WEEK/ATM±0..10_CE.parquet"
     if source_df is None:
         for vid in variants:
             cycles.append({"variant_id":vid,"target_expiry":exp,"entry_timestamp":b["entry_timestamp"],"lock_timestamp":b["lock_timestamp"],"status":"UNRECOVERED","source":None})
         continue
     if source_name=="HF1":
-        table=pq.read_table(source_local,filters=[("expiry","=",exp),("option_type","=","CE"),("date",">=",entry[:10]),("date","<=",exp)],columns=["date","timestamp","expiry","strike","option_type","open","high","low","close","volume","oi"])
-        pdf=table.to_pandas()
-        pdf["timestamp"]=pdf["timestamp"].astype(str).str.replace(" ","T").str.slice(0,19)
-        pdf["expiry"]=pdf["expiry"].astype(str).str.slice(0,10)
-        source_df=pl.from_pandas(pdf)
-        source_df=source_df.with_columns(pl.col("timestamp").alias("_ts"),pl.col("expiry").alias("_exp"))
-        sdf=source_df
-        entry_df=sdf.filter((pl.col("expiry")==exp)&(pl.col("timestamp")==entry)&(pl.col("volume").fill_null(0)>0))
-
+        sdf=source_df.with_columns(pl.col("timestamp").alias("_ts"),pl.col("expiry").alias("_exp"))
+        entry_df=sdf.filter((pl.col("_exp")==exp)&(pl.col("_ts")==entry)&(pl.col("option_type").str.to_uppercase().is_in(["CE","CALL"]))&(pl.col("volume").fill_null(0)>0))
     else:
-        sdf=source_df.with_columns((pl.col("datetime") + pl.duration(hours=5,minutes=30)).dt.strftime("%Y-%m-%dT%H:%M:%S").alias("_ts"))
+        sdf=source_df
         entry_df=sdf.filter((pl.col("_ts")==entry)&(pl.col("option_type").str.to_uppercase().is_in(["CE","CALL"])))
     strikes=entry_df["strike"].to_list() if source_name=="HF1" else entry_df["strike_price"].to_list()
     opens=entry_df["open"].to_list()
-    bar_rows=[]
     for k1r in K1:
         k1=choose_k1(strikes,spot,k1r)
         for k2r in K2:
             k2=choose_k2(strikes,k1,k2r) if k1 is not None else None
             for m in K3:
                 vid=f"{k1r}_{k2r}_K3M{m:g}"
-                p1=None;p2=None;k3=None;p3=None
+                p1=p2=k3=p3=None
                 if k1 is not None:
                     for s,p in zip(strikes,opens):
                         if float(s)==float(k1): p1=float(p)
@@ -136,8 +120,7 @@ for exp in missing:
                     for s,p in zip(strikes,opens):
                         if float(s)==float(k2): p2=float(p)
                 target=(p1-p2)*m if p1 is not None and p2 is not None else None
-                if target is not None and target>0:
-                    k3,p3=choose_k3(strikes,opens,k2,target)
+                if target is not None and target>0: k3,p3=choose_k3(strikes,opens,k2,target)
                 status="INCOMPLETE"
                 if k3 is not None and p3 is not None:
                     if source_name=="HF1":
@@ -147,7 +130,6 @@ for exp in missing:
                     lock_strikes=set((lock_df["strike"] if source_name=="HF1" else lock_df["strike_price"]).cast(pl.Float64).to_list())
                     if all(float(k) in lock_strikes for k in [k1,k2,k3]): status="USABLE_OHLC"
                 cycles.append({"variant_id":vid,"target_expiry":exp,"prior_expiry":b["prior_expiry"],"historical_expiry_regime":b["historical_expiry_regime"],"entry_timestamp":b["entry_timestamp"],"lock_timestamp":b["lock_timestamp"],"source_file":source_path,"source_sha256":"","entry_spot":spot,"k1":k1,"k2":k2,"k3":k3,"p1":p1,"p2":p2,"target_premium":target,"k3_multiplier":m,"p3":p3,"target_error":(abs(p3-target)/target if p3 is not None and target else None),"status":status,"recovery_source":source_name,"recovery_revision":source_rev})
-    # Store only the strikes required by usable recovered variants.
     usable=[x for x in cycles if x["target_expiry"]==exp and x["status"]=="USABLE_OHLC"]
     reqstr=sorted({float(k) for x in usable for k in [x["k1"],x["k2"],x["k3"]] if k is not None})
     if source_name=="HF1":
@@ -158,7 +140,6 @@ for exp in missing:
         bars=bars.select([pl.col("datetime").alias("timestamp"),pl.col("strike_price").alias("strike"),"open","high","low","close","volume","oi"]).with_columns(pl.lit(exp).alias("target_expiry"))
     if bars.height: frames.append(bars)
     prov.append({"expiry":exp,"source":source_name,"revision":source_rev,"path":source_path,"usable_variants":len(usable)})
-
 cycle_df=pl.DataFrame(cycles)
 cycle_df.write_csv(OUT/"recovered_variant_cycle_manifest.csv")
 if frames: pl.concat(frames,how="diagonal").write_parquet(OUT/"recovered_variant_option_bars.parquet",compression="zstd")
