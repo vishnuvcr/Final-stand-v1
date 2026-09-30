@@ -1,18 +1,36 @@
-# Phase 21W — External Full-Strike Recovery Status
+# Phase 21W Status
 
-**State:** ACTIVE — the missing-five data gap is being audited against independent broker/API routes and public historical mirrors.
+**State:** RUNNING — external recovery of the final five holdout expiries.
 
-## Frozen gap
-- Missing weekly expiries from the combined frozen rerun: 2026-01-13, 2026-02-10, 2026-03-10, 2026-04-13, 2026-05-12.
-- Admission requires same-source exact CE observations at 10:00 and 14:00 IST plus complete intraday path for every selected strike; no synthetic bars, strike substitution or cross-source leg mixing.
+## Current gate
 
-## Current source findings
-- Upstox documents an expired-option-contract endpoint and expired historical candles at 1-minute granularity; authenticated access is required.
-- ICICI Breeze documents 1-minute NIFTY option history by expiry/right/strike; authenticated API credentials are required.
-- Dhan documents minute-level rolling expired options but limits index-option selection to ATM through ATM±10, so exact coverage of the wider frozen strike family must be empirically checked.
-- NSE publishes an option-chain CSV interface and sells historical F&O order/trade data; the public option-chain page is not itself a historical 1-minute archive.
-- Hugging Face dataset thetrademarkk/india-index-options-1m is a public per-expiry 1-minute NIFTY options dataset with strike/option_type/expiry/OHLCV/OI fields and current files through August 2026. Its license is CC-BY-NC-4.0 and the dataset card says coverage is partial, especially for illiquid/far strikes.
-- A separate Hugging Face dataset, rissin/nse-options-intraday, contains Upstox-sourced NIFTY 1-minute data from October 2024 through 2026, with strike/expiry/option_type/OHLCV fields; its license is listed as other and redistribution is subject to source-provider terms.
+The exact frozen 224-variant combined rerun completed for **58/63** weekly expiries, with **11,702** combined variant-cycle cells and zero HF-03/HF-02 overlap. Five baseline expiries remain completely unrecovered:
 
-## Next executable gate
-Run the public HF per-expiry probe for the five missing expiries, record file availability, schema, SHA-256, exact 10:00/14:00 coverage, unique CE strike counts and duplicate counts, then attempt exact frozen variant reconstruction only if the data pass source-level validation.
+- 2026-01-13
+- 2026-02-10
+- 2026-03-10
+- 2026-04-13
+- 2026-05-12
+
+These five are all in the untouched holdout portion, so the current empirical results are **not yet the final 63-cycle holdout result**.
+
+## New external-source route
+
+A public Hugging Face dataset, `rissin/nse-options-intraday`, was identified as a candidate source. Its dataset card documents NIFTY 1-minute intraday coverage from October 2024 through 2026, with expiry, strike, option type, OHLC and volume fields. The source was pinned to revision `78b1c5468255d18cf492984bfe6fe4e3ac874d7c`.
+
+The next executable step is to download only the NIFTY 2026 parquet through the existing HF_TOKEN-enabled workflow, isolate the five missing expiries, reconstruct the frozen 224-variant strike selections, and validate exact 10:00/14:00 timestamp coverage plus stop-path bars.
+
+## Frozen constraints
+
+- 63 weekly expiries; 224 variants.
+- 60/20/20 chronological train/validation/holdout split remains frozen.
+- Entry 10:00 IST; lock 14:00 IST.
+- 50-point hard stop.
+- 0.50 NIFTY-point slippage per leg.
+- Existing Paytm Money/NSE transaction-cost model.
+- No synthetic interpolation, strike substitution or cross-source leg mixing.
+- External bars may fill only the five previously missing expiry cycles; existing 58-cycle HF-03/HF-02 observations are not replaced.
+
+## Phase completion condition
+
+Complete the five-cycle recovery and rerun only if all 224 variants are executable on all five dates. Otherwise record the exact missing cells and source limitation and do not manufacture a 63-cycle conclusion.
