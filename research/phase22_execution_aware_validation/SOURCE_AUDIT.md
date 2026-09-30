@@ -30,3 +30,19 @@
 No execution-aware result will be admitted until the data source demonstrably contains timestamped executable bid/ask/depth observations for the exact NIFTY option contracts and periods used by the new experiment.
 
 No purchase or external credential use is authorized by this phase plan.
+
+
+## 22.1B — Broker/API route audit (2026-09-30)
+
+- Upstox documents live market-feed bid/ask quantities and prices and D0/D5 depth, plus expired-option contract/candle APIs. Its documented historical expired-instrument endpoint is OHLC, not historical bid/ask/depth. citeturn0search1turn1search4turn1search9
+- Upstox option-chain APIs expose current bid/ask price and quantity, but this is a live/current option-chain interface rather than a historical quote archive. citeturn1search3
+- Dhan documents historical expired-options data at one-minute resolution with OHLC, IV, OI, volume and spot, but the historical endpoint does not document bid/ask fields. Dhan's 20/200-level depth is documented as real-time websocket data. citeturn1search0turn1search12
+- ICICI Breeze's documented historical options API returns minute OHLC/volume and does not expose historical bid/ask in the shown response. citeturn2search5
+- A public GitHub NIFTY options analytics repository describes snapshot CSVs containing captured_at, bid_price, ask_price, bid_qty and ask_qty, but its data directory is explicitly not tracked in Git; therefore the repository does not itself provide an admissible reproducible historical quote archive. citeturn2search3
+- A separate public NIFTY data-engine repository explicitly states that bid/ask quotes are not available and market_price is substituted from close_price, so it is not execution evidence. citeturn2search0
+
+### Updated admission conclusion
+
+The audit has now covered official NSE historical order/trade products, public OHLC archives, broker APIs with current depth, broker expired-contract historical candles, and public GitHub snapshot schemas. No reproducible, freely accessible historical NIFTY option bid/ask/depth archive has yet been admitted for Phase 22. The official NSE historical order/trade route remains the authoritative candidate, while broker live-depth APIs could support a future prospective collection study but cannot reconstruct past quotes.
+
+No new holdout is opened until an admissible historical execution dataset exists.
