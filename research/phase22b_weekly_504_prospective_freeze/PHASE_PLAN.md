@@ -15,7 +15,7 @@ Does the complete 504-configuration weekly strategy family retain its historical
 No configuration is selected from the new period before the family-level results are computed.
 
 ## Weekly protocol
-- Entry: 10:00 IST on the first trading day after the prior weekly expiry.
+- Entry: 10:00 IST on the first trading day after the prior weekly expiry; entry-strike spot uses the latest underlying observation at or before 10:00 within a fixed 5-minute causal tolerance if exact 10:00 is absent.
 - Lock/exit decision: 14:00 IST on the trading day before the target weekly expiry.
 - Remaining exposure may continue to target expiry unless stopped/exited.
 - Hard stop: 50 NIFTY points.
