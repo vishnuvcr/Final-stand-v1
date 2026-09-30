@@ -29,3 +29,4 @@ if dups.height: raise RuntimeError(f'Duplicate option observations: {dups.height
 c.write_csv(out/'variant_cycle_manifest.csv'); b.write_parquet(out/'variant_option_bars.parquet',compression='zstd')
 coverage={'hf03_cycle_cells':c3.height,'hf2_usable_cycle_cells':c2.height,'combined_cycle_cells':c.height,'combined_unique_expiries':c['target_expiry'].n_unique(),'combined_coverage_fraction':c.height/(224*63),'overlap_cells':overlap}
 (out/'coverage.json').write_text(json.dumps(coverage,indent=2)); print(json.dumps(coverage,indent=2))
+# Phase 21 execution trigger: frozen adapter logic unchanged.
