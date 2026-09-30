@@ -28,6 +28,8 @@ jobs:
           python -m pip install -q --upgrade pip
           pip install -q 'polars>=1.20,<2' 'pyarrow>=18,<23' 'numpy>=2,<3'
       - name: Validate 504 registry
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: python research/phase22a_weekly_504_strike_expansion/test_weekly_504.py
 
   weekly-504-backtest:
