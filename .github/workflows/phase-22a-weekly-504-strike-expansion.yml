@@ -69,6 +69,14 @@ jobs:
           path: work/phase21
           if_no_artifact_found: fail
 
+      - name: Restore frozen Phase-17/11/9 engine sources
+        run: |
+          git fetch origin phase-21w-combined-frozen-rerun --depth=1
+          git checkout origin/phase-21w-combined-frozen-rerun -- \
+            research/phase17w_strike_alternatives/strike_alternatives.py \
+            research/phase11_weekly/weekly_backtest.py \
+            research/phase9_weekly/hf_weekly_ingest.py
+
       - name: Locate frozen Phase-9 interface
         run: |
           find work/phase21 -type f | sort | sed -n '1,80p'
