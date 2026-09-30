@@ -101,7 +101,7 @@ def _normalize_timestamp(df: pl.DataFrame) -> pl.DataFrame:
     )
 
 
-def _normalize_option_frame(df: pl.DataFrame, source_name: str) -> pl.DataFrame:
+def _normalize_option_frame(df: pl.DataFrame, source_name: str, duplicate_key_extra=None) -> pl.DataFrame:
     required = {"timestamp", "open", "strike", "option_type"}
     missing = sorted(required - set(df.columns))
     if missing:
@@ -122,8 +122,9 @@ def _normalize_option_frame(df: pl.DataFrame, source_name: str) -> pl.DataFrame:
         pl.col("open").cast(pl.Float64, strict=False),
     )
     df = df.filter(pl.col("strike").is_not_null() & pl.col("open").is_not_null())
+    dup_keys = ["timestamp", "strike", *(duplicate_key_extra or [])]
     dup = (
-        df.group_by(["timestamp", "strike"])
+        df.group_by(dup_keys)
         .len()
         .filter(pl.col("len") > 1)
     )
@@ -168,7 +169,11 @@ def _load_rissin_targets(cache_dir: Path) -> tuple[pl.DataFrame, str, str]:
         .filter(pl.col("_expiry").is_in(sorted(EXTERNAL_TARGETS)))
     )
     df = expr.collect(engine="streaming")
-    df = _normalize_option_frame(df, f"{RISSIN_REPO}:{RISSIN_FILE}")
+    df = _normalize_option_frame(
+        df,
+        f"{RISSIN_REPO}:{RISSIN_FILE}",
+        duplicate_key_extra=["_expiry"],
+    )
     df = df.with_columns(pl.col("_expiry").alias("target_expiry"))
     df.write_parquet(target_cache, compression="zstd")
     return df, str(local), sha
