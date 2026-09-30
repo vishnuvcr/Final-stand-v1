@@ -1,0 +1,40 @@
+name: Phase 20W - Inventory Alternate Executable Sources
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-20w-executable-bar-recovery
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install data tooling
+        run: pip install -q huggingface_hub polars pandas pyarrow
+      - name: Inventory HF alternate sources
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_CACHE: ~/.cache/huggingface
+        run: python research/phase20w_executable_bar_recovery/inventory_sources.py
+      - name: Commit inventory
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/phase20w_executable_bar_recovery/output
+          git diff --cached --quiet || git commit -m 'phase20w: record alternate-source inventory'
+          git push origin HEAD:phase-20w-executable-bar-recovery
+      - name: Upload inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase20w-alternate-source-inventory
+          path: research/phase20w_executable_bar_recovery/output/
+          if-no-files-found: error
