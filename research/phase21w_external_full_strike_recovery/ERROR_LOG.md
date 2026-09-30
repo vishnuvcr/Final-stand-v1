@@ -32,3 +32,15 @@
 ### E21X-006 — RISSIN strike coverage
 - **Risk:** The dataset card warns that some illiquid/far strikes can be sparse.
 - **Control:** Every one of the 224 variants must pass exact entry/lock coverage on all five targets; otherwise the route is rejected rather than patched.
+
+## E21X-007 — 2026-09-30
+- **Issue:** Public-HF probe run 36711279624 failed with HTTP 404 because the pinned Rissin revision `78b1c54` did not contain `upstox_intraday/NIFTY/NIFTY_2026.parquet`.
+- **Impact:** No empirical recovery result was produced.
+- **Correction:** Resolve the current dataset `main` revision at run start, discover the exact NIFTY 2026 parquet, and record the resolved commit SHA and file SHA-256.
+- **Prevention:** Validate required-file existence at the actual revision before freezing a public-source pin.
+
+## E21X-008 — 2026-09-30
+- **Issue:** The public-HF and full-recovery workflows used broad branch push triggers, causing redundant concurrent runs when research logs/output commits were made.
+- **Impact:** Several runs were cancelled by concurrency before reaching the data-recovery step.
+- **Correction:** Restrict push triggers to source-code/configuration paths; output commits no longer self-trigger the research workflows. Manual dispatch remains enabled.
+- **Prevention:** All large-data workflows must be event-filtered to exclude generated outputs from push triggers.
