@@ -16,8 +16,10 @@ Phase 21W showed a descriptive K3/ITM/NEXT surface, but using the Phase 21W hold
 
 ## Frozen strategy rules
 
-- Entry: 10:00 IST.
-- Lock/exit: 14:00 IST.
+- **Trading horizon: weekly.** The strategy uses the target weekly expiry and is not an intraday-only strategy.
+- Entry decision: 10:00 IST on the first trading day after the prior weekly expiry.
+- Lock/exit decision: 14:00 IST on the trading day before the target weekly expiry.
+- Remaining exposure may continue to the target expiry unless the frozen stop/exit rules terminate it earlier.
 - Hard stop: 50 NIFTY points.
 - Slippage baseline: 0.50 NIFTY points per leg.
 - Paytm Money/NSE transaction-cost model remains the registered baseline.
