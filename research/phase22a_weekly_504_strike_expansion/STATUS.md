@@ -37,3 +37,18 @@ It does not open a new unseen holdout. It does not replace the execution-aware e
 The next defensible step is a separately frozen prospective validation on a genuinely new chronological period, preferably with executable bid/ask/depth data and explicit margin/capital reconstruction.
 
 No 504 configuration is promoted to capital deployment from Phase 22A.
+
+
+## 2026-10-01 — Robustness analysis addendum
+
+State: **RETROSPECTIVE ROBUSTNESS ANALYSIS COMPLETE; DATA-QUALITY REPAIR PENDING**
+
+- 504-configuration robustness metrics calculated: ✅
+- Profit breadth / win-rate / profit-factor / drawdown diagnostics: ✅
+- Additional execution-cost stress: ✅
+- Reproducible robustness script committed: ✅
+- 39 missing net-P&L fields identified and logged: ⚠️
+- New chronological validation: ⏳ pending Phase 22B / execution-aware evidence
+- Capital promotion: **0/504; none authorized**
+
+The new diagnostics answer the requested economic traceability question more directly than Holm-adjusted significance alone. They do not change the frozen strategy or open a new holdout.

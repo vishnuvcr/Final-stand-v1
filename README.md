@@ -135,3 +135,13 @@ Capital/margin reconstruction is a separate evidence layer from execution valida
 - **Status: ACTIVE.** Execution-data acquisition remains the main blocker to opening a genuinely new execution-aware holdout.
 - The 504-family result is preserved as a retrospective parameter-surface layer; no configuration is promoted or selected post hoc.
 - Historical bid/ask/depth, liquidity and margin evidence remain separate gates before deployment interpretation.
+
+
+## Phase 22A robustness reinterpretation — 2026-10-01
+- The 504 configurations are now treated as a **robustness grid**, not a 504-way winner-selection exercise.
+- New retrospective diagnostics: net-P&L breadth, win-rate breadth, profit factor, maximum drawdown, additional execution-cost buffer, and cost-stress survival.
+- Baseline: 367/504 configurations had positive total net P&L; 300/504 had >=50% win rate; 431/504 had max drawdown <=₹150k.
+- Additional execution-cost stress of 3 points/order still left 305/504 configurations with positive total net P&L.
+- A trade-level audit found 39 missing net-P&L fields across 24 configurations; these are excluded from the robustness calculations and logged as E22A-012. They must be resolved before this table is treated as final authoritative evidence.
+- Holm remains a multiple-testing diagnostic, not the primary economic robustness criterion.
+- [Phase 22A robustness analysis](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-22a-weekly-504-strike-expansion/research/phase22a_weekly_504_strike_expansion/ROBUSTNESS_ANALYSIS.md)

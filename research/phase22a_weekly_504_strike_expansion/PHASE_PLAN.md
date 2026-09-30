@@ -73,3 +73,19 @@ All exit criteria are satisfied:
 
 ## Interpretation boundary
 Positive P&L or high Sharpe in this historical expansion is descriptive evidence only. It does not establish future profitability or executable bid/ask performance.
+
+
+## Post-completion research addendum — economic robustness
+
+The original Phase 22A plan remains frozen as the 504-configuration retrospective experiment. The user subsequently clarified the research objective: the practical question is economic traceability and robustness rather than selection of a statistically significant configuration. This addendum changes the **analysis layer**, not the trading rules, configuration registry, chronological sample or holdout boundary.
+
+### Added robustness objectives
+1. Quantify breadth of positive net P&L across all 504 configurations.
+2. Quantify win-rate, profit-factor and maximum-drawdown distributions.
+3. Quantify additional execution-cost tolerance using recorded orders and lot sizes.
+4. Test whether economically reasonable behavior is broad across the parameter surface.
+5. Keep Holm as an inferential diagnostic rather than a primary economic promotion gate.
+6. Preserve all retrospective/prospective and execution-aware evidence boundaries.
+
+### New blocking data-quality requirement
+The trade-level artifact must have a fully reconciled realized net-P&L field before its robustness table is treated as authoritative. Missing net-P&L rows are not imputed.

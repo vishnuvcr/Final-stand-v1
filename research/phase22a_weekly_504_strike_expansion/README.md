@@ -50,3 +50,12 @@ Artifact digest: sha256:1a250f5ca0a39aaefb3b293758eedc41293387e720cf65491e720a5c
 ### Next phase boundary
 
 No configuration is promoted from Phase 22A. A genuinely new chronological period and execution-aware evidence remain required before any deployment interpretation.
+
+
+## Economic robustness addendum — 2026-10-01
+The 504-family is being evaluated as a robustness surface. New outputs cover profit breadth, win rate, drawdown, profit factor and additional execution-cost stress. No configuration is promoted from these retrospective diagnostics.
+
+- [Robustness analysis](./ROBUSTNESS_ANALYSIS.md)
+- [Robustness breadth](./ROBUSTNESS_BREADTH.csv)
+- [Additional-cost stress summary](./SLIPPAGE_STRESS_SUMMARY.csv)
+- [Reproducible analysis script](./ROBUSTNESS_504.py)

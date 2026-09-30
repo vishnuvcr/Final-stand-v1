@@ -49,3 +49,9 @@
 - Observed: the generic IST correction was applied to TheTrademarkk filtering and entry selection, but the special five-expiry RISSIN filter still compared an IST series to a UTC-converted Python literal.
 - Impact: the workflow reached the first recovered expiry, then stopped before configuration construction.
 - Correction: RISSIN's external entry/end literals are explicitly cast to `Datetime(us, Asia/Kolkata)`.
+
+## E22A-012 — Trade-level robustness audit found missing net-P&L fields
+- Observed: the 31,752-row trade-level artifact contains 39 rows with missing net_rupees across 24 configurations, although every configuration has 63 cycle records.
+- Impact: a naive configuration-level robustness calculation could silently treat missing P&L as zero or exclude it without traceability.
+- Correction: robustness metrics exclude missing net-P&L observations explicitly; no imputation is used. The missing-field issue is now a blocking data-quality item before the robustness table becomes final authoritative evidence.
+- Required follow-up: identify why these records were emitted without net_rupees and add an explicit workflow validation for zero missing realized P&L in the authoritative trade table.

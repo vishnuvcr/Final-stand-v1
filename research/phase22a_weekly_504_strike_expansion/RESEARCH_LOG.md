@@ -29,3 +29,13 @@
 - Full result tables, parameter surfaces, manuscript and static charts were published.
 - Workflow artifact: phase22a-weekly-504-results, artifact ID 11111230842, digest sha256:1a250f5ca0a39aaefb3b293758eedc41293387e720cf65491e720a5cdb243964.
 - Phase 22A is closed as a retrospective parameter-expansion phase. The next evidence layer remains a genuinely new chronological validation, preferably execution-aware.
+
+
+## 2026-10-01 — Economic robustness reinterpretation
+- User clarified that the objective is not to find a statistically significant winner among 504 configurations.
+- The 504 configurations are retained as a robustness grid for traceability: profitability, win rate, profit factor, drawdown, expectancy and execution-cost resilience are the primary descriptive dimensions.
+- The completed 63-week trade-level artifact was downloaded from workflow run 36741881293 and independently recalculated.
+- Baseline breadth: 367/504 positive total net P&L; 300/504 >=50% win rate; 431/504 max drawdown <=₹150k.
+- Additional all-in execution-cost stress was applied using recorded order counts and lot sizes. At +3 points/order, 305/504 configurations remained positive.
+- A data-quality audit found 39 missing net-P&L fields across 24 configurations. No imputation was performed.
+- Holm remains retained for inferential completeness but is no longer treated as the primary economic robustness gate.
