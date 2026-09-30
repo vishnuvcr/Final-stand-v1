@@ -41,3 +41,13 @@
 ## 2026-09-30 — Additional source leads
 - NiftyTrader publicly advertises historical NIFTY option-chain snapshots containing bid/ask and bulk historical downloads; however, the underlying machine-readable archive and provenance/hash are not exposed in the public page, so it remains an unadmitted candidate.
 - optionsdata.shop provides broad 1-minute and 1-second expired-option archives, but public documentation establishes OHLC/OI/volume rather than bid/ask, so it does not satisfy the frozen execution contract yet.
+
+
+## 2026-09-30 — Phase 22A weekly 504-family expansion completed
+- Created a separate Phase 22A branch to honor the requested weekly framing and extend K1 through OTM8/ITM8.
+- Full 504-family completed successfully over the 63-expiry historical sample.
+- All 504 configurations were valid for all 63 weekly cycles.
+- Raw bootstrap p<0.05 occurred for 323/504 configurations; Holm-adjusted p<0.05 occurred for 0/504.
+- No configuration passed the capital-promotion gate.
+- The result is retrospective parameter-surface evidence only; it does not open or consume a new unseen holdout.
+- Phase 22 remains open for genuinely new chronological validation and execution-aware evidence.
