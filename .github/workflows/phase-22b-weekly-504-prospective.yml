@@ -1,6 +1,8 @@
 name: Phase 22B — Weekly 504 Prospective Validation
 
 on:
+  push:
+    branches: [phase-22b-weekly-504-prospective-freeze]
   workflow_dispatch:
     inputs:
       start_date:
