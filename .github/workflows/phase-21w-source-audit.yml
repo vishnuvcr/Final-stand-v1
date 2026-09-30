@@ -144,6 +144,17 @@ jobs:
             --external-bars research/phase21w_external_full_strike_recovery/output/rissin_recovered_variant_option_bars.parquet \
             --output-dir work/final_input
 
+      - name: Restore exact Phase 9 frozen interface for the engine
+        run: |
+          baseline="$(find work/phase9 -name weekly_cycle_manifest.csv -print -quit)"
+          spot="$(find work/phase9 -name selected_weekly_spot_bars.parquet -print -quit)"
+          test -n "$baseline"
+          test -n "$spot"
+          rm -rf research/phase9_weekly/output
+          mkdir -p research/phase9_weekly/output
+          cp "$baseline" research/phase9_weekly/output/weekly_cycle_manifest.csv
+          cp "$spot" research/phase9_weekly/output/selected_weekly_spot_bars.parquet
+
       - name: Restore the exact frozen engine revision
         run: |
           git fetch origin phase-21w-combined-frozen-rerun --depth=1
