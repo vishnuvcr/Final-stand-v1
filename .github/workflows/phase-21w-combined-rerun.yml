@@ -43,7 +43,7 @@ jobs:
           workflow_conclusion: success
           branch: phase-21w-combined-frozen-rerun
           name: phase21w-hf03-interface
-          path: .
+          path: research
       - name: Build deterministic combined input
         run: python research/phase21w_combined_frozen_rerun/build_combined.py
       - name: Validate coverage

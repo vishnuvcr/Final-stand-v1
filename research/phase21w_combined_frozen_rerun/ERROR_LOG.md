@@ -70,3 +70,10 @@
 - **Root cause:** The validator conflated the frozen 63-expiry experimental denominator with the subset of expiries for which executable bars have been recovered. Five baseline expiries remain completely unrecovered.
 - **Correction:** Validate 63 baseline expiries plus exactly five missing expiries, while requiring at least 11,702 combined variant-cycle cells and zero unexpected-expiry/overlap conditions.
 - **Prevention:** Coverage validators must distinguish baseline chronology, executable observations, and missing observations as separate fields.
+
+## E21-016 — 2026-09-30
+- **Issue:** Workflow run 36708651392 passed coverage validation but the frozen 224-variant backtest raised `Missing Phase 9 selected spot bars`.
+- **Impact:** No empirical trades or statistics were produced.
+- **Root cause:** The prepared Phase-9 artifact was extracted under `phase9_weekly/output`; the frozen engine resolves its restored interface under `research/phase9_weekly/output` or `prepared/phase9`.
+- **Correction:** Change the artifact download destination from repository root to `research/`, so `research/phase9_weekly/output/` and `research/phase21w_combined_frozen_rerun/` are restored in the expected paths.
+- **Prevention:** Artifact transport paths must preserve the directory contract of the consuming phase; validate both manifest and spot-interface existence before invoking the backtester.

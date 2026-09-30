@@ -12,3 +12,5 @@
 - Next gate: successful combined-input build, exact coverage validation, then the frozen 224-variant backtest/statistics.
 
 - Workflow run 36708232073 built the combined input successfully: 11,702 cells, 58 executable expiries, 5 missing baseline expiries, zero overlap and zero duplicate groups; its validator failed only because it expected 63 executable expiries.
+
+- Run 44 validated the 63/58/5 coverage contract successfully but stopped before the backtest because the restored Phase-9 spot interface was extracted under the wrong directory.

@@ -13,3 +13,8 @@
 - Reported coverage: 8,064 HF-03 variant-cycle cells + 3,638 HF-02 usable recovered cells = 11,702 combined cells; zero overlap; zero source-local duplicate groups.
 - The validator then failed because it required `combined_unique_expiries==63`. The executable combined set has 58 expiries because five of the frozen 63 baseline expiries remain completely unrecovered.
 - Correction: validate the frozen denominator of 63 baseline expiries separately from the currently executable subset, requiring exactly five missing baseline expiries and no unexpected expiries. No strategy or data values were changed.
+
+## 2026-09-30 — E21-016 Phase-9 artifact path correction
+- Coverage validation passed in workflow run 36708651392 with the expected 63 baseline expiries, 11,702 combined variant-cycle cells, 58 covered expiries and 5 missing expiries.
+- The frozen backtest then failed before any trades because the downloaded Phase-9 artifact was extracted to `phase9_weekly/output`, while the frozen engine searches `research/phase9_weekly/output` (or `prepared/phase9`) for the selected spot interface.
+- Correction: extract the prepared artifact under `research/`, preserving its original internal paths. This restores the exact Phase-9 interface expected by the frozen backtester without changing data or strategy parameters.
