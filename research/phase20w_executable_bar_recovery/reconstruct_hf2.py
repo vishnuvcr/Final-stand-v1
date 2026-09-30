@@ -52,11 +52,21 @@ for b in base.iter_rows(named=True):
       cand=[s for s in strikes if s>kk2 and s in prices]; kk3=min(cand,key=lambda s:abs(prices[s]-target)) if cand else None; p3=prices.get(kk3)
     status="USABLE_OHLC" if kk3 is not None and all(x in lockstr for x in [kk1,kk2,kk3]) else "INCOMPLETE"
     rows.append({"variant_id":vid,"target_expiry":exp,"entry_timestamp":entry,"lock_timestamp":lock,"entry_spot":spot,"k1":kk1,"k2":kk2,"k3":kk3,"p1":prices.get(kk1),"p2":prices.get(kk2),"target_premium":target,"k3_multiplier":m,"p3":p3,"status":status,"recovery_source":"HF2","recovery_revision":REV})
-# Save cycle manifest and exact option bars for required recovered strikes.
+# Save cycle manifest and variant-labelled option bars. Each variant-cycle is sourced entirely from HF2.
 r=pl.DataFrame(rows); r.write_csv(OUT/"hf2_recovered_variant_cycles.csv")
-req=sorted(set(x for row in rows if row["status"]=="USABLE_OHLC" for x in [row["k1"],row["k2"],row["k3"]] if x is not None))
-bars=all_df.filter(pl.col("strike_price").cast(pl.Float64).is_in(req)&pl.col("_ts").is_in([str(x) for x in all_df["_ts"].unique().to_list()])) 
-bars.write_parquet(OUT/"hf2_recovered_option_bars.parquet",compression="zstd")
+usable=r.filter(pl.col("status")=="USABLE_OHLC")
+bar_frames=[]
+for exp in usable["target_expiry"].unique().to_list():
+    ur=usable.filter(pl.col("target_expiry")==exp)
+    entry=ur["entry_timestamp"][0][:19]; end=f"{exp}T15:30:00"
+    strikes=sorted(set(float(x) for col in ["k1","k2","k3"] for x in ur[col].drop_nulls().to_list()))
+    base=all_df.filter(pl.col("strike_price").cast(pl.Float64).is_in(strikes)&pl.col("_ts").is_between(pl.lit(entry),pl.lit(end))).select(["_ts","strike_price","open","high","low","close","volume","oi"]).rename({"_ts":"timestamp","strike_price":"strike"})
+    mapping=ur.select(["variant_id","k1","k2","k3"]).melt(id_vars=["variant_id"],value_vars=["k1","k2","k3"],variable_name="leg",value_name="strike").select(["variant_id","strike"]).drop_nulls().unique()
+    if base.height and mapping.height:
+        bar_frames.append(base.join(mapping,on="strike",how="inner").with_columns(pl.lit(exp).alias("target_expiry")))
+if bar_frames:
+    bars=pl.concat(bar_frames,how="vertical_relaxed")
+    bars.write_parquet(OUT/"hf2_recovered_variant_option_bars.parquet",compression="zstd")
 summary=r.group_by("target_expiry").agg(pl.len().alias("variants"),(pl.col("status")=="USABLE_OHLC").sum().alias("usable_variants"))
 summary.write_csv(OUT/"hf2_recovered_cycle_summary.csv")
 print(json.dumps({"missing_cycles":len(missing),"variant_rows":r.height,"usable_variant_cycles":r.filter(pl.col("status")=="USABLE_OHLC").height,"fully_usable_expiries":summary.filter(pl.col("usable_variants")==224).height},indent=2))
