@@ -74,3 +74,9 @@
 - **Impact:** Recovery stopped before variant construction; no external data were admitted.
 - **Correction:** Keep source and frozen spot timestamps in the original Asia/Kolkata representation for output, but add a temporary UTC comparison column and perform all equality/range filters against UTC-normalized instants.
 - **Prevention:** External timezone handling must distinguish display/source timezone from comparison timezone; never compare timezone-aware Polars columns with fixed-offset Python literals directly.
+
+
+### E21X-011 — Merge gate incorrectly assumed 224 executable cells for every frozen expiry
+- **Observed:** The first successful RISSIN recovery produced 224/224 variants for each of the five target expiries, but the pre-existing 58-cycle combined input contains 11,702 executable variant-cycle cells rather than 58 x 224, because some variants are legitimately unavailable on some of those historical cycles.
+- **Correction:** Changed the merge gate to preserve the frozen partial coverage and add exactly 1,120 new cells. Final validation now uses the frozen engine's existing minimum validity requirement of 50/63 cycles per variant rather than demanding 63/63.
+- **Prevention:** Never reinterpret the registered 224 variants as a guarantee that every historical cycle is executable. Coverage must follow the frozen manifest and engine admission rules.
