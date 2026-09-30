@@ -104,6 +104,8 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
     idx = pl.read_parquet(spath)
     if "symbol" in idx.columns:
         idx = idx.filter(pl.col("symbol").cast(pl.String).str.to_uppercase().is_in(["NIFTY", "NIFTY_50", "NIFTY50"]))
+    if "timestamp" not in idx.columns and "date" in idx.columns:
+        idx = idx.rename({"date": "timestamp"})
     if "timestamp" not in idx.columns:
         raise RuntimeError(f"Spot source columns: {idx.columns}")
     ts_dtype = idx.schema["timestamp"]
