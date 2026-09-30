@@ -34,11 +34,8 @@ jobs:
           path: ~/.cache/huggingface
           key: phase21w-hf03-hf2-${{hashFiles('research/phase17w_strike_alternatives/VARIANT_REGISTRY.md')}}
       - run: pip install -q 'huggingface_hub>=0.36,<0.37' 'polars>=1.20,<2' 'pyarrow>=18,<23' 'numpy>=2,<3' pandas
-      - name: Restore prepared HF-03 interface
-        uses: actions/download-artifact@v4
-        with:
-          name: phase21w-hf03-interface
-          path: .
+      - name: Use persisted HF-03 interface
+        run: test -f research/phase21w_combined_frozen_rerun/hf03_build/variant_option_bars.parquet
       - name: Build deterministic combined input
         run: python research/phase21w_combined_frozen_rerun/build_combined.py
       - name: Validate coverage
