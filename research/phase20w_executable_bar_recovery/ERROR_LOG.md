@@ -19,3 +19,9 @@ No Phase-20 execution errors yet.
 - **Issue:** HF-01 NIFTY parquet encodes timestamps with `+0530`, which the current Polars reader rejects while casting the timestamp column.
 - **Impact:** Alternate-source recovery stopped before evaluating any HF-01 rows.
 - **Correction:** Use Polars' PyArrow parquet reader for HF-01 source files. This is a reader compatibility change only; timestamps and OHLC observations are not transformed.
+
+
+## E20-004 — 2026-09-30
+- **Issue:** Even the PyArrow-backed Polars frame retained the problematic timezone metadata when converting HF-01 timestamps to strings.
+- **Impact:** Recovery stopped before evaluating HF-01 observations.
+- **Correction:** HF-01 recovery will use predicate-pushed PyArrow reads filtered by expiry/date, then normalize only the small filtered timestamp column to strings before Polars processing. This avoids materializing/reinterpreting the full annual parquet timezone column.
