@@ -64,3 +64,9 @@
 - Impact: this was a reporting/serialization failure after the 504-family computation; no trades or strategy parameters were altered.
 - Correction: the coverage check now explicitly casts `holm_adjusted_p` to Float64 with null-safe handling before counting significant adjusted p-values.
 - Research interpretation: null adjusted p-values remain null; they are not converted into significant results. The next run will determine whether the holdout produced enough observations per variant for the pre-specified bootstrap test.
+
+
+## E22B-014 — Validator missing pandas dependency
+- Observed: the full 504-family computation completed successfully, producing 7 admitted weekly expiries, 3,528/3,528 expected usable variant-cycle rows, and all 504 variants. The subsequent validation step failed with `ModuleNotFoundError: No module named 'pandas'`.
+- Impact: validation/publish/artifact steps were skipped; this was a workflow dependency failure, not a research-computation failure.
+- Correction: add `pandas` to the workflow's installed Python dependencies. No research data, variant definition, weekly protocol, or statistical rule is changed.
