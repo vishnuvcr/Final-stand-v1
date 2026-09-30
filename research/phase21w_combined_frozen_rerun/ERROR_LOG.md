@@ -1,91 +1,28 @@
 # Phase 21W Error Log
 
 ## E21-001 — 2026-09-30
-- **Issue:** HF-02 recovered cycle manifest lacks Phase-9 `prior_expiry` and `status` columns required by the frozen backtester interface.
-- **Impact:** Combined-input construction stopped before backtesting.
-- **Correction:** Join those fields from the frozen 63-cycle Phase-9 calendar by `target_expiry`. No strategy/data values changed.
-
-## E21-002 — 2026-09-30
-- **Issue:** HF-02 recovered bars use `oi` while the HF-03 frozen bar interface uses `open_interest`.
-- **Impact:** Combined-input construction stopped before coverage validation.
-- **Correction:** Rename `oi` to the frozen interface field `open_interest` at the adapter boundary; values are unchanged.
-
-## E21-003 — 2026-09-30
-- **Issue:** The third Phase-21 run was cancelled during a redundant HF-03 interface rebuild.
-- **Impact:** No empirical result was produced.
-- **Correction:** Reuse the prepared HF-03 interface artifact and the admitted Phase-20 HF-02 recovery overlay. The frozen calendar and strategy parameters remain unchanged.
-
-## E21-004 — 2026-09-30
-- **Issue:** Phase-19 persisted outputs did not include the intermediate `variant_option_bars.parquet` required for exact re-execution.
-- **Impact:** A direct persisted-input overlay could not reproduce the original OHLC backtest interface.
-- **Correction:** Rebuild the frozen HF-03 interface once from its pinned revision, then overlay admitted HF-02 cycles.
-
-## E21-005 — 2026-09-30
-- **Issue:** HF-02 recovered bars lack the derived `trading_day` field required by the HF-03 interface.
-- **Correction:** Derive `trading_day` from the recovered bar timestamp at the adapter boundary.
-
-## E21-006 — 2026-09-30
-- **Issue:** HF-02 recovered bars lack the static `symbol` field required by the HF-03 interface.
-- **Correction:** Set `symbol='NIFTY'` for HF-02 rows at the adapter boundary.
-
-## E21-007 — 2026-09-30
-- **Issue:** HF-02 recovered bars lack `option_type` in the frozen interface.
-- **Correction:** Set `option_type='CE'` because the recovered HF-02 files are weekly NIFTY `*_CE` files.
-
-## E21-008 — 2026-09-30
-- **Issue:** GitHub cancelled two Phase-21 runs during the expensive HF-03 interface rebuild.
-- **Correction:** Split preparation from the combined rerun and reuse the prepared interface artifact.
-
-## E21-009 — 2026-09-30
-- **Issue:** The prepared HF-03 interface built successfully, but persisting its large files to the branch failed.
-- **Correction:** Use the successful preparation workflow artifact as the transport layer.
-
-## E21-010 — 2026-09-30
-- **Issue:** HF-02 recovered bars expose `expiry` while the frozen interface also requires an `expiry` field.
-- **Correction:** Preserve/add `expiry` as the same weekly contract date represented by `target_expiry`.
-
-## E21-011 — 2026-09-30
-- **Issue:** Conditional expiry normalization was initially inserted in the wrong order and interacted with an already-present `target_expiry` field.
-- **Correction:** Ensure the frozen `expiry` field exists before bar-schema validation; do not alter the contract date.
-
-## E21-012 — 2026-09-30
-- **Issue:** The combined-bar build became unnecessarily slow when every HF-02 bar was joined to cycle metadata and the complete combined bar table was grouped for duplicate checks.
-- **Impact:** No empirical result was produced.
-- **Correction:** Remove the large metadata join and validate duplicates source-locally before concatenation.
-
-## E21-013 — 2026-09-30
-- **Issue:** Workflow run 36706822914 failed because the HF-02 bar adapter lacked repeated HF-03 interface fields `entry_timestamp`, `lock_timestamp`, and `k3_multiplier`.
-- **Correction:** Reconstruct these fields from the admitted cycle manifest and registered variant id without restoring the large metadata join.
-
-## E21-014 — 2026-09-30
-- **Issue:** Workflow run 36707810280 was cancelled by the GitHub-hosted runner during combined-input construction; the job log reported `The runner has received a shutdown signal` and no Python traceback.
-- **Impact:** Coverage validation and the exact frozen 224-variant backtest were skipped; no empirical result was produced.
-- **Diagnosis:** Most consistent with runner/resource termination during large-table construction; this is an execution diagnosis, not a proven root cause.
-- **Correction:** Replace eager `read_parquet`/in-memory concatenation with Polars lazy `scan_parquet`, streaming source-local duplicate queries, a streamed normalized HF-02 parquet, and streamed vertical concatenation.
-- **Prevention:** Phase-21 large-file adapters must remain streaming/bounded-memory end-to-end; do not materialize both frozen and recovered bar tables simultaneously.
-
-## E21-015 — 2026-09-30
-- **Issue:** Workflow run 36708232073 built the combined input successfully but the coverage validator asserted that the executable combined set must contain all 63 expiries.
-- **Impact:** The exact frozen backtest was skipped even though the admitted combined dataset met the planned 11,702-cell threshold.
-- **Root cause:** The validator conflated the frozen 63-expiry experimental denominator with the subset of expiries for which executable bars have been recovered. Five baseline expiries remain completely unrecovered.
-- **Correction:** Validate 63 baseline expiries plus exactly five missing expiries, while requiring at least 11,702 combined variant-cycle cells and zero unexpected-expiry/overlap conditions.
-- **Prevention:** Coverage validators must distinguish baseline chronology, executable observations, and missing observations as separate fields.
-
-## E21-016 — 2026-09-30
-- **Issue:** Workflow run 36708651392 passed coverage validation but the frozen 224-variant backtest raised `Missing Phase 9 selected spot bars`.
-- **Impact:** No empirical trades or statistics were produced.
-- **Root cause:** The prepared Phase-9 artifact was extracted under `phase9_weekly/output`; the frozen engine resolves its restored interface under `research/phase9_weekly/output` or `prepared/phase9`.
-- **Correction:** Change the artifact download destination from repository root to `research/`, so `research/phase9_weekly/output/` and `research/phase21w_combined_frozen_rerun/` are restored in the expected paths.
-- **Prevention:** Artifact transport paths must preserve the directory contract of the consuming phase; validate both manifest and spot-interface existence before invoking the backtester.
-
-## E21-017 — 2026-09-30
-- **Issue:** Workflow run 36708865255 failed in `build_combined.py` because it still referenced `phase9_weekly/output/weekly_cycle_manifest.csv`, while the corrected artifact transport restores the file at `research/phase9_weekly/output/weekly_cycle_manifest.csv`.
-- **Impact:** The combined build stopped before any coverage validation or backtest; no empirical result was produced.
-- **Correction:** Point the baseline-manifest read to the restored Phase-9 interface path under `research/`.
-- **Prevention:** Keep all Phase-21 artifact-consumer paths under the same `research/` namespace used by the frozen backtest engine and verify them in a preflight step.
-
-## E21-018 — 2026-09-30
-- **Issue:** Workflow run 36709072723 completed the exact backtest but the result commit was rejected because `variant_option_bars.parquet` is 346.32 MB, above GitHub's 100 MB single-file limit.
-- **Impact:** Backtest results were generated/uploaded but not persisted to the branch.
-- **Correction:** Exclude the large combined parquet from the Git commit. Persist `coverage.json`, `variant_cycle_manifest.csv`, and the complete backtest output directory; keep the full combined parquet in the workflow artifact for reproducibility.
-- **Prevention:** Large generated datasets must use workflow artifacts (or intentionally sharded storage) rather than a single Git blob; repository commits should contain compact provenance and statistical outputs.
+- HF-02 recovered cycle manifest lacked Phase-9 prior_expiry/status columns; mapped from the frozen 63-cycle calendar.
+## E21-002
+- HF-02 used oi rather than open_interest; renamed at the adapter boundary.
+## E21-003
+- A redundant HF-03 rebuild run was cancelled; reused the prepared artifact.
+## E21-004
+- Phase-19 persisted option-bar input was absent; rebuilt the frozen interface from the pinned source.
+## E21-005 to E21-011
+- Adapter schema mismatches (trading_day, symbol, option_type, expiry and ordering) were corrected without changing source price/timestamp values.
+## E21-012
+- Full metadata join/global duplicate grouping was too expensive; replaced by compact metadata reconstruction and source-local duplicate checks.
+## E21-013
+- Missing entry_timestamp, lock_timestamp and k3_multiplier fields were reconstructed from the admitted manifest/variant ID.
+## E21-014
+- GitHub runner shutdown occurred during combined-input construction; builder was changed to lazy/streaming parquet processing.
+## E21-015
+- Coverage validation incorrectly required all 63 expiries to be executable; corrected to 63 baseline + 58 covered + 5 missing.
+## E21-016
+- Phase-9 artifact path was restored under the wrong directory; corrected to the research/ interface path.
+## E21-017
+- Builder still used the old Phase-9 manifest path; corrected to research/phase9_weekly/output.
+## E21-018
+- 346.32 MB combined parquet exceeded GitHub's 100 MB single-file limit; switched repository persistence to compact outputs plus workflow artifact.
+## E21-019
+- No new execution error. The exact frozen 224-variant run completed successfully and produced the phase-closure result.

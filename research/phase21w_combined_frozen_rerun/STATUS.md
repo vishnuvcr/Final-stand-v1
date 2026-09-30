@@ -1,21 +1,37 @@
 # Phase 21W Status
 
-**State:** PATCHED — coverage gate corrected; the next run will validate the frozen 63-cycle denominator separately from the 58 currently executable expiries.
+State: COMPLETE — exact frozen 224-variant rerun executed on the admitted 82.93% executable-cell sample; no configuration passed the preregistered promotion gate. External full-strike recovery remains the next data-recovery phase.
 
-- Phase 20 public-source recovery admitted 11,702/14,112 variant-cycle cells (82.93%).
-- Source precedence: HF-03 pinned revision first; HF-02 pinned revision only for previously missing cells.
-- No synthetic bars; no source blending within a variant-cycle.
-- Frozen family: 224 variants; 63 chronological cycles; 37/12/14 train/validation/holdout; 10:00 entry; 14:00 lock; 50-point hard stop; 0.50-point/leg slippage; Paytm Money/NSE cost model; block bootstrap length 3, 3,000 reps; Holm adjustment.
-- Run 36707810280 was cancelled by the GitHub runner during combined-input construction after the metadata-adapter fix; the job log shows a runner shutdown signal rather than a Python exception.
-- The builder is now fully lazy/streaming for the large option parquets. It reconstructs the three repeated metadata fields, validates source-local duplicates, normalizes the HF-02 schema, and streams both sources into the combined parquet without materializing the full tables together.
-- E21-014 records the runner-shutdown/resource event. No empirical result was produced by the cancelled run.
-- Next gate: successful combined-input build, exact coverage validation, then the frozen 224-variant backtest/statistics.
+Frozen design:
+- 224 variants = 8 K1 × 4 K2 × 7 K3 multipliers.
+- 63 chronological weekly expiries; train/validation/holdout = 37/12/14.
+- 10:00 IST entry; 14:00 IST lock.
+- 50-point hard stop; 0.50-point slippage per leg.
+- Existing Paytm Money/NSE transaction-cost model.
+- Block bootstrap length 3,000 reps with Holm multiple-testing adjustment.
+- No synthetic bars, strike substitution, or cross-source leg mixing.
 
-- Workflow run 36708232073 built the combined input successfully: 11,702 cells, 58 executable expiries, 5 missing baseline expiries, zero overlap and zero duplicate groups; its validator failed only because it expected 63 executable expiries.
+Data coverage:
+- Combined admitted variant-cycle cells: 11,702 / 14,112 (82.93%).
+- HF-03 cells: 8,064.
+- HF-02 recovered cells: 3,638.
+- Covered expiries: 58/63.
+- Completely missing expiries: 5 — 2026-01-13, 2026-02-10, 2026-03-10, 2026-04-13, 2026-05-12.
+- Source overlap: 0.
+- Source-local duplicate groups: 0.
+- Full combined option parquet is 346.32 MB and is retained in the successful workflow artifact rather than Git.
 
-- Run 44 validated the 63/58/5 coverage contract successfully but stopped before the backtest because the restored Phase-9 spot interface was extracted under the wrong directory.
+Empirical result:
+- Variants evaluated: 224.
+- Variants satisfying coverage >= 50/63: 168.
+- Positive training mean: 193.
+- Positive validation mean: 136.
+- Positive holdout mean: 185.
+- Positive means in training + validation + holdout with coverage >= 50/63: 106.
+- Variants meeting all non-Holm promotion components: 107.
+- Holm-adjusted training p < 0.05: 0.
+- Variants promoted to capital phase: 0.
 
-- Workflow run 36708865255 failed at combined-input construction only because the builder still referenced `phase9_weekly/output`; the artifact was correctly restored under `research/phase9_weekly/output`. The builder path is now corrected.
+The exact backtest is reproducible and auditable for the current admitted sample, but the five missing expiries and lack of historical bid/ask execution data remain material limitations.
 
-- Workflow run 36709072723 completed the bounded-memory combined build, coverage validation, and exact frozen 224-variant backtest successfully. The only failed step was committing the 346.32 MB combined parquet, which exceeds GitHub's 100 MB single-file limit.
-- Correction: commit the auditable summary/trade outputs and compact coverage/manifest files, while retaining the full combined parquet in the workflow artifact; the parquet remains reproducible from the pinned HF-03 artifact plus admitted HF-02 source.
+Next phase: Phase 21W External Full-Strike Source Recovery.
