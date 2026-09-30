@@ -290,18 +290,20 @@ def build_variants_504(
                 expected_sha,
                 cache_dir,
             )
+            expiry_end_ts = datetime.combine(
+                date.fromisoformat(expiry),
+                time(16, 0),
+                IST,
+            )
+            entry_lit = pl.lit(entry_ts).cast(
+                pl.Datetime(time_unit="us", time_zone="Asia/Kolkata")
+            )
+            expiry_end_lit = pl.lit(expiry_end_ts).cast(
+                pl.Datetime(time_unit="us", time_zone="Asia/Kolkata")
+            )
             opt = opt.filter(
-                (pl.col("timestamp") >= pl.lit(entry_ts))
-                & (
-                    pl.col("timestamp")
-                    <= pl.lit(
-                        datetime.combine(
-                            date.fromisoformat(expiry),
-                            time(16, 0),
-                            IST,
-                        )
-                    )
-                )
+                (pl.col("timestamp") >= entry_lit)
+                & (pl.col("timestamp") <= expiry_end_lit)
             )
 
         entry_calls = opt.filter(
