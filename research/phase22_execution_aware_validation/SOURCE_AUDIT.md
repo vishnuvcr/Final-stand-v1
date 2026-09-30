@@ -102,3 +102,20 @@ No source is admitted until an actual sample for the required target dates/contr
 
 ### Acquisition test
 The first authorized sample must contain at least one historical weekly NIFTY expiry session and verify: exact option symbol/expiry/strike/type, timestamp, bid, bid quantity, ask, ask quantity, trade price/quantity and OI. The sample will be hashed and stored as provenance evidence before any bulk acquisition.
+
+
+## 22.1F — Newly identified public NIFTY TBT/depth dataset (2026-09-30)
+
+- A new Hugging Face dataset, `antony9952/Nifty_option_TBT`, was identified during the expanded source search. Its preview contains timestamped NIFTY option observations with `instrument_key`, five depth levels (`depth_level=0..4`), `bid_price`, `bid_qty`, `ask_price`, and `ask_qty`. This field set directly overlaps the Phase 22 execution-data contract. citeturn2search0
+- The dataset is currently **not admissible**. Hugging Face reports a dataset-generation/schema-cast failure because the underlying `market_ticks.csv` mixes depth-schema rows with a different 18-column LTP/OHLC/volume/OI schema. citeturn3view0
+- The public preview demonstrates real depth observations (for example, five bid/ask levels at the same timestamp), but the public evidence inspected so far does not establish complete coverage of the required 2024–2026 target weekly expiries. The search did not verify the five Phase 21 recovery dates or the full prospective Phase 22 chronology from this source. citeturn3view0
+- Therefore this source is promoted from “unknown” to **execution-data lead requiring direct file-level coverage/schema validation**, not to admitted data.
+- No new holdout was opened and no strategy parameter was changed.
+
+### Required validation for this source
+1. Obtain the immutable dataset revision and raw file manifest.
+2. Determine whether quote/depth rows can be isolated deterministically from the mixed file without imputing or altering observations.
+3. Verify exact NIFTY option contract identity: expiry, strike, CE/PE, and instrument mapping.
+4. Measure date/session coverage against the preregistered weekly chronology.
+5. Hash the admitted raw subset and cache it in the Phase 22 workflow if—and only if—it passes the execution contract.
+6. Reject the source if coverage is incomplete or contract identity cannot be reconstructed reproducibly.
