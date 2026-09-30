@@ -33,3 +33,12 @@ Run the external recovery workflow. If all five dates pass the 224-variant admis
 - The current dataset card documents NIFTY 1-minute intraday coverage through 2026, and a later dataset tree contains `upstox_intraday/NIFTY/NIFTY_2026.parquet`. citeturn769528search1turn627359search0
 - The recovery scripts now resolve `main`, discover the exact 2026 NIFTY file, and record the resolved commit SHA plus file SHA-256 before use.
 - Workflow push triggers were narrowed so generated output commits do not recursively launch the large recovery jobs.
+
+
+## 2026-09-30 — first live RISSIN probe
+
+- The corrected workflow successfully downloaded the 371,495,369-byte Phase 21 combined artifact from successful run 36709664677.
+- Source audit completed successfully.
+- The first live RISSIN probe reached Polars schema inspection and exposed a timezone-metadata compatibility error: the parquet declares +05:30, which the runner's Polars build rejected.
+- The recovery script and workflow were corrected with POLARS_IGNORE_TIMEZONE_PARSE_ERROR=1 and explicit timestamp normalization.
+- The latest branch head contains that correction. A new workflow run was not created automatically after the GitHub-API commit, so the corrected recovery remains pending execution. The phase therefore remains RUNNING and no 63-cycle conclusion has been published.
