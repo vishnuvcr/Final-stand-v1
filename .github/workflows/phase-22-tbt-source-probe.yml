@@ -2,6 +2,9 @@ name: Phase 22W - TBT depth source probe
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - phase-22-execution-aware-validation
 
 permissions:
   contents: write
