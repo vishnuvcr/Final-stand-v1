@@ -23,7 +23,7 @@ base=pl.read_csv("research/phase9_weekly/output/weekly_cycle_manifest.csv")
 trade=pl.read_csv("research/phase19w_recovered_rerun/output/trades_ITM3_NEXT1_K3M4.csv")
 got=set(trade["target_expiry"].cast(pl.String).to_list())
 missing=[x for x in base["target_expiry"].cast(pl.String).to_list() if x not in got]
-base=base.with_columns(pl.col("target_expiry").cast(pl.String))
+base=base.with_columns(pl.col("target_expiry").cast(pl.String)).sort("target_expiry").head(63)
 print({"baseline_rows":base.height,"baseline_unique_expiries":base["target_expiry"].n_unique(),"missing_count":len(missing),"missing_head":missing[:10]})
 need=base.filter(pl.col("target_expiry").is_in(missing))
 
