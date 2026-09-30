@@ -130,6 +130,19 @@ Capital/margin reconstruction is a separate evidence layer from execution valida
 - [Phase 22A manuscript](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-22a-weekly-504-strike-expansion/research/phase22a_weekly_504_strike_expansion/FINAL_MANUSCRIPT.md)
 - [Phase 22A workflow run](https://github.com/vishnuvcr/Final-stand-v1/actions/runs/36741881293)
 
+## Phase 22B — Weekly 504 prospective validation — 2026-09-30
+
+- **Status: ACTIVE — multi-source recovery rerun.**
+- The frozen family contains **504 variants**: OTM1–OTM8, ATM_NEAREST, ATM_UP, ITM1–ITM8 × NEXT1/NEXT2/NEXT3/MIRROR_GAP × K3 multipliers 0.5/1.0/1.5/2.0/2.5/3.0/4.0.
+- The prior corrected computation completed with **7 weekly expiries**, **3,528/3,528 expected usable variant-cycle rows**, and **all 504 variants present**.
+- Validator-only defects E22B-014 (missing pandas) and E22B-015 (obsolete registry field) were corrected and logged.
+- The frozen **>=8 weekly-expiry validation gate remains unchanged**. A gap-only TradeMarkk Hugging Face option-data fallback has now been added to recover expiry files missing from RISSIN.
+- No strategy, holdout boundary, entry/lock timing, causal spot rule, stop-loss, slippage/cost model, or configuration family was changed.
+- [Phase 22B branch](https://github.com/vishnuvcr/Final-stand-v1/tree/phase-22b-weekly-504-prospective-freeze)
+- [Phase 22B status](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-22b-weekly-504-prospective-freeze/research/phase22b_weekly_504_prospective_freeze/STATUS.md)
+- [Phase 22B error log](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-22b-weekly-504-prospective-freeze/research/phase22b_weekly_504_prospective_freeze/ERROR_LOG.md)
+- [Phase 22B research updates](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-22b-weekly-504-prospective-freeze/research/phase22b_weekly_504_prospective_freeze/RESEARCH_UPDATES.md)
+
 ## Phase 22W — Prospective execution-aware validation — 2026-09-30
 
 - **Status: ACTIVE.** Execution-data acquisition remains the main blocker to opening a genuinely new execution-aware holdout.
