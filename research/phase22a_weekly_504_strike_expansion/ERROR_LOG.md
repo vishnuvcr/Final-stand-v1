@@ -33,3 +33,7 @@
 - Observed: an initial custom-builder design repeated every OHLC observation for every variant that used the strike.
 - Impact: the 504-family would create a much larger intermediate parquet than necessary.
 - Correction: the builder now writes each expiry/strike source observation once; the custom backtest runner maps the cycle-level variant strikes onto a shared per-expiry OHLC pivot.
+## E22A-008 — RISSIN duplicate check initially ignored expiry identity
+- Observed: the annual RISSIN NIFTY parquet contains multiple weekly option expiries sharing the same timestamp and strike. A duplicate check on only `(timestamp, strike)` therefore reported 79,066 false duplicate groups.
+- Impact: the 504 run stopped before reading any per-expiry source.
+- Correction: duplicate identity for the RISSIN annual file now includes `_expiry`; true duplicates within the same expiry/timestamp/strike remain a hard error.
