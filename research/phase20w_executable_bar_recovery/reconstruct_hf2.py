@@ -18,6 +18,9 @@ def k2(s,k,r):
  if r.startswith("NEXT"): return gt[int(r[-1])-1] if len(gt)>=int(r[-1]) else None
  return next((x for x in gt if x>=2*k),gt[-1] if gt else None)
 frames=[]; rows=[]
+idx_local=hf_hub_download(repo_id="thetrademarkk/india-index-options-1m",filename="index/NIFTY.parquet",repo_type="dataset",revision="0f4800e43e6f96cec0794369d78eb4d3c4211ef5",token=token,cache_dir=CACHE)
+idx=pl.read_parquet(idx_local).with_columns(pl.col("timestamp").cast(pl.Datetime(time_zone="Asia/Kolkata")))
+idx=idx.with_columns(pl.col("timestamp").dt.strftime("%Y-%m-%dT%H:%M:%S").alias("_its"))
 for off in range(-10,11):
  tag="ATM" if off==0 else f"ATM{off:+d}"
  p=f"NIFTY/WEEK/{tag}_CE.parquet"; local=hf_hub_download(repo_id="artist-23/nifty-options-data",filename=p,repo_type="dataset",revision=REV,token=token,cache_dir=CACHE)
@@ -28,7 +31,7 @@ all_df=pl.concat(frames,how="diagonal")
 for b in base.iter_rows(named=True):
  exp=str(b["target_expiry"])
  if exp not in missing: continue
- entry=str(b["entry_timestamp"]).replace("+05:30","")[:19]; lock=str(b["lock_timestamp"]).replace("+05:30","")[:19]; spot=float(b["entry_spot"])
+ entry=f"{exp}T10:00:00"; lock=f"{exp}T14:00:00"; spot_row=idx.filter(pl.col("_its")==entry); spot=float(spot_row["open"][0]) if spot_row.height else None
  e=all_df.filter((pl.col("_ts")==entry)&(pl.col("option_type")=="CALL"))
  # Build one source-local strike universe at entry; no synthetic strike interpolation.
  strikes=e["strike_price"].cast(pl.Float64).unique().to_list()
