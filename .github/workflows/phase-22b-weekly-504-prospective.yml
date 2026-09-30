@@ -28,9 +28,9 @@ jobs:
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
       HF_HOME: ~/.cache/huggingface
       THEMARKET_REVISION: main
-      PROSPECTIVE_START: ${{ inputs.start_date }}
-      PROSPECTIVE_END: ${{ inputs.end_date }}
-      MAX_EXPIRIES: ${{ inputs.max_expiries }}
+      PROSPECTIVE_START: ${{ inputs.start_date || '2026-05-19' }}
+      PROSPECTIVE_END: ${{ inputs.end_date || '2026-08-04' }}
+      MAX_EXPIRIES: ${{ inputs.max_expiries || '32' }}
       PYTHONPATH: ${{ github.workspace }}
     steps:
       - uses: actions/checkout@v4
