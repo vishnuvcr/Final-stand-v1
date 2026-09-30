@@ -12,7 +12,7 @@ on:
       end_date:
         description: "Last available new weekly expiry"
         required: true
-        default: "2026-08-04"
+        default: "2026-09-08"
       max_expiries:
         description: "Maximum weekly expiries to admit"
         required: true
@@ -31,7 +31,7 @@ jobs:
       RISSIN_REVISION: main
       SPOT_REVISION: 3420f004d1b4ce56975b06fcd594e0787cd6a83e
       PROSPECTIVE_START: ${{ inputs.start_date || '2026-05-19' }}
-      PROSPECTIVE_END: ${{ inputs.end_date || '2026-08-04' }}
+      PROSPECTIVE_END: ${{ inputs.end_date || '2026-09-08' }}
       MAX_EXPIRIES: ${{ inputs.max_expiries || '32' }}
       PYTHONPATH: ${{ github.workspace }}
     steps:
