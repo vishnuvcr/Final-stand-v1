@@ -6,7 +6,7 @@ session=requests.Session()
 headers={"Authorization":f"Bearer {os.getenv('HF_TOKEN','')}"} if os.getenv("HF_TOKEN") else {}
 
 sources=[
- {"id":"RECOVERY-1","repo":"johnwick3690/stocks","revision":"main","base":"https://huggingface.co/datasets/johnwick3690/stocks/resolve/main/nifty%20historical%20data/nifty%2050%201min%20options%20weekly%20expiries/"},
+ {"id":"RECOVERY-1","repo":"johnwick3690/stocks","revision":"main","base":"https://huggingface.co/datasets/johnwick3690/stocks/blob/main/nifty%20historical%20data/nifty%2050%201min%20options%20weekly%20expiries/"},
  {"id":"RECOVERY-2","repo":"artist-23/nifty-options-data","revision":"main","base":None},
  {"id":"RECOVERY-3","repo":"rissin/nse-options-intraday","revision":"main","base":None},
 ]
