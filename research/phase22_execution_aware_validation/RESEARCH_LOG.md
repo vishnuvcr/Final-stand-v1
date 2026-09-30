@@ -36,3 +36,8 @@
 - Global Datafeeds also exposes historical NFO bid/ask fields, but its published tick backfill window is one calendar week, so it does not solve the multi-year archive problem without additional provisioning.
 - TickBytes and OptionVault advertise the required Level-2/tick coverage, but their full archives are licensed/private; only public samples/schema are available.
 - No holdout opened; no execution-aware strategy backtest run.
+
+
+## 2026-09-30 — Additional source leads
+- NiftyTrader publicly advertises historical NIFTY option-chain snapshots containing bid/ask and bulk historical downloads; however, the underlying machine-readable archive and provenance/hash are not exposed in the public page, so it remains an unadmitted candidate.
+- optionsdata.shop provides broad 1-minute and 1-second expired-option archives, but public documentation establishes OHLC/OI/volume rather than bid/ask, so it does not satisfy the frozen execution contract yet.
