@@ -132,3 +132,11 @@
 - **Impact:** final rerun outputs were discarded before artifact upload, despite the core 63-expiry coverage being complete and the engine itself returning a full 224-variant summary.
 - **Correction:** validation now treats 63-expiry coverage and 224-variant presence as the hard publication gates, while recording the 50/63 validity-floor result as an explicit diagnostic in `final_validation_summary.json`. Variants below the floor remain ineligible for any downstream promotion analysis.
 - **Evidence:** run 36715815962, job 109888329116; the rerun step completed successfully and validation failed immediately afterward.
+
+
+## E21X-019 — Publication commit rebase saw temporary frozen-engine changes as unstaged
+
+- **Observed:** the complete rerun and artifact upload succeeded, but the final metadata commit step failed because restoring the frozen engine/interface files for execution left tracked temporary changes in the worktree; `git rebase` refused to start with unstaged changes.
+- **Impact:** results were uploaded as an Actions artifact, but the compact research metadata was not pushed to the branch.
+- **Correction:** after committing the output directory, the workflow now runs `git reset --hard HEAD` to discard only the intentional temporary tracked engine/interface changes, then rebases and pushes the compact result commit.
+- **Evidence:** run 36716614936, job 109890990079.
