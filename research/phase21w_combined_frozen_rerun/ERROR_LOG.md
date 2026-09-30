@@ -73,3 +73,7 @@
 ## E21-010 — 2026-09-30
 - **Issue:** HF-02 bars already contained `target_expiry` alongside redundant `expiry`; conditional renaming therefore left `expiry` and triggered the same schema check.
 - **Correction:** Drop redundant `expiry` when `target_expiry` is already present.
+
+## E21-011 — 2026-09-30
+- **Issue:** The target HF-03 bar schema legitimately contains `expiry`; dropping HF-02's redundant `expiry` caused the validator to report it as missing.
+- **Correction:** Preserve/add `expiry` as the same frozen weekly contract date represented by `target_expiry`.
