@@ -54,8 +54,12 @@
 - **Correction:** Remove the large metadata join and validate duplicates source-locally before concatenation.
 
 ## E21-013 — 2026-09-30
-- **Issue:** Workflow run 36706822914 failed in `build_combined.py` because the HF-02 reconstructed bar parquet lacks the repeated HF-03 interface fields `entry_timestamp`, `lock_timestamp`, and `k3_multiplier`.
+- **Issue:** Workflow run 36706822914 failed because the HF-02 bar adapter lacked repeated HF-03 interface fields `entry_timestamp`, `lock_timestamp`, and `k3_multiplier`.
+- **Correction:** Reconstruct these fields from the admitted cycle manifest and registered variant id without restoring the large metadata join.
+
+## E21-014 — 2026-09-30
+- **Issue:** Workflow run 36707810280 was cancelled by the GitHub-hosted runner during combined-input construction; the job log reported `The runner has received a shutdown signal` and no Python traceback.
 - **Impact:** Coverage validation and the exact frozen 224-variant backtest were skipped; no empirical result was produced.
-- **Root cause:** E21-012 removed the prior metadata join to solve the large-join performance problem, but the replacement did not recreate the three non-price metadata columns required by the frozen bar schema.
-- **Correction:** Reconstruct `entry_timestamp` and `lock_timestamp` from the compact recovery manifest keyed by `target_expiry`, and reconstruct `k3_multiplier` from the registered variant id. Reject nulls and retain source-local duplicate validation.
-- **Prevention:** Future schema optimizations must compare the complete target column contract before removing an adapter stage; source price/timestamp/strike data remain immutable and only schema metadata may be derived from the admitted same-source manifest.
+- **Diagnosis:** Most consistent with runner/resource termination during large-table construction; this is an execution diagnosis, not a proven root cause.
+- **Correction:** Replace eager `read_parquet`/in-memory concatenation with Polars lazy `scan_parquet`, streaming source-local duplicate queries, a streamed normalized HF-02 parquet, and streamed vertical concatenation.
+- **Prevention:** Phase-21 large-file adapters must remain streaming/bounded-memory end-to-end; do not materialize both frozen and recovered bar tables simultaneously.

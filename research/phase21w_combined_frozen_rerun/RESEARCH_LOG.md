@@ -1,10 +1,9 @@
 # Phase 21W Research Log
 
-## 2026-09-30 — Resume after E21-012 optimization run
-- Re-read the phase plan, status, error log, workflow definition, prior workflow runs and the frozen Phase-17/19 interface before modifying the current phase.
-- Latest workflow run 36706822914 completed in about 85 seconds and failed only at the deterministic combined-input build; HF-03 artifact retrieval and dependency installation succeeded.
-- Exact failure: `Unmapped HF2 schema columns: ['entry_timestamp', 'lock_timestamp', 'k3_multiplier']`.
-- Inspection of the frozen Phase-17 build logic confirmed these are repeated metadata fields in the variant-bar interface. The Phase-20 HF-02 bars carry the contract/variant identifiers but omit these repeated fields.
-- Correction: map `entry_timestamp` and `lock_timestamp` from the compact recovered-cycle manifest by `target_expiry`; extract `k3_multiplier` from the registered variant id. Null reconstructed metadata is rejected.
-- No prices, source timestamps, strike-selection rules, chronology, stop, slippage, transaction-cost assumptions, bootstrap settings or promotion gate changed.
-- The memory optimization from E21-012 is retained: no large bar-to-metadata join and duplicate validation is source-local.
+## 2026-09-30 — E21-013 validation run
+- The E21-013 schema correction was executed in workflow run 36707810280.
+- The Python adapter passed dependency setup and reached combined-input construction, but the runner received a shutdown signal during the streaming-free builder implementation before coverage validation.
+- No Python data/schema exception was emitted in the job log and no empirical backtest result was produced.
+- The event is treated as an execution-resource failure, not an empirical finding.
+- Builder redesign: use `scan_parquet`/lazy expressions for both large option tables; perform source-local duplicate queries in streaming mode; stream normalized HF-02 output to a temporary parquet; then stream-concatenate HF-03 and HF-02 to the final combined parquet.
+- The frozen 224-variant family, 63-cycle chronology, train/validation/holdout split, strike definitions, stop, slippage, costs and statistical gate remain unchanged.
