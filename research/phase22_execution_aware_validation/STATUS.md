@@ -1,6 +1,6 @@
 # Phase 22W Status
 
-State: **ACTIVE — 22.1 and 22.2 complete; 22.3 configuration freeze complete; broker/API and public-archive audit expanded; execution-data acquisition/admission still pending.**
+State: **ACTIVE — 22.1 and 22.2 complete; 22.3 configuration freeze complete; broker/API and public-archive audit expanded; TrueData technically suitable but historical coverage access-dependent; execution-data acquisition/admission still pending.**
 
 - 224 configurations frozen.
 - Execution-data contract frozen.
