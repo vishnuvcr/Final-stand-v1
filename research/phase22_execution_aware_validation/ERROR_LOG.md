@@ -42,3 +42,9 @@
 - **Observed:** TrueData documents historical Bid/Ask support, but its default REST tick-history window is only the last 5 trading days; extended history is an add-on. Historical Bid/Ask is also documented through its WebSocket service.
 - **Impact:** TrueData cannot yet be treated as an automatically available multi-year source for the Phase 22 holdout.
 - **Correction:** require an authorized historical sample and explicit coverage confirmation before admission; no assumption of multi-year access.
+
+
+## E22-006 — Global Datafeeds historical retention/access not yet verified
+- **Observed:** Global Datafeeds documents historical NFO tick responses containing bid/ask prices and quantities, but public documentation does not establish that the complete 2024–2026 weekly-option history required by Phase 22 is freely accessible.
+- **Impact:** technically suitable schema is confirmed, but data admission and retention are unverified.
+- **Correction:** require an authorized historical sample and coverage verification before treating the source as admitted.
