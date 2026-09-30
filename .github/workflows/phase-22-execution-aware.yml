@@ -1,0 +1,30 @@
+name: Phase 22W - Execution-aware validation
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  protocol-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-22-execution-aware-validation
+      - name: Verify frozen protocol
+        run: |
+          test -f research/phase22_execution_aware_validation/PHASE_PLAN.md
+          test -f research/phase22_execution_aware_validation/EXECUTION_DATA_CONTRACT.md
+          test -f research/phase22_execution_aware_validation/VARIANT_REGISTRY.md
+          test -f research/phase22_execution_aware_validation/SOURCE_AUDIT.md
+          test -f research/phase22_execution_aware_validation/ERROR_LOG.md
+      - name: Refuse execution without admitted quote cache
+        run: |
+          if [ ! -d data/phase22_execution_aware ]; then
+            echo "No admitted execution-data cache exists."
+            echo "This is an intentional hard gate: do not run an execution-aware backtest on OHLC-only data."
+            exit 1
+          fi
+          find data/phase22_execution_aware -maxdepth 2 -type f -print
