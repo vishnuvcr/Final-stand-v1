@@ -427,7 +427,7 @@ def main():
         "expected_cycle_rows": len(targets) * 504,
         "all_504_present": usable["variant_id"].n_unique() == 504,
         "positive_holdout": int((summary["total_net_rupees"] > 0).sum()),
-        "holm_lt_05": int((summary["holm_adjusted_p"] < 0.05).fill_null(False).sum()),
+        "holm_lt_05": int((summary["holm_adjusted_p"].cast(pl.Float64, strict=False).fill_null(float("nan")) < 0.05).fill_null(False).sum()),
         "min_holm": float(summary["holm_adjusted_p"].drop_nulls().min()) if summary["holm_adjusted_p"].drop_nulls().len() else None,
     }
     (out / "prospective_registry.json").write_text(json.dumps({
