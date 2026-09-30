@@ -37,7 +37,7 @@ for off in range(-10,11):
     try:
         local=hf_hub_download(repo_id="artist-23/nifty-options-data",filename=p,repo_type="dataset",revision=HF2,token=os.getenv("HF_TOKEN") or None,cache_dir=str(HF_CACHE))
         df=pl.read_parquet(local)
-        sources[f"HF2_{tag}_CE"]={"path":p,"rows":df.height,"columns":df.columns}
+        sources[f"HF2_{tag}_CE"]={"path":p,"rows":df.height,"columns":df.columns,"sample":df.select(["timestamp","datetime","date","expiry_type","strike_type","option_type"]).head(3).to_dicts()}
     except Exception as e:
         sources[f"HF2_{tag}_CE"]={"path":p,"error":repr(e)}
 # Persist the exact missing-cycle inventory and source inventory; no bars are admitted in this step.
