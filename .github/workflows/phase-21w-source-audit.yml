@@ -2,6 +2,9 @@ name: Phase 21W - External Full-Strike Recovery
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - phase-21w-external-full-strike-recovery
 
 permissions:
   actions: read
