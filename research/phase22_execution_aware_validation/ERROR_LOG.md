@@ -80,3 +80,13 @@
 - 57 rows violated the basic quote contract. The workflow therefore failed admission.
 - This source cannot currently support the Phase 22 weekly-horizon new-data validation because its observed coverage is far short of the required multi-expiry chronological sample.
 - No holdout was opened and no strategy result was produced.
+
+
+## E22-012 — Execution-data acquisition gate remains unresolved
+- Date: 2026-09-30
+- Re-audited TrueData, Global Datafeeds, TickBytes, OptionVault, and public GitHub bid/ask projects.
+- TrueData is technically suitable but requires active access/subscription; no credentials are provisioned to the Phase 22 workflow.
+- Global Datafeeds documents NFO historical bid/ask fields but its published tick backfill is only one calendar week; multi-year contractwise archive access is not established.
+- TickBytes/OptionVault advertise the required depth/quote coverage but their complete archives are licensed/private; public repositories contain samples/schema only.
+- ayyararyan/nse-options-pipeline verifies a compatible bid/ask schema but its actual historical data directory is not tracked.
+- No source is admitted. Phase 22 holdout remains locked.
