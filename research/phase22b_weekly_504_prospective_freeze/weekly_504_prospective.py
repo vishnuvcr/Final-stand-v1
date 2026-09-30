@@ -174,8 +174,11 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
             .filter(pl.col("granularity") == "1min")
             .filter(pl.col("expiry").cast(pl.String).str.slice(0, 10) == expiry.isoformat())
             .filter(pl.col("option_type").cast(pl.String).str.to_uppercase().is_in(["CE", "CALL"]))
-            .filter(pl.col("timestamp") >= ts_lit(entry_ts))
-            .filter(pl.col("timestamp") <= ts_lit(end_ts))
+            # Filter the annual RISSIN file by its canonical trading-date string
+            # before materializing; timestamp timezone normalization is performed
+            # after collection to avoid Polars timezone-literal coercion.
+            .filter(pl.col("date").cast(pl.String).str.slice(0, 10) >= entry_day.isoformat())
+            .filter(pl.col("date").cast(pl.String).str.slice(0, 10) <= expiry.isoformat())
             .select(["timestamp", "strike", "open", "volume"])
             .collect(engine="streaming")
             .with_columns(
