@@ -396,13 +396,13 @@ def build_variants_504(
                             )
 
         if usable_specs:
-            specs = pl.DataFrame(usable_specs).unique()
-            strikes_needed = specs["strike"].unique().to_list()
-            part = opt.filter(pl.col("strike").is_in(strikes_needed))
-            # Join each raw CE strike observation to every registered variant that uses it.
-            # The result remains the exact OHLC source bar; only the variant label is repeated.
-            part = part.join(specs, on="strike", how="inner")
-            part = part.with_columns(
+            strikes_needed = sorted(
+                {float(spec["strike"]) for spec in usable_specs}
+            )
+            # Store each source observation once per expiry/strike. Variant membership
+            # remains in the cycle manifest, eliminating a large Cartesian replication
+            # of identical OHLC bars across the 504 configurations.
+            part = opt.filter(pl.col("strike").is_in(strikes_needed)).with_columns(
                 pl.lit(expiry).alias("target_expiry"),
                 pl.lit(entry_ts.isoformat()).alias("entry_timestamp"),
                 pl.lit(lock_ts.isoformat()).alias("lock_timestamp"),
@@ -416,7 +416,6 @@ def build_variants_504(
                         "open",
                         "strike",
                         "volume",
-                        "variant_id",
                         "target_expiry",
                         "entry_timestamp",
                         "lock_timestamp",
@@ -447,8 +446,8 @@ def build_variants_504(
     )
 
     # The custom Phase-22A runner consumes one expiry at a time from this compact
-    # variant-labelled bar table. It intentionally does not replicate separate
-    # high/low/close fields because the frozen engine only uses option opens.
+    # shared strike-bar table. Identical source bars are not duplicated per variant;
+    # the cycle manifest supplies the variant-to-strike mapping.
     option_path = out_dir / "variant_option_bars.parquet"
     option_df.write_parquet(option_path, compression="zstd")
 
@@ -501,7 +500,7 @@ def run_variants_504(
         raw = (
             scan
             .filter(pl.col("target_expiry").cast(pl.String) == expiry)
-            .select(["timestamp", "strike", "open", "variant_id"])
+            .select(["timestamp", "strike", "open"])
             .collect(engine="streaming")
         )
         if raw.height == 0:
@@ -531,9 +530,7 @@ def run_variants_504(
             .filter(pl.col("variant_id").is_in(variants))
             .iter_rows(named=True)
         ):
-            part = raw.filter(
-                pl.col("variant_id") == row["variant_id"]
-            )
+            part = raw
             if part.height == 0:
                 continue
             result = base._fast_backtest_cycle(
