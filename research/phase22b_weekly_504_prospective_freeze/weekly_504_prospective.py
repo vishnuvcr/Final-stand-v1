@@ -33,8 +33,9 @@ assert len(VARIANT_IDS) == 504 and len(set(VARIANT_IDS)) == 504
 
 RISSIN_REPO = "rissin/nse-options-intraday"
 RISSIN_FILE = "upstox_intraday/NIFTY/NIFTY_2026.parquet"
-THEMARKET_REPO = "thetrademarkk/india-index-options-1m"
-THEMARKET_INDEX = "index/NIFTY.parquet"
+SPOT_REPO = "Jitendra12421/AlargeDatabase"
+SPOT_FILE = "INDDEX FILES/NIFTY_minute.parquet"
+SPOT_REVISION = os.getenv("SPOT_REVISION", "3420f004d1b4ce56975b06fcd594e0787cd6a83e")
 
 
 def choose_k1_extended(strikes, spot, rule):
@@ -87,11 +88,11 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
         token=token,
         cache_dir=str(cache),
     ))
-    tpath = Path(hf_hub_download(
-        repo_id=THEMARKET_REPO,
-        filename=THEMARKET_INDEX,
+    spath = Path(hf_hub_download(
+        repo_id=SPOT_REPO,
+        filename=SPOT_FILE,
         repo_type="dataset",
-        revision=tm_revision,
+        revision=SPOT_REVISION,
         token=token,
         cache_dir=str(cache),
     ))
@@ -103,9 +104,16 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
     resolved_r = getattr(rinfo, "sha", None) or rissin_revision
     resolved_t = getattr(tinfo, "sha", None) or tm_revision
 
-    idx = pl.read_parquet(tpath).with_columns(
-        pl.col("timestamp").cast(pl.Datetime(time_zone="Asia/Kolkata"))
-    )
+    idx = pl.read_parquet(spath)
+    if "symbol" in idx.columns:
+        idx = idx.filter(pl.col("symbol").cast(pl.String).str.to_uppercase().is_in(["NIFTY", "NIFTY_50", "NIFTY50"]))
+    ts_dtype = idx.schema["timestamp"]
+    if getattr(ts_dtype, "time_zone", None):
+        idx = idx.with_columns(pl.col("timestamp").dt.convert_time_zone("Asia/Kolkata"))
+    else:
+        idx = idx.with_columns(pl.col("timestamp").cast(pl.Datetime(time_zone="Asia/Kolkata")))
+    if "open" not in idx.columns or "close" not in idx.columns:
+        raise RuntimeError(f"Spot source missing open/close columns: {idx.columns}")
     dates = idx.select(pl.col("timestamp").dt.date().alias("d")).unique().sort("d")["d"].to_list()
 
     lf = pl.scan_parquet(rpath)
@@ -264,11 +272,10 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
         "rissin_requested_revision": rissin_revision,
         "rissin_resolved_revision": resolved_r,
         "rissin_sha256": sha256(rpath),
-        "thetrademarkk_index_repo": THEMARKET_REPO,
-        "thetrademarkk_index_file": THEMARKET_INDEX,
-        "thetrademarkk_requested_revision": tm_revision,
-        "thetrademarkk_resolved_revision": resolved_t,
-        "thetrademarkk_index_sha256": sha256(tpath),
+        "spot_repo": SPOT_REPO,
+        "spot_file": SPOT_FILE,
+        "spot_revision": SPOT_REVISION,
+        "spot_sha256": sha256(spath),
         "requested_start": start_date,
         "requested_end": end_date,
         "weekly_expiries": targets,
@@ -342,17 +349,24 @@ def main():
     if len(targets) < 7:
         raise RuntimeError(f"Only {len(targets)} weekly expiries admitted")
 
-    # Use the cached NIFTY spot source only for expiry-date close in the frozen engine.
+    # Reuse the exact spot source admitted during data construction.
     token = os.getenv("HF_TOKEN") or None
-    tpath = Path(hf_hub_download(
-        repo_id=THEMARKET_REPO,
-        filename=THEMARKET_INDEX,
+    spath = Path(hf_hub_download(
+        repo_id=SPOT_REPO,
+        filename=SPOT_FILE,
         repo_type="dataset",
-        revision=os.getenv("THEMARKET_REVISION", "main"),
+        revision=SPOT_REVISION,
         token=token,
         cache_dir=str(cache),
     ))
-    spot = pl.read_parquet(tpath).with_columns(pl.col("timestamp").cast(pl.Datetime(time_zone="Asia/Kolkata")))
+    spot = pl.read_parquet(spath)
+    if "symbol" in spot.columns:
+        spot = spot.filter(pl.col("symbol").cast(pl.String).str.to_uppercase().is_in(["NIFTY", "NIFTY_50", "NIFTY50"]))
+    ts_dtype = spot.schema["timestamp"]
+    if getattr(ts_dtype, "time_zone", None):
+        spot = spot.with_columns(pl.col("timestamp").dt.convert_time_zone("Asia/Kolkata"))
+    else:
+        spot = spot.with_columns(pl.col("timestamp").cast(pl.Datetime(time_zone="Asia/Kolkata")))
 
     result_df, summary = run_all(cycles, options, spot, out)
     coverage = {
