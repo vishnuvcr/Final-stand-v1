@@ -14,3 +14,9 @@
 - Observed: the Phase-21 63-expiry dataset includes the historical holdout already examined in the completed 224-family study.
 - Impact: testing 504 variants on it is a parameter-expansion/reassessment, not a fresh unseen-data validation.
 - Correction: keep any future post-Phase-21 period reserved as the separate unseen validation layer.
+## E22A-004 — Initial 504 wrapper did not override the base K1 selector
+- Observed: the frozen Phase-17 engine's original `choose_k1` implementation only recognized OTM1–OTM3 and ITM1–ITM3.
+- Impact: simply expanding `K1_RULES` to OTM4–OTM8/ITM4–ITM8 would fail during data construction.
+- Detection: source inspection before the full 504 backtest completed.
+- Correction: Phase 22A now injects a generalized K1 selector supporting OTM1–OTM8 and ITM1–ITM8 while leaving K2, K3, execution, cost and statistical functions unchanged.
+- The full 504 run is therefore restarted from the corrected wrapper.
