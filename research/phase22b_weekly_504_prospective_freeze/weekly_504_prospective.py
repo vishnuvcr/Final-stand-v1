@@ -105,6 +105,30 @@ def main():
         out,
     )
 
+    # Compute the frozen family-level prospective statistics. This period is
+    # untouched, so no configuration is selected from it before this calculation.
+    summary = []
+    for vid in VARIANT_IDS:
+        part = result_df.filter(pl.col("variant_id") == vid)
+        row = {"variant_id": vid}
+        row.update(base.metrics(part))
+        pval = None
+        if part.height:
+            pval = base.centered_block_bootstrap_pvalue(
+                part["net_rupees"].to_numpy(),
+                block_len=3,
+                reps=3000,
+                seed=1727,
+            )
+        row["raw_bootstrap_p"] = pval
+        summary.append(row)
+    holm = base.holm_adjust([(r["variant_id"], r["raw_bootstrap_p"]) for r in summary])
+    for r in summary:
+        r["holm_adjusted_p"] = holm.get(r["variant_id"])
+    summary_df = pl.DataFrame(summary).sort("variant_id")
+    summary_df.write_csv(out / "ALL_504_PROSPECTIVE_RESULTS.csv")
+    summary_df.write_json(out / "ALL_504_PROSPECTIVE_RESULTS.json")
+
     usable = cycles.filter(pl.col("status") == "USABLE_OHLC")
     coverage = {
         "weekly_expiries": len(ordered),
