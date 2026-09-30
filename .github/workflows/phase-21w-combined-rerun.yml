@@ -2,6 +2,10 @@ name: Phase 21W - Combined Frozen 224 Variant Rerun
 
 on:
   workflow_dispatch:
+  push:
+    branches: [phase-21w-combined-frozen-rerun]
+    paths:
+      - 'research/phase21w_combined_frozen_rerun/build_combined.py'
 
 permissions:
   contents: write
