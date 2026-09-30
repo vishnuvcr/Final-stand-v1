@@ -50,3 +50,9 @@
 - **Observed:** The first external-recovery workflow used gh run list with the workflow-scoped token and received HTTP 401 Bad credentials.
 - **Correction:** Removed direct gh API lookup and replaced it with dawidd6/action-download-artifact@v25, which resolves the latest successful workflow artifact by workflow, branch and artifact name.
 - **Prevention:** Cross-workflow artifact transfer now uses a dedicated artifact action and explicit actions:read permission rather than a shell API lookup.
+
+
+### E21X-008 — Separate Phase 9 artifact lookup was unnecessary and unavailable
+- **Observed:** The external workflow could not find a successful standalone Phase 9 artifact on its branch.
+- **Correction:** Verified that the successful Phase 21 combined artifact already contains the exact Phase 9 weekly manifest and selected spot bars. The workflow now reuses those embedded frozen files.
+- **Prevention:** Prefer the newest already-admitted composite artifact when it contains all required frozen interfaces; do not add redundant cross-workflow dependencies.
