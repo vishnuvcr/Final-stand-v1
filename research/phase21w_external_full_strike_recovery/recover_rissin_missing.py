@@ -15,6 +15,8 @@ from huggingface_hub import HfApi, hf_hub_download
 IST = ZoneInfo("Asia/Kolkata")
 
 RISSIN_REPO = "rissin/nse-options-intraday"
+RISSIN_REVISION = "78b1c5468255d18cf492984bfe6fe4e3ac874d7c"
+RISSIN_FILE = "upstox_intraday/NIFTY/NIFTY_2026.parquet"
 
 TARGETS = [
     "2026-01-13",
@@ -127,16 +129,8 @@ def main() -> None:
     import os
     token = os.getenv("HF_TOKEN") or None
 
-    api = HfApi(token=token)
-    info = api.dataset_info(RISSIN_REPO, revision="main")
-    rissin_revision = getattr(info, "sha", None)
-    if not rissin_revision:
-        raise RuntimeError("Could not resolve the Rissin dataset main revision")
-    files = api.list_repo_files(repo_id=RISSIN_REPO, repo_type="dataset", revision=rissin_revision)
-    candidates = [f for f in files if f == "upstox_intraday/NIFTY/NIFTY_2026.parquet"]
-    if len(candidates) != 1:
-        raise RuntimeError(f"Expected one Rissin NIFTY_2026 parquet at resolved revision, found {candidates}")
-    rissin_file = candidates[0]
+    rissin_revision = RISSIN_REVISION
+    rissin_file = RISSIN_FILE
     rissin_local = Path(hf_hub_download(
         repo_id=RISSIN_REPO,
         filename=rissin_file,
