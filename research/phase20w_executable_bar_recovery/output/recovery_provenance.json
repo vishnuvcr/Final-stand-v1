@@ -1,0 +1,287 @@
+{
+  "hf1_main_resolved": "8f7739cab3f38abdcbc6332a6d0a83e1341326e3",
+  "hf1_pinned": "78b1c5468255d18cf492984bfe6fe4e3ac874d7c",
+  "hf2_pinned": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+  "cycles": [
+    {
+      "expiry": "2024-01-04",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-02-01",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-02-08",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-03-07",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-03-14",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-04-04",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-04-10",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-05-02",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-05-09",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-06-06",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-06-13",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-07-04",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-07-11",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-08-01",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-08-08",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-09-05",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-09-12",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-10-03",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-10-10",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-11-07",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-11-14",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-12-05",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2024-12-12",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2025-01-02",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2025-01-09",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2025-01-16",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2025-01-23",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2025-02-06",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2025-02-13",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2025-02-20",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2025-03-06",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2025-03-13",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2025-04-03",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2025-04-09",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2025-05-08",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2025-05-15",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2025-06-05",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2025-06-12",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2025-07-03",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    },
+    {
+      "expiry": "2025-07-10",
+      "source": "HF2",
+      "revision": "45e0a043f34f3f40f9694e52a944297803c2af8b",
+      "path": "NIFTY/WEEK/ATM\u00b10..10_CE.parquet",
+      "usable_variants": 0
+    }
+  ]
+}
