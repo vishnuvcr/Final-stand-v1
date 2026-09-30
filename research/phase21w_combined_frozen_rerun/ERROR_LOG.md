@@ -34,3 +34,8 @@
 - **Issue:** HF-02 recovered bars lack `option_type` in the frozen interface.
 - **Impact:** Overlay construction stopped before coverage validation.
 - **Correction:** Set `option_type='CE'`, matching the recovered HF-02 NIFTY weekly call files. Added an explicit schema-difference guard after normalization.
+
+## E21-007 — 2026-09-30
+- **Issue:** HF-02 recovered bars lack `option_type`.
+- **Impact:** Overlay construction stopped before coverage validation.
+- **Correction:** Set `option_type='CALL'`, matching the HF-02 recovery file and the frozen call-side strike-selection experiment.
