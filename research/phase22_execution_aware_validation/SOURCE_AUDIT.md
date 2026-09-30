@@ -68,3 +68,18 @@ No new holdout is opened until an admissible historical execution dataset exists
 
 ### Acquisition gate
 A future acquisition attempt must first obtain a small sample covering at least one target historical expiry and verify that the account actually returns timestamped bid/ask/quantity observations for the exact option contracts. If only the default five-day tick window is available, the source cannot satisfy the retrospective Phase 22 experiment.
+
+## 22.1E — Additional historical routes: GFDL and NSE full order/trade
+
+- Global Datafeeds (GFDL) documents historical NFO tick data with BUYPRICE/BUYQTY and SELLPRICE/SELLQTY and says NFO tick backfill is one calendar week. Its option-chain API also exposes bid/ask and sizes, but these are live/current chain endpoints. citeturn3search19turn3search3turn3search6
+- GFDL therefore has the required field shape but, like TrueData default tick retention, its documented historical tick window is too short for the retrospective Phase 22 sample unless a separate archival product is licensed.
+- NSE's current Historical Order & Trade specification states that full historical Orders and Trades provide complete order-book events and executed trades, with timestamps, prices, volumes and identifiers; full orders are released after 90 calendar days and full trades after 30 calendar days. citeturn4search33
+- This makes the **NSE official full-order/full-trade archive** the strongest authoritative reconstruction route. It is an exchange data product requiring subscription/access, and the project currently has no such entitlement.
+
+### Updated route priority
+1. **NSE full Orders + Trades** — strongest authoritative historical reconstruction route; access required.
+2. **TrueData extended historical Bid/Ask** — technically compatible; extended-history entitlement required for old periods.
+3. **GFDL historical tick** — technically compatible; documented default tick retention only one week.
+4. Public OHLC/option-chain archives — fallback/cross-check only.
+
+No source is admitted until an actual sample for the required target dates/contracts is obtained and schema/provenance/hash checks pass.
