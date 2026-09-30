@@ -69,3 +69,7 @@
 - **Issue:** The prior `expiry` normalization was inserted after the HF-02 bar-schema validation path, so the intended mapping was not applied.
 - **Impact:** The same `expiry` error recurred.
 - **Correction:** Normalize `expiry -> target_expiry` immediately after reading the HF-02 bar parquet, before any required-column validation.
+
+## E21-010 — 2026-09-30
+- **Issue:** HF-02 bars already contained `target_expiry` alongside redundant `expiry`; conditional renaming therefore left `expiry` and triggered the same schema check.
+- **Correction:** Drop redundant `expiry` when `target_expiry` is already present.
