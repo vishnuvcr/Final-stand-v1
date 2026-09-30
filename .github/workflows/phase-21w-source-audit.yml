@@ -1,8 +1,15 @@
 name: Phase 21W - External Full-Strike Recovery
 
 on:
+  push:
+    branches:
+      - phase-21w-external-full-strike-recovery
+    paths:
+      - 'research/phase21w_external_full_strike_recovery/recover_rissin_missing.py'
+      - 'research/phase21w_external_full_strike_recovery/merge_external_recovery.py'
+      - 'research/phase21w_external_full_strike_recovery/build_frozen_spot_interface.py'
+      - '.github/workflows/phase-21w-source-audit.yml'
   workflow_dispatch:
-
 permissions:
   actions: read
   contents: write
@@ -64,7 +71,7 @@ jobs:
           python research/phase21w_external_full_strike_recovery/audit_sources.py \
             --output research/phase21w_external_full_strike_recovery/output/source_access_audit.json
 
-      - name: Recover five missing expiries from pinned RISSIN archive
+      - name: Recover five missing expiries from current RISSIN archive
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_HOME: ~/.cache/huggingface
@@ -91,17 +98,6 @@ jobs:
             --external-cycle research/phase21w_external_full_strike_recovery/output/rissin_recovered_variant_cycles.csv \
             --external-bars research/phase21w_external_full_strike_recovery/output/rissin_recovered_variant_option_bars.parquet \
             --output-dir work/final_input
-
-      - name: Restore exact Phase 9 frozen interface for the engine
-        run: |
-          baseline="$(find work/phase9 -name weekly_cycle_manifest.csv -print -quit)"
-          spot="$(find work/phase9 -name selected_weekly_spot_bars.parquet -print -quit)"
-          test -n "$baseline"
-          test -n "$spot"
-          rm -rf research/phase9_weekly/output
-          mkdir -p research/phase9_weekly/output
-          cp "$baseline" research/phase9_weekly/output/weekly_cycle_manifest.csv
-          cp "$spot" research/phase9_weekly/output/selected_weekly_spot_bars.parquet
 
       - name: Restore exact Phase 9 frozen interface for the engine
         run: |

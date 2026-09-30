@@ -42,3 +42,8 @@ Run the external recovery workflow. If all five dates pass the 224-variant admis
 - The first live RISSIN probe reached Polars schema inspection and exposed a timezone-metadata compatibility error: the parquet declares +05:30, which the runner's Polars build rejected.
 - The recovery script and workflow were corrected with POLARS_IGNORE_TIMEZONE_PARSE_ERROR=1 and explicit timestamp normalization.
 - The latest branch head contains that correction. A new workflow run was not created automatically after the GitHub-API commit, so the corrected recovery remains pending execution. The phase therefore remains RUNNING and no 63-cycle conclusion has been published.
+
+## 2026-09-30 — E21X-010 recovery provenance serialization fix
+- The Rissin recovery script was audited after the timezone failure and found one remaining stale reference to the old fixed filename constant.
+- The source manifest now records the exact dynamically resolved file path used for the download.
+- The external workflow was simplified to retain only the valid post-merge Phase-9 restore step; the obsolete pre-merge restore step was removed.

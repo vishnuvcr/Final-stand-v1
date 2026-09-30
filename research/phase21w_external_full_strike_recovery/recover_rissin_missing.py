@@ -357,7 +357,7 @@ def main() -> None:
     summary = {
         "source": RISSIN_REPO,
         "source_revision": rissin_revision,
-        "source_file": RISSIN_FILE,
+        "source_file": rissin_file,
         "source_sha256": rissin_sha,
         "spot_interface": str(args.spot_bars),
         "spot_sha256": spot_sha,
