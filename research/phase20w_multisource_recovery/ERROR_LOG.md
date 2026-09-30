@@ -24,3 +24,9 @@ No Phase 20 execution errors yet.
 - **Issue:** The Hugging Face Python API returned 404 for the public `johnwick3690/stocks` dataset even at `main`, preventing recursive inventory.
 - **Impact:** No source files were enumerated through the API.
 - **Correction:** Recovery-1 inventory now uses lightweight HTTPS probes against the verified weekly-expiry parquet path exposed by the public dataset tree. Recovery-2 and Recovery-3 remain registered and will receive separate schema discovery before download. No large file is downloaded during inventory.
+
+
+## E20-004 — 2026-09-30
+- **Issue:** The direct-probe inventory script imported `requests`, but the workflow installed only `huggingface_hub`.
+- **Impact:** Inventory stopped before making any HTTP probe.
+- **Correction:** Add `requests` to the workflow environment. No source or research rule changes.
