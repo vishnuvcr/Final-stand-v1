@@ -78,7 +78,6 @@ def ts_lit(dt: datetime):
 def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: str):
     token = os.getenv("HF_TOKEN") or None
     rissin_revision = os.getenv("RISSIN_REVISION", "main")
-    tm_revision = os.getenv("THEMARKET_REVISION", "main")
 
     rpath = Path(hf_hub_download(
         repo_id=RISSIN_REPO,
@@ -100,9 +99,7 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
     # Resolve immutable source revision IDs for provenance.
     api = HfApi(token=token)
     rinfo = api.repo_info(RISSIN_REPO, repo_type="dataset", revision=rissin_revision)
-    tinfo = api.repo_info(THEMARKET_REPO, repo_type="dataset", revision=tm_revision)
     resolved_r = getattr(rinfo, "sha", None) or rissin_revision
-    resolved_t = getattr(tinfo, "sha", None) or tm_revision
 
     idx = pl.read_parquet(spath)
     if "symbol" in idx.columns:
