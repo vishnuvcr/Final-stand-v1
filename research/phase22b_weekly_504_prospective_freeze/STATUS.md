@@ -1,60 +1,39 @@
 # Phase 22B Status
 
-State: **VALIDATION COMPLETE — prospective statistical confirmation still pending additional weekly cycles**
+State: **VALIDATION COMPLETE — prospective statistical confirmation pending additional qualifying weekly cycles**
 
 ## Freeze gate
-- 504-configuration family frozen: ✅
-- Weekly protocol frozen: ✅
-- New-period holdout opened only after freeze: ✅
-- Post-hoc configuration selection: ❌ prohibited
+- 504-configuration family frozen: PASS
+- Weekly protocol frozen: PASS
+- New-period holdout opened only after freeze: PASS
+- Post-hoc configuration selection: prohibited
 
-## Data and source gate
-- Primary option source: RISSIN NIFTY 1-minute archive: ✅
-- Primary spot source: pinned independent NIFTY minute archive: ✅
-- Gap-only causal spot fallback: used: ✅
-- TradeMarkk option fallback: available for eligible files; not used in this run: ⚠️
-- Historical bid/ask/depth: unavailable at this validation layer
-- Execution-aware evidence: separate downstream gate
-- Requested prospective boundary: **2026-09-08**
-- Actually admitted weekly expiries: **8**, ending **2026-07-21**
-- Data-coverage ceiling is the limiting factor; extending the date input did not create additional admissible option expiries.
-
-## Validation result — extension run
-- Authoritative workflow run **36763880416**: SUCCESS
-- Commit: **045a2da46307603fe7d0bdf04d12e74285545ee5**
+## Validation result
+- Authoritative extension run: **36763880416 — SUCCESS**
+- Commit that changed the prospective boundary: **045a2da46307603fe7d0bdf04d12e74285545ee5**
 - Frozen family size: **504**
+- Requested prospective boundary: **2026-09-08**
+- Qualifying weekly expiries admitted: **8**, ending **2026-07-21**
 - Expected variant-cycle rows: **4,032**
 - Usable variant-cycle rows: **4,032**
 - All 504 variants present: **yes**
-- Variants with positive total net P&L: **376/504**
-- Every variant has **n=6** completed trades.
-- Bootstrap p-values: not computed because the pre-specified bootstrap requires at least 8 observations per variant.
-- Holm-adjusted p-values: therefore not computed; none can be treated as <0.05.
-- Capital-promotion gate: not reached; existing minimum is 30 completed cycles.
-- No configuration is selected or promoted.
+- Positive total net P&L: **376/504**
+- Completed observations per variant: **n=6**
+- Bootstrap/Holm inference: **not computed**, because the frozen bootstrap requires at least 8 observations per configuration
+- Capital-promotion gate: **not reached**; minimum remains 30 completed cycles
+- Configuration promoted/selected: **none**
 
-## Prospective expiry coverage
-The run requested 2026-05-19 through 2026-09-08 but admitted only:
-- 2026-05-19
-- 2026-06-02
-- 2026-06-09
-- 2026-06-16
-- 2026-06-23
-- 2026-07-07
-- 2026-07-14
-- 2026-07-21
+## Data interpretation
+The September 8 date extension did not add qualifying weekly option cycles. The limitation is source coverage, not a strategy or statistical-rule change. The primary RISSIN source supplied the admitted cycles; the successful run recorded no TradeMarkk option-fallback expiries.
 
-Monthly expiries excluded by the protocol included 2026-05-26, 2026-06-30, 2026-07-28 and 2026-08-04. The successful run's source manifest recorded no TradeMarkk option-fallback expiries. Independent public inspection of the TradeMarkk dataset shows its NIFTY option tree currently reaches 2026-08-04, while its dataset documentation explicitly notes partial option coverage. citeturn0search0turn0search1
+## External source review
+- The TradeMarkk NIFTY option tree currently lists 2026-08-04 as its latest NIFTY option file; its documentation states that option coverage is partial.
+- The codepyx23 Hugging Face dataset/bucket is a duplicate/mirror of TradeMarkk, so it is not independent evidence.
+- NSE publishes historical contract-wise derivatives reports and historical order/trade specifications, but the public historical-report pages do not provide a ready free 1-minute expired-option archive equivalent to the required backtest input.
+- A commercial archive advertises NIFTY 1-minute full-chain coverage through September 2026, including OHLC, volume and OI. It has no bid/ask/order-book fields and requires purchase; it is therefore recorded as a **candidate source**, not silently substituted into the study.
 
 ## Interpretation boundary
-The 376/504 positive count is descriptive only. It must not be interpreted as proof of robustness because the prospective sample remains six completed trades per variant and below the statistical and capital-promotion gates. The September 8 date extension was therefore a **data-coverage test**, not additional evidence.
+The 376/504 positive count is descriptive only. It is not evidence of robustness, statistical significance, or a configuration choice. Historical Phase 22A and prospective Phase 22B remain separate evidence streams.
 
-## Errors/recovery
-- E22B-014: validator dependency failure — corrected.
-- E22B-015: validator registry-field mismatch — corrected.
-- E22B-016: initial RISSIN-only expiry coverage below the frozen 8-expiry gate — multi-source discovery added; successful run admitted 8 expiries.
-- E22B-017: n=6 per variant prevents the pre-specified bootstrap — remains a coverage limitation, not a strategy redesign.
-- E22B-018: extending the prospective end date to 2026-09-08 did not increase admissible weekly option expiries; source coverage remains the bottleneck. No strategy parameters were changed.
-
-## Next research boundary
-Do not select a winner from the six-trade sample. Continue only through the pre-planned prospective-validation path when additional qualifying weekly option data become available. Before any further extension, search the approved external sources for additional qualifying NIFTY weekly option archives and record source coverage before rerunning.
+## Next gate
+Before another prospective rerun, continue source-recovery work using approved public/free sources first. If no qualifying free source can provide the missing weekly cycles, record the limitation and separately evaluate whether the paid archive is admissible under the project's data-acquisition rules. Do not change the strategy family or statistical gates to compensate for missing data.
