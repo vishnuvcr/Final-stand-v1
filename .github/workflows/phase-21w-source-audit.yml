@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - phase-21w-external-full-strike-recovery
+  pull_request:
+    branches:
+      - main
 
 permissions:
   actions: read
