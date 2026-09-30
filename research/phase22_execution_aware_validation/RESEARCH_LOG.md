@@ -21,3 +21,8 @@
 - TrueData is now the primary acquisition candidate for Phase 22 execution data.
 - No credentials or paid subscription are assumed; no vendor data have been admitted.
 - Admission remains gated on a real sample, exact schema validation, provenance and SHA-256 hashing.
+
+## 2026-09-30 — TrueData retention check
+- Verified current TrueData documentation: default REST tick history is 5 trading days; intraday bars are 6 months; extended history is an add-on.
+- TrueData remains technically suitable for bid/ask schema, but default access is insufficient for the retrospective Phase 22 target periods.
+- No data admission or holdout opening occurred.
