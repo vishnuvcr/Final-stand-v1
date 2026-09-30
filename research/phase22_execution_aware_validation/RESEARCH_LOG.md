@@ -32,3 +32,9 @@
 - Confirmed default REST tick history is limited to the last 5 trading days; extended history is an add-on.
 - Corrected the earlier assumption that TrueData automatically supplies the required multi-year historical archive.
 - No data admitted and no holdout opened; authorized historical sample remains the next gate.
+
+## 2026-09-30 — Global Datafeeds route identified
+- Found official Global Datafeeds historical NFO tick documentation showing bid/ask prices and quantities in historical tick responses.
+- Added Global Datafeeds as a primary acquisition candidate alongside TrueData.
+- No credentials, purchase or data admission assumed.
+- Full historical retention for the required 2024–2026 NIFTY weekly option sample remains to be verified.
