@@ -15,3 +15,9 @@
 - Result: no freely accessible, immutable historical bid/ask/depth archive has yet been admitted.
 - Added a manual GitHub Actions workflow with a hard refusal gate when the execution-data cache is absent.
 - Phase remains blocked at execution-data admission; no new holdout opened and no Phase 21W configuration selected post hoc.
+
+## 2026-09-30 — Strongest vendor route identified
+- TrueData documentation confirms historical NSE F&O data with optional Bid/Ask history and a historical tick interface with bid/ask quantities.
+- TrueData is now the primary acquisition candidate for Phase 22 execution data.
+- No credentials or paid subscription are assumed; no vendor data have been admitted.
+- Admission remains gated on a real sample, exact schema validation, provenance and SHA-256 hashing.
