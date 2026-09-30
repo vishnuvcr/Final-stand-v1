@@ -29,6 +29,7 @@ jobs:
       HF_HOME: ~/.cache/huggingface
       THEMARKET_REVISION: main
       RISSIN_REVISION: main
+      SPOT_REVISION: 3420f004d1b4ce56975b06fcd594e0787cd6a83e
       PROSPECTIVE_START: ${{ inputs.start_date || '2026-05-19' }}
       PROSPECTIVE_END: ${{ inputs.end_date || '2026-08-04' }}
       MAX_EXPIRIES: ${{ inputs.max_expiries || '32' }}
