@@ -174,9 +174,17 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
         entry_ts = datetime.combine(entry_day, time(10, 0), IST)
         lock_ts = datetime.combine(lock_day, time(14, 0), IST)
 
-        spot_row = idx.filter(pl.col("timestamp") == ts_lit(entry_ts))
+        # Causal spot selection: exact 10:00 if available; otherwise use the
+        # latest minute at or before 10:00 within a fixed five-minute tolerance.
+        # No future observation is allowed to determine the entry strikes.
+        spot_row = (
+            idx.filter(pl.col("timestamp") <= ts_lit(entry_ts))
+            .filter(pl.col("timestamp") >= ts_lit(entry_ts - timedelta(minutes=5)))
+            .sort("timestamp", descending=True)
+            .head(1)
+        )
         if spot_row.height != 1:
-            raise RuntimeError(f"Exact NIFTY spot row missing at {entry_ts} for {expiry}")
+            raise RuntimeError(f"No causal NIFTY spot row within 5 minutes before {entry_ts} for {expiry}")
         spot = float(spot_row["open"][0])
 
         end_ts = datetime.combine(expiry, time(16, 0), IST)
