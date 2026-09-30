@@ -10,6 +10,7 @@ out=Path('research/phase21w_combined_frozen_rerun/combined_input'); out.mkdir(pa
 c3=pl.read_csv(hf03/'variant_cycle_manifest.csv'); b3=pl.read_parquet(hf03/'variant_option_bars.parquet')
 c2=pl.read_csv(hf2/'hf2_recovered_variant_cycles.csv').filter(pl.col('status')=='USABLE_OHLC')
 b2=pl.read_parquet(hf2/'hf2_recovered_variant_option_bars.parquet')
+if 'expiry' in b2.columns and 'target_expiry' not in b2.columns: b2=b2.rename({'expiry':'target_expiry'})
 key=['variant_id','target_expiry']
 overlap=c2.join(c3.select(key),on=key,how='inner').height
 if overlap: raise RuntimeError(f'Unexpected HF03/HF02 overlap: {overlap}')
