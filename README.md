@@ -123,6 +123,7 @@ Capital/margin reconstruction is a separate evidence layer from execution valida
 - Goal: test the frozen 224-configuration family on genuinely new data using executable bid/ask/depth evidence, realistic slippage and the registered Paytm Money/NSE transaction-cost model.
 - Source audit expanded to NSE historical order/trade products plus Upstox, Dhan, ICICI Breeze and public GitHub archive routes. No freely accessible immutable historical bid/ask/depth archive has yet been admitted.
 - Broker APIs inspected provide current/live bid/ask/depth or historical OHLC, but do not provide the required historical executable quote archive in the documented endpoints.
+- **New strongest acquisition candidate:** TrueData documents historical NSE F&O data with optional Bid/Ask history and a historical tick interface; access is subscription/trial-based and no credentials or purchase are assumed, so no data are yet admitted.
 - **No new holdout has been opened and no Phase 21W configuration has been selected post hoc.**
 - A manual Phase 22 workflow now contains a hard gate that refuses an execution-aware run when no admitted quote/depth cache exists.
 - [Phase 22W branch](https://github.com/vishnuvcr/Final-stand-v1/tree/phase-22-execution-aware-validation)
