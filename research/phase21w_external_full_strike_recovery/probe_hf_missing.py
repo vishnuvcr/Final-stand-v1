@@ -50,7 +50,7 @@ for expiry in MISSING:
         'source':'rissin/nse-options-intraday',
         'repo_id':REPO_ID,
         'dataset_revision':resolved_revision,
-        'requested_revision':REVISION,
+        'requested_revision':'main',
         'filename':FILENAME,
         'file_sha256':sha256,
         'expiry':expiry,
