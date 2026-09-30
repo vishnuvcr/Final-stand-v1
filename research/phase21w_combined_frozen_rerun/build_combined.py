@@ -9,7 +9,10 @@ b2=pl.read_parquet(hf2/'hf2_recovered_variant_option_bars.parquet')
 key=['variant_id','target_expiry']
 overlap=c2.join(c3.select(key),on=key,how='inner').height
 if overlap: raise RuntimeError(f'Unexpected HF03/HF02 overlap: {overlap}')
-c2=c2.select(c3.columns,strict=False)
+for col in c3.columns:
+    if col not in c2.columns:
+        c2=c2.with_columns(pl.lit(None).alias(col))
+c2=c2.select(c3.columns)
 c=pl.concat([c3,c2],how='diagonal_relaxed').unique(subset=key,keep='first')
 meta=c2.select(['variant_id','target_expiry','entry_timestamp','lock_timestamp','k3_multiplier']).unique()
 b2=b2.join(meta,on=key,how='left').select(b3.columns,strict=False)
