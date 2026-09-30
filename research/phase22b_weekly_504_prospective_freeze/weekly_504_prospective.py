@@ -111,6 +111,8 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
     ts_dtype = idx.schema["timestamp"]
     if getattr(ts_dtype, "time_zone", None):
         idx = idx.with_columns(pl.col("timestamp").dt.convert_time_zone("Asia/Kolkata"))
+    elif ts_dtype == pl.String:
+        idx = idx.with_columns(pl.col("timestamp").str.to_datetime(strict=False, time_zone="Asia/Kolkata"))
     else:
         idx = idx.with_columns(pl.col("timestamp").cast(pl.Datetime(time_zone="Asia/Kolkata")))
     if "open" not in idx.columns or "close" not in idx.columns:
@@ -368,6 +370,8 @@ def main():
     ts_dtype = spot.schema["timestamp"]
     if getattr(ts_dtype, "time_zone", None):
         spot = spot.with_columns(pl.col("timestamp").dt.convert_time_zone("Asia/Kolkata"))
+    elif ts_dtype == pl.String:
+        spot = spot.with_columns(pl.col("timestamp").str.to_datetime(strict=False, time_zone="Asia/Kolkata"))
     else:
         spot = spot.with_columns(pl.col("timestamp").cast(pl.Datetime(time_zone="Asia/Kolkata")))
 
