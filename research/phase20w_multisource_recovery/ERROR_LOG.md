@@ -12,3 +12,9 @@ No Phase 20 execution errors yet.
 - **Issue:** The first Phase 20 inventory run passed the short HF commit prefix `f90f7ac` to the Hub tree API, which returned 404.
 - **Impact:** Source inventory stopped before any files were examined.
 - **Correction:** Pin the full verified commit SHA `f90f7acad633ba5a803f25cf431fb5f13ce3d162` for Recovery-1. The public archive and commit page confirm the dataset and revision. No data were downloaded or altered.
+
+
+## E20-002 — 2026-09-30
+- **Issue:** Hugging Face recursive tree listing returned 404 even for the verified full Recovery-1 commit SHA because the repository is LFS-backed and the tree endpoint is rejecting the revision path.
+- **Impact:** Inventory could not enumerate files through `list_repo_files(..., revision=...)`.
+- **Correction:** Resolve the immutable current `main` commit via `repo_info`, then enumerate files from the default branch and record the resolved SHA in the inventory. The public commit history shows that `main` resolves to the verified upload commit. No strategy or source-selection rule changes.
