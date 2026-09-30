@@ -134,3 +134,12 @@ Public GitHub documentation describes daily NIFTY option-chain Level-2/top-5 dep
 
 ### Public GitHub bid/ask schema projects
 ayyararyan/nse-options-pipeline documents per-snapshot NIFTY option rows with bid/ask and quantities, but the underlying NSEI-Data archive is explicitly not tracked in Git. Therefore schema existence is verified, historical coverage is not.
+
+
+## 22.1H — Additional public/retail historical-data candidates (2026-09-30)
+
+### NiftyTrader historical option-chain page — candidate, not yet admitted
+NiftyTrader publicly describes historical NIFTY option-chain snapshots with strike-wise LTP, IV, and bid/ask, and says premium access can export historical data in bulk. The page describes default end-of-day snapshots plus some premium intraday snapshots. This could be useful if the downloadable payload is genuinely historical bid/ask and can be exported reproducibly, but the current public page does not expose a machine-readable archive or immutable file hash. Therefore it is a candidate only and has not entered the Phase 22 data cache.
+
+### optionsdata.shop — broad OHLC archive, execution quotes not established
+The service advertises a large NIFTY 1-minute archive and expired-contract 1-minute/1-second archives spanning 2021–2026. The public description confirms OHLC/OI/volume coverage, but does not establish historical bid/ask fields. It therefore cannot replace the execution-data contract without a schema/sample proving quotes.
