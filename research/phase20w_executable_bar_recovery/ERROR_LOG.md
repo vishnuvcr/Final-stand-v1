@@ -54,3 +54,9 @@ No Phase-20 execution errors yet.
 - **Issue:** Recovery persistence attempted rebase after committing while an intentionally excluded parquet artifact remained unstaged.
 - **Impact:** The computation succeeded but repository persistence failed.
 - **Correction:** Use `git pull --rebase --autostash` after committing, then push. The recovery artifact remains available through the workflow artifact and the compact manifest is committed to the branch.
+
+
+## E20-006 — 2026-09-30
+- **Issue:** The Phase-9 calendar restored from the artifact contains 100 weekly expiries, while the frozen Phase-17/19 experiment explicitly used the first 63 cycles.
+- **Impact:** Phase-20 diagnostic initially treated 64 cycles as missing instead of the frozen 27-cycle gap.
+- **Correction:** Restrict recovery to the exact frozen 63-cycle manifest (`expiry_start=0`, `expiry_end=63`). No additional cycles will enter the research sample.
