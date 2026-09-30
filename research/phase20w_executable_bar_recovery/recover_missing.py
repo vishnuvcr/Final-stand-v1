@@ -59,7 +59,22 @@ hf1_main_sha=getattr(api.repo_info("rissin/nse-options-intraday",repo_type="data
 frames=[]; cycles=[]; prov=[]
 for exp in missing:
     b=need.filter(pl.col("target_expiry")==exp).row(0,named=True)
-    entry=norm_ts(b["entry_timestamp"]); lock=norm_ts(b["lock_timestamp"]); spot=float(b["entry_spot"])
+    entry=norm_ts(b["entry_timestamp"]); lock=norm_ts(b["lock_timestamp"])
+    spot_val=b["entry_spot"]
+    if spot_val is None:
+        try:
+            spath="NIFTY/WEEK/ATM_CE.parquet"
+            slocal=hf_hub_download(repo_id="artist-23/nifty-options-data",filename=spath,repo_type="dataset",revision=HF2_PIN,token=token,cache_dir=str(CACHE))
+            sdf0=pl.read_parquet(slocal).with_columns(pl.col("datetime").cast(pl.String).str.replace(r" ","T").str.slice(0,19).alias("_ts"))
+            sv=sdf0.filter(pl.col("_ts")==entry).select("spot").drop_nulls()
+            spot_val=float(sv["spot"][0]) if sv.height else None
+        except Exception:
+            spot_val=None
+    if spot_val is None:
+        for vid in variants:
+            cycles.append({"variant_id":vid,"target_expiry":exp,"entry_timestamp":b["entry_timestamp"],"lock_timestamp":b["lock_timestamp"],"status":"UNRECOVERED_NO_ENTRY_SPOT","source":None})
+        continue
+    spot=float(spot_val)
     source_df=None; source_name=None; source_rev=None; source_path=None
     year=int(exp[:4])
     if year>=2024:
