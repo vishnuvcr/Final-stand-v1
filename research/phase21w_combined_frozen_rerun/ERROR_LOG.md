@@ -24,3 +24,8 @@
 - **Issue:** HF-02 recovered bars lack the derived `trading_day` field required by the HF-03 interface.
 - **Impact:** Overlay construction stopped before coverage validation.
 - **Correction:** Derive `trading_day` from the recovered bar timestamp at the adapter boundary; no timestamp or price values are modified.
+
+## E21-006 — 2026-09-30
+- **Issue:** HF-02 recovered bars lack the static `symbol` field required by the HF-03 interface.
+- **Impact:** Overlay construction stopped before coverage validation.
+- **Correction:** Set `symbol='NIFTY'` for HF-02 rows at the adapter boundary, matching the source instrument; no price/timestamp field is modified.
