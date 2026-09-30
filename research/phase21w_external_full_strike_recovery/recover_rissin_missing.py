@@ -108,6 +108,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--hf-cache", default="~/.cache/huggingface")
     ap.add_argument("--baseline-calendar", required=True)
+    ap.add_argument("--target-cells", required=True)
     ap.add_argument("--spot-bars", required=True)
     ap.add_argument("--cycle-output", required=True)
     ap.add_argument("--bars-output", required=True)
@@ -120,6 +121,16 @@ def main() -> None:
     out.mkdir(parents=True, exist_ok=True)
 
     calendar = json.loads(Path(args.baseline_calendar).read_text())
+    target_pairs = set()
+    with Path(args.target_cells).open() as fh:
+        import csv
+        for row in csv.DictReader(fh):
+            target_pairs.add((row["variant_id"], row["target_expiry"]))
+    expected_target_pairs = {(v, e) for v in VARIANT_IDS for e in TARGETS}
+    if target_pairs != expected_target_pairs:
+        missing_pairs = sorted(expected_target_pairs - target_pairs)[:10]
+        extra_pairs = sorted(target_pairs - expected_target_pairs)[:10]
+        raise RuntimeError(f"Target-cell set mismatch: expected 1120 five-expiry cells; missing={missing_pairs}; extra={extra_pairs}")
     if len(calendar) != 63:
         raise RuntimeError(f"Expected frozen 63-expiry calendar, got {len(calendar)}")
     if not set(TARGETS).issubset(set(calendar)):
