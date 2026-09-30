@@ -28,3 +28,11 @@
 - Exact schema and depth levels 0–4 passed; chronology scan found 681,055 rows across only 2025-10-27 and 2025-10-28, with 57 invalid quote rows.
 - Admission failed. The candidate is not sufficient for Phase 22's weekly-horizon multi-expiry execution-aware validation.
 - Holdout remains locked.
+
+
+## 2026-09-30 — Execution-source re-audit after TBT rejection
+- Re-checked vendor documentation and public repositories for a genuinely retrievable multi-expiry bid/ask archive.
+- TrueData remains the clearest technically documented route: historical NSE F&O bid/ask is supported, including tick history, but credentials/subscription are required.
+- Global Datafeeds also exposes historical NFO bid/ask fields, but its published tick backfill window is one calendar week, so it does not solve the multi-year archive problem without additional provisioning.
+- TickBytes and OptionVault advertise the required Level-2/tick coverage, but their full archives are licensed/private; only public samples/schema are available.
+- No holdout opened; no execution-aware strategy backtest run.
