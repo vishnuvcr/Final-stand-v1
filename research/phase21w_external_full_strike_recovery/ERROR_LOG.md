@@ -100,3 +100,11 @@
 - **Impact:** the recovery script correctly operates only on the five approved external-recovery expiries, so the workflow target manifest and script interface were inconsistent and the run stopped before source recovery.
 - **Correction:** the workflow now filters the target manifest to the five approved expiries and requires exactly 1,120 cells (224 variants × 5 expiries). The recovery script now requires an exact target-cell manifest containing those 1,120 pairs.
 - **Evidence:** failed run 36714007429, job 109882125237, followed by corrective commits on `phase-21w-external-full-strike-recovery`.
+
+
+## E21X-015 — Merge script lacked the workflow target-cell argument
+
+- **Observed:** after the recovery script was corrected, the merge step rejected the workflow's `--target-cells` argument.
+- **Impact:** the recovered 1,120 cells were produced successfully, but the merge could not start, so no final 63-expiry rerun occurred.
+- **Correction:** the merge script now accepts `--target-cells` and verifies that the external cycle manifest exactly matches the 1,120 approved variant/expiry pairs before merging.
+- **Evidence:** failed run 36714191588, job 109882930922.
