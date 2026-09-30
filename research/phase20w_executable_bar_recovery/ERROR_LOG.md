@@ -66,3 +66,9 @@ No Phase-20 execution errors yet.
 - **Issue:** HF-02 `datetime` values are UTC, while the frozen Phase-19 entry/lock calendar is Asia/Kolkata. Direct string comparison therefore shifted the required 10:00/14:00 observations by +5:30 hours and admitted zero cycles.
 - **Impact:** HF-02 appeared to have no usable missing cycles despite containing intraday observations.
 - **Correction:** Convert HF-02 `datetime` from UTC to Asia/Kolkata before exact entry/lock matching. This is a timestamp interpretation correction supported by the dataset's epoch/timestamp fields; no OHLC values are changed.
+
+
+## E20-008 — 2026-09-30
+- **Issue:** HF-02 `datetime` is already a Polars `datetime[ns]`, so applying string parsing was invalid.
+- **Impact:** Recovery stopped before HF-02 cycle matching.
+- **Correction:** Add 5h30 directly to the datetime column and then format to the comparison string. No observation values are changed.
