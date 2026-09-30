@@ -33,3 +33,8 @@
 - Observed: using `Expr.is_in([timezone-literal, timezone-literal])` produced a nested-object construction error.
 - Impact: the run stopped after loading the weekly option data, before completing cycle admission.
 - Correction: the exact entry/lock coverage check now uses two explicit equality predicates joined with OR.
+
+## E22B-008 — Spot coverage gap
+- The TradeMarkk NIFTY minute index source lacked an exact 10:00 IST spot row for a later prospective week.
+- K1 selection cannot proceed without an underlying spot observation.
+- Correction: the prospective run now uses a separately pinned NIFTY minute spot archive; option legs remain exclusively sourced from RISSIN.
