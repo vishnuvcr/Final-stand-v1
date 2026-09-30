@@ -13,7 +13,7 @@ jobs:
     timeout-minutes: 240
     # Phase-21W recovery is intentionally rerunnable after any source/parser correction.
     concurrency:
-      group: phase21w-external-recovery
+      group: phase21w-external-recovery-v2
       cancel-in-progress: true
 
     steps:
