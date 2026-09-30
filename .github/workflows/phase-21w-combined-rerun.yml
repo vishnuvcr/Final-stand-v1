@@ -35,16 +35,11 @@ jobs:
           path: ~/.cache/huggingface
           key: phase21w-hf03-hf2-${{hashFiles('research/phase17w_strike_alternatives/VARIANT_REGISTRY.md')}}
       - run: pip install -q 'huggingface_hub>=0.36,<0.37' 'polars>=1.20,<2' 'pyarrow>=18,<23' 'numpy>=2,<3' pandas
-      - name: Rebuild frozen Phase 9 interface
-        env:
-          HF_TOKEN: ${{secrets.HF_TOKEN}}
-          HF_REVISION: 0f4800e43e6f96cec0794369d78eb4d3c4211ef5
-          HF_HOME: ~/.cache/huggingface
-          PYTHONPATH: ${{github.workspace}}
+      - name: Restore persisted HF-03 primary interface
         run: |
-          rm -rf research/phase9_weekly/output research/phase21w_combined_frozen_rerun/hf03_build
-          python research/phase9_weekly/hf_weekly_ingest.py --max-expiries 104 --start-date 2024-01-01 --end-date 2026-12-31 --output-dir research/phase9_weekly/output --hf-cache ~/.cache/huggingface
-          python research/phase17w_strike_alternatives/strike_alternatives.py --variant-start 0 --variant-end 224 --hf-cache ~/.cache/huggingface --baseline-manifest research/phase9_weekly/output/weekly_cycle_manifest.csv --expiry-start 0 --expiry-end 63 --build-only --output-dir research/phase21w_combined_frozen_rerun/hf03_build
+          git fetch origin phase-19w-recovered-rerun --depth=1
+          git checkout origin/phase-19w-recovered-rerun -- research/phase9_weekly/output
+          git checkout origin/phase-19w-recovered-rerun -- research/phase19w_recovered_rerun/output
       - name: Build deterministic combined input
         run: python research/phase21w_combined_frozen_rerun/build_combined.py
       - name: Validate coverage
