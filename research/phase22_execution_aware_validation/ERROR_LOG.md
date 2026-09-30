@@ -68,3 +68,15 @@
 - **Observed:** the Phase 22 manual probe workflow was created correctly, but the available GitHub connector exposes workflow inspection/rerun operations and does not expose a workflow-dispatch operation. Direct container download of the Hugging Face file also failed in this session.
 - **Impact:** the source cannot be admitted merely from the public preview; no claim of a completed Actions probe is made.
 - **Correction:** preserve the manual workflow as the reproducible next execution step. Continue source assessment only from independently verifiable public metadata/preview until a workflow run or authorized file download is available.
+
+
+## E22-011 — TBT probe executed: only two dates and 57 invalid quote rows
+- Date: 2026-09-30
+- Workflow run: 36737538413
+- Source: `antony9952/Nifty_option_TBT/market_depth.csv`
+- SHA-256: `50c92a9c1ab2070224885392a7bd7e4ff94f046eeeef3e9af3289935343c6a05`
+- Download succeeded (46.2 MiB); exact 9-column schema and depth levels 0–4 were present.
+- Scan found 681,055 rows, 4 instruments, but only 2 dates: 2025-10-27 through 2025-10-28.
+- 57 rows violated the basic quote contract. The workflow therefore failed admission.
+- This source cannot currently support the Phase 22 weekly-horizon new-data validation because its observed coverage is far short of the required multi-expiry chronological sample.
+- No holdout was opened and no strategy result was produced.
