@@ -82,3 +82,10 @@
 - Observed: corrected validation showed only 7 weekly expiries from RISSIN in 2026-05-19..2026-08-04, while the frozen validation requires at least 8.
 - External source review found the current TradeMarkk Hugging Face NIFTY 1-minute options dataset has per-expiry Parquet files and currently advertises coverage through 2026-08-04. citeturn1search0turn0search2
 - Correction: add TradeMarkk as a **gap-only option-data fallback** for expiry files absent from RISSIN. RISSIN remains primary; no strategy, strike grid, entry/lock times, causal spot rule, cost model, or 8-expiry validation threshold is changed.
+
+
+## E22B-017 — Eight expiry coverage rows but only six completed trades per variant
+- Observed after successful end-to-end validation: the phase admitted 8 weekly expiries and 4,032/4,032 variant-cycle rows, but every one of the 504 result rows has n=6 completed trades.
+- Impact: the pre-specified bootstrap inference requires at least 8 observations per variant, so raw and Holm-adjusted p-values remain null. This prevents statistical confirmation from the current holdout.
+- Interpretation: the 376/504 positive-total-net count is descriptive only. It is not treated as evidence of statistical significance or capital-promotion eligibility.
+- Correction: none to the frozen research design. The correct action is to retain the six-trade limitation and continue only with the pre-planned accumulation of additional prospective weekly cycles.
