@@ -99,3 +99,17 @@ Capital/margin reconstruction is a separate evidence layer from execution valida
 - [Phase 19W result](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-19w-recovered-rerun/research/phase19w_recovered_rerun/PHASE_RESULT.md)
 - **Phase 20W — Multi-Source Contract Recovery: 🔄 prepared**. It will exhaust the registered public fallback sources for the remaining contract-level gaps before any further strategy conclusion.
 - [Phase 20W branch](https://github.com/vishnuvcr/Final-stand-v1/tree/phase-20w-multisource-recovery) · [Phase 20W plan](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-20w-multisource-recovery/research/phase20w_multisource_recovery/PHASE_PLAN.md)
+
+## Phase 21W — Frozen 224-variant combined rerun and final five-cycle recovery — 2026-09-30
+
+- **Combined rerun status:** complete for 58/63 frozen weekly expiries.
+- Combined input coverage: **11,702 / 14,112** variant-cycle cells, with zero overlap between the admitted HF-03 and HF-02 sources.
+- The five unresolved expiries are **2026-01-13, 2026-02-10, 2026-03-10, 2026-04-13 and 2026-05-12**. All five are in the holdout segment, so the current 224-variant results are not yet the final 63-cycle holdout evidence.
+- Current 224-variant rerun: 193/224 positive training means, 136/224 positive validation means, 185/224 positive holdout means on the currently executable cycles; **0/224 passed the frozen promotion gate** and the minimum Holm-adjusted training p-value was 0.07464.
+- A new public recovery candidate has been qualified for automated testing: rissin/nse-options-intraday, pinned to revision 78b1c5468255d18cf492984bfe6fe4e3ac874d7c. Its dataset card documents NIFTY 1-minute intraday coverage from October 2024 through 2026 with expiry, strike, option type, OHLC and volume fields.
+- The Phase 21 external-recovery workflow now tests all five missing expiries, requires all 224 variants to pass exact entry/lock coverage, merges only the missing cells, and then reruns the unchanged frozen engine.
+- No commercial data access has been purchased and no strategy parameter, split, stop, slippage or cost assumption has been changed.
+- [Phase 21W combined rerun branch](https://github.com/vishnuvcr/Final-stand-v1/tree/phase-21w-combined-frozen-rerun)
+- [Phase 21W external recovery branch](https://github.com/vishnuvcr/Final-stand-v1/tree/phase-21w-external-full-strike-recovery)
+- [Phase 21W recovery targets](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-21w-external-full-strike-recovery/research/phase21w_external_full_strike_recovery/RECOVERY_TARGETS.md)
+- [Phase 21W external recovery workflow](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-21w-external-full-strike-recovery/.github/workflows/phase-21w-source-audit.yml)
