@@ -142,6 +142,12 @@ jobs:
           df.groupby('k3',as_index=False)['holdout.total_net_rupees'].mean().sort_values('holdout.total_net_rupees',ascending=False).to_csv(out/'K3_SURFACE_MEAN_HOLDOUT.csv',index=False)
           PY
 
+      - name: Run economic robustness and cost-stress analysis
+        run: |
+          python research/phase22a_weekly_504_strike_expansion/ROBUSTNESS_504.py \\
+            --trades research/phase22a_weekly_504_strike_expansion/output/all_variant_trades.csv \\
+            --out-dir research/phase22a_weekly_504_strike_expansion/output
+
       - name: Upload complete 504 results
         uses: actions/upload-artifact@v4
         with:
