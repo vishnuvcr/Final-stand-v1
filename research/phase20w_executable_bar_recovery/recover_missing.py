@@ -3,7 +3,7 @@ import json, os, hashlib
 import pyarrow.parquet as pq
 import pandas as pd
 from pathlib import Path
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
 import polars as pl
 from huggingface_hub import HfApi, hf_hub_download
@@ -117,7 +117,7 @@ for exp in missing:
         entry_df=sdf.filter((pl.col("expiry")==exp)&(pl.col("timestamp")==entry)&(pl.col("volume").fill_null(0)>0))
 
     else:
-        sdf=source_df.with_columns(pl.col("datetime").cast(pl.String).str.replace(r" ","T").str.slice(0,19).alias("_ts"))
+        sdf=source_df.with_columns((pl.col("datetime").str.strptime(pl.Datetime, "%Y-%m-%d %H:%M:%S", strict=False) + pl.duration(hours=5,minutes=30)).dt.strftime("%Y-%m-%dT%H:%M:%S").alias("_ts"))
         entry_df=sdf.filter((pl.col("_ts")==entry)&(pl.col("option_type").str.to_uppercase().is_in(["CE","CALL"])))
     strikes=entry_df["strike"].to_list() if source_name=="HF1" else entry_df["strike_price"].to_list()
     opens=entry_df["open"].to_list()
