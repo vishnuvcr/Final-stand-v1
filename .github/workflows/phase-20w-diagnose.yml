@@ -1,0 +1,32 @@
+name: Phase 20W - Diagnose Missing Manifest Rows
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [phase-20w-executable-bar-recovery]
+    paths:
+      - 'research/phase20w_executable_bar_recovery/diagnose_manifest.py'
+      - 'research/phase19w_recovered_rerun/output/variant_cycle_manifest.csv'
+      - 'research/phase19w_recovered_rerun/output/trades_ITM3_NEXT1_K3M4.csv'
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-20w-executable-bar-recovery
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -q polars
+      - run: python research/phase20w_executable_bar_recovery/diagnose_manifest.py
+      - run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/phase20w_executable_bar_recovery/output/manifest_diagnostic.json research/phase20w_executable_bar_recovery/output/required_missing_variant_bars.csv
+          git diff --cached --quiet || git commit -m 'phase20w: diagnose missing executable manifest rows'
+          git push origin HEAD:phase-20w-executable-bar-recovery
