@@ -18,3 +18,8 @@
 - Observed: the source-catalog discovery over 2026-05-19..2026-08-04 admitted only one weekly expiry from TradeMarkk's NIFTY expiry-file tree.
 - Impact: it could not provide a meaningful new weekly validation window.
 - Correction: the prospective phase switched acquisition to RISSIN's current 2026 NIFTY 1-minute archive, which documents year-level intraday coverage and expiry/strike/CE/PE/OHLC/volume fields. The 504 family and trading protocol were not changed.
+
+## E22B-005 — Source gaps must not redefine the trading calendar
+- Observed: RISSIN contains only 7 of the weekly expiries in the requested post-Phase-21 window.
+- Risk: deriving the prior expiry from available source files would incorrectly move entry dates backward whenever an expiry file is missing.
+- Correction: the prospective builder now derives the prior weekly expiry from the frozen Tuesday weekly calendar relation (target expiry minus 7 days) for this period. Missing source files cause a missing cycle, not a calendar shift.
