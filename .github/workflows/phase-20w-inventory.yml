@@ -2,6 +2,11 @@ name: Phase 20W - Inventory Alternate Executable Sources
 
 on:
   workflow_dispatch:
+  push:
+    branches: [phase-20w-executable-bar-recovery]
+    paths:
+      - 'research/phase20w_executable_bar_recovery/**'
+      - '.github/workflows/phase-20w-inventory.yml'
 
 permissions:
   contents: write
