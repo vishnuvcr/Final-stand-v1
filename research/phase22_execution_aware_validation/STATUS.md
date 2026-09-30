@@ -11,4 +11,4 @@ State: **ACTIVE — 22.1 and 22.2 complete; 22.3 configuration freeze complete; 
 - The strategy is explicitly a **weekly-horizon weekly-expiry strategy with intraday execution timestamps**, not an intraday-only strategy.
 - Protocol wording was corrected after the 2026-09-30 strategy-horizon clarification; no parameter or holdout data were changed.
 
-Next gate: prioritize authorized NSE full-order/full-trade acquisition; TrueData extended Bid/Ask and GFDL archival routes remain secondary candidates. Admit only reproducible timestamped executable quote/depth data. No new holdout until admission.
+Next gate: validate the newly identified Hugging Face NIFTY TBT/depth source at immutable file/revision level, while retaining NSE full-order/full-trade, TrueData extended history and GFDL as authorized acquisition routes. Admit only reproducible timestamped executable quote/depth data. No new holdout until admission.
