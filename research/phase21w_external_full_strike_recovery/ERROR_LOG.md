@@ -116,3 +116,11 @@
 - **Impact:** external recovery itself succeeded and verified all 224 variants for all five target expiries, but the final merged input was not produced.
 - **Correction:** merge now streams the frozen base Parquet row groups directly with PyArrow, appends the small external table, validates external duplicates in-memory, and uses a predicate-pushdown target-cell check instead of rescanning the complete merged file. The logical cell-count gate remains tied to the frozen cycle manifest.
 - **Evidence:** run 36714458466, attempts 1 and 2, job IDs 109883850710 and 109885523118.
+
+
+## E21X-017 — External Parquet schema timestamp type mismatch
+
+- **Observed:** the optimized PyArrow merge reached the append operation but rejected the external table because the frozen base stores `timestamp` as `large_string` while the recovered table still had a timezone-aware datetime.
+- **Impact:** no merged input was written; the final rerun remained pending.
+- **Correction:** `align_to_schema` now casts existing external columns to the exact frozen base Parquet schema, not only fills missing columns.
+- **Evidence:** run 36715341754, job 109886769584.
