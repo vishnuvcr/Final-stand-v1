@@ -30,11 +30,12 @@ jobs:
           rm -rf research/phase9_weekly/output research/phase21w_combined_frozen_rerun/hf03_build
           python research/phase9_weekly/hf_weekly_ingest.py --max-expiries 104 --start-date 2024-01-01 --end-date 2026-12-31 --output-dir research/phase9_weekly/output --hf-cache ~/.cache/huggingface
           python research/phase17w_strike_alternatives/strike_alternatives.py --variant-start 0 --variant-end 224 --hf-cache ~/.cache/huggingface --baseline-manifest research/phase9_weekly/output/weekly_cycle_manifest.csv --expiry-start 0 --expiry-end 63 --build-only --output-dir research/phase21w_combined_frozen_rerun/hf03_build
-      - name: Persist prepared interface
-        uses: actions/upload-artifact@v4
-        with:
-          name: phase21w-hf03-interface
-          path: |
-            research/phase9_weekly/output/
-            research/phase21w_combined_frozen_rerun/hf03_build/
-          if-no-files-found: error
+      - name: Persist prepared interface in branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/phase9_weekly/output research/phase21w_combined_frozen_rerun/hf03_build
+          git diff --cached --quiet || git commit -m 'phase21w: persist prepared HF03 interface'
+          git fetch origin phase-21w-combined-frozen-rerun
+          git rebase origin/phase-21w-combined-frozen-rerun
+          git push origin HEAD:phase-21w-combined-frozen-rerun
