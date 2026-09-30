@@ -17,7 +17,7 @@ got=set(trade["target_expiry"].cast(pl.String).to_list())
 missing=[d for d in cal if d not in got]
 # Required variant strikes for the missing cycles.
 vc=pl.read_csv("research/phase19w_recovered_rerun/output/variant_cycle_manifest.csv")
-req=vc.filter(pl.col("target_expiry").is_in(missing))
+req=vc.with_columns(pl.col("target_expiry").cast(pl.String)).filter(pl.col("target_expiry").is_in(missing))
 api=HfApi(token=os.getenv("HF_TOKEN") or None)
 sources={}
 # HF-01: Oct-2024 onward 1-minute NIFTY option data plus daily NIFTY spot.
