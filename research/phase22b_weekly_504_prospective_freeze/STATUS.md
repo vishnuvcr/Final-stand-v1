@@ -16,9 +16,9 @@ State: **ACTIVE**
 - Execution-aware evidence: remains a separate downstream gate
 
 ## Backtest gate
-- 504 configurations: frozen; rerun pending
-- New weekly expiry count: pending successful acquisition
-- Coverage: pending successful acquisition
+- 504 configurations: frozen; rerun after E22B-012 correction: pending
+- New weekly expiry count: pending successful acquisition after spot-gap recovery
+- Coverage: pending successful acquisition after spot-gap recovery
 - Statistical inference: pending
 
 ## Promotion boundary
