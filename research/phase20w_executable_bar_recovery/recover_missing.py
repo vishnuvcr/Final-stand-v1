@@ -96,6 +96,7 @@ for exp in missing:
         pdf["timestamp"]=pdf["timestamp"].astype(str).str.replace(" ","T").str.slice(0,19)
         pdf["expiry"]=pdf["expiry"].astype(str).str.slice(0,10)
         source_df=pl.from_pandas(pdf)
+        source_df=source_df.with_columns(pl.col("timestamp").alias("_ts"),pl.col("expiry").alias("_exp"))
         sdf=source_df
         entry_df=sdf.filter((pl.col("expiry")==exp)&(pl.col("timestamp")==entry)&(pl.col("volume").fill_null(0)>0))
 
