@@ -42,3 +42,9 @@ No Phase 20 execution errors yet.
 - **Issue:** Public Recovery-1 file pages returned HTTP 401 when the runner supplied the configured `HF_TOKEN` header.
 - **Impact:** Anonymous public-file existence was masked as authentication failure.
 - **Correction:** Inventory probes now omit authentication headers for public file pages. The token remains available for subsequent LFS payload downloads where required.
+
+
+## E20-007 — 2026-09-30
+- **Issue:** GitHub-runner HTTP page probes remain 401 despite the public Hugging Face archive being externally verified.
+- **Impact:** HTML status cannot be used as an inventory signal from the runner.
+- **Correction:** Added a direct `hf_hub_download` probe against a verified weekly parquet at the pinned Recovery-1 commit. This is the correct acquisition path for the subsequent recovery step.
