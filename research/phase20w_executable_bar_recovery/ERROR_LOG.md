@@ -25,3 +25,9 @@ No Phase-20 execution errors yet.
 - **Issue:** Even the PyArrow-backed Polars frame retained the problematic timezone metadata when converting HF-01 timestamps to strings.
 - **Impact:** Recovery stopped before evaluating HF-01 observations.
 - **Correction:** HF-01 recovery will use predicate-pushed PyArrow reads filtered by expiry/date, then normalize only the small filtered timestamp column to strings before Polars processing. This avoids materializing/reinterpreting the full annual parquet timezone column.
+
+
+## E20-005 — 2026-09-30
+- **Issue:** HF-02 fallback used `is_between(entry, end)` with string arguments interpreted by Polars as column expressions.
+- **Impact:** Recovery stopped when reaching the early-period HF-02 source after HF-01 processing succeeded.
+- **Correction:** Wrap timestamp bounds in `pl.lit(...)` for the HF-02 fallback. No data or selection rule changes.
