@@ -60,3 +60,9 @@ No Phase 20 execution errors yet.
 - **Issue:** Git/LFS fallback reached Hugging Face but failed because Git attempted an interactive username prompt on the runner.
 - **Impact:** No LFS object was fetched.
 - **Correction:** The probe now supplies the existing HF token to the Git HTTPS URL internally without printing it, then fetches only the target parquet through LFS.
+
+
+## E20-010 — 2026-09-30
+- **Issue:** Supplying the HF token directly in the Git clone URL still produced `Repository not found`.
+- **Impact:** Git LFS could not start the sparse fetch.
+- **Correction:** Switched to Hugging Face's documented `hf auth login --token ... --add-to-git-credential` flow, then clone the public dataset normally. The token is not embedded in source or command arguments visible to GitHub logs.
