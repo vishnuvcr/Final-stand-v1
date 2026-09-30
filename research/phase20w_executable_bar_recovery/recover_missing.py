@@ -1,5 +1,7 @@
 from __future__ import annotations
 import json, os, hashlib
+import pyarrow.parquet as pq
+import pandas as pd
 from pathlib import Path
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
@@ -65,8 +67,9 @@ for exp in missing:
         path=f"upstox_intraday/NIFTY/NIFTY_{year}.parquet"
         try:
             local=hf_hub_download(repo_id="rissin/nse-options-intraday",filename=path,repo_type="dataset",revision=rev,token=token,cache_dir=str(CACHE))
-            source_df=pl.read_parquet(local,use_pyarrow=True).filter(pl.col("underlying")=="NIFTY")
+            source_df=None
             source_name="HF1"; source_rev=str(rev); source_path=path
+            source_local=local
         except Exception as e:
             prov.append({"expiry":exp,"source":"HF1","error":repr(e)})
     # For early missing dates, use the weekly ATM-relative HF-02 source.
@@ -88,8 +91,14 @@ for exp in missing:
             cycles.append({"variant_id":vid,"target_expiry":exp,"entry_timestamp":b["entry_timestamp"],"lock_timestamp":b["lock_timestamp"],"status":"UNRECOVERED","source":None})
         continue
     if source_name=="HF1":
-        sdf=source_df.with_columns(pl.col("timestamp").cast(pl.String).str.replace(r" ","T").str.slice(0,19).alias("_ts"),pl.col("expiry").cast(pl.String).str.slice(0,10).alias("_exp"))
-        entry_df=sdf.filter((pl.col("_exp")==exp)&(pl.col("_ts")==entry)&pl.col("option_type").str.to_uppercase().is_in(["CE","CALL"])&((pl.col("volume").fill_null(0))>0))
+        table=pq.read_table(source_local,filters=[("expiry","=",exp),("option_type","=","CE"),("date",">=",entry[:10]),("date","<=",exp)],columns=["date","timestamp","expiry","strike","option_type","open","high","low","close","volume","oi"])
+        pdf=table.to_pandas()
+        pdf["timestamp"]=pdf["timestamp"].astype(str).str.replace(" ","T").str.slice(0,19)
+        pdf["expiry"]=pdf["expiry"].astype(str).str.slice(0,10)
+        source_df=pl.from_pandas(pdf)
+        sdf=source_df
+        entry_df=sdf.filter((pl.col("expiry")==exp)&(pl.col("timestamp")==entry)&(pl.col("volume").fill_null(0)>0))
+
     else:
         sdf=source_df.with_columns(pl.col("datetime").cast(pl.String).str.replace(r" ","T").str.slice(0,19).alias("_ts"))
         entry_df=sdf.filter((pl.col("_ts")==entry)&(pl.col("option_type").str.to_uppercase().is_in(["CE","CALL"])))
@@ -125,7 +134,7 @@ for exp in missing:
     usable=[x for x in cycles if x["target_expiry"]==exp and x["status"]=="USABLE_OHLC"]
     reqstr=sorted({float(k) for x in usable for k in [x["k1"],x["k2"],x["k3"]] if k is not None})
     if source_name=="HF1":
-        bars=sdf.filter((pl.col("_exp")==exp)&pl.col("strike").is_in(reqstr)&pl.col("option_type").str.to_uppercase().is_in(["CE","CALL"])&(pl.col("_ts")>=entry)&(pl.col("_ts")<=f"{exp}T15:30:00"))
+        bars=sdf.filter(pl.col("strike").is_in(reqstr)&(pl.col("timestamp")>=entry)&(pl.col("timestamp")<=f"{exp}T15:30:00"))
         bars=bars.select(["timestamp","strike","open","high","low","close","volume","oi"]).with_columns(pl.lit(exp).alias("target_expiry"))
     else:
         bars=sdf.filter(pl.col("strike_price").is_in(reqstr)&pl.col("_ts").is_between(entry,f"{exp}T15:30:00"))
