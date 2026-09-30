@@ -96,3 +96,9 @@ No Phase-20 execution errors yet.
 - **Issue:** HF-02 reconstruction referenced `entry_timestamp`/`lock_timestamp` fields that are not present in the restored Phase-9 calendar schema.
 - **Impact:** Reconstruction stopped before processing any missing expiry.
 - **Correction:** Use the actual Phase-9 calendar fields after schema inspection, mapping the frozen entry/lock times without changing their values.
+
+
+## E20-011 — 2026-09-30
+- **Issue:** The HF-03 NIFTY index parquet carries `+05:30` timezone metadata that current Polars rejects when loading the spot series for HF-02 reconstruction.
+- **Impact:** Reconstruction stopped before evaluating recovered option cycles.
+- **Correction:** Read only the index timestamp/open columns via PyArrow/Pandas and normalize the timestamp representation to a naive local ISO string for exact 10:00 IST matching. No index price values are altered.
