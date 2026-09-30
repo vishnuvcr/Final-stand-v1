@@ -130,7 +130,21 @@ Capital/margin reconstruction is a separate evidence layer from execution valida
 - [Phase 22A manuscript](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-22a-weekly-504-strike-expansion/research/phase22a_weekly_504_strike_expansion/FINAL_MANUSCRIPT.md)
 - [Phase 22A workflow run](https://github.com/vishnuvcr/Final-stand-v1/actions/runs/36741881293)
 
-## Phase 22B — Weekly 504 prospective validation — 2026-09-30
+## Phase 22B — Weekly 504 prospective validation — COMPLETE
+
+- End-to-end workflow **36759982136** passed computation, validation, publication, and artifact upload.
+- Frozen family: **504 variants**.
+- Prospective coverage: **8 weekly expiries; 4,032/4,032 expected variant-cycle rows**.
+- All 504 variants are present. **376/504** have positive total net P&L after the configured cost model.
+- However, every variant has only **6 completed trades**, so the pre-specified bootstrap inference (minimum 8 observations) was not populated; **Holm-adjusted significance count = 0 / not computed**.
+- Accordingly, this is **descriptive prospective evidence, not statistical confirmation or a capital-promotion result**. The existing 30-cycle promotion minimum remains unmet.
+- RISSIN remained the primary option source; the separate causal spot fallback was used. The newly added TradeMarkk option fallback was not required in the successful run.
+- No strategy parameter, holdout boundary, weekly protocol, strike grid, entry/lock timing, stop-loss, slippage/cost model, or 504-family definition was changed.
+- [Phase 22B status](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-22b-weekly-504-prospective-freeze/research/phase22b_weekly_504_prospective_freeze/STATUS.md)
+- [Phase 22B error log](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-22b-weekly-504-prospective-freeze/research/phase22b_weekly_504_prospective_freeze/ERROR_LOG.md)
+- [Phase 22B research updates](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-22b-weekly-504-prospective-freeze/research/phase22b_weekly_504_prospective_freeze/RESEARCH_UPDATES.md)
+
+
 
 - **Status: ACTIVE — multi-source recovery rerun.**
 - The frozen family contains **504 variants**: OTM1–OTM8, ATM_NEAREST, ATM_UP, ITM1–ITM8 × NEXT1/NEXT2/NEXT3/MIRROR_GAP × K3 multipliers 0.5/1.0/1.5/2.0/2.5/3.0/4.0.
