@@ -6,6 +6,7 @@ on:
     branches: [phase-20w-executable-bar-recovery]
     paths:
       - 'research/phase20w_executable_bar_recovery/recover_missing.py'
+      - 'research/phase20w_executable_bar_recovery/output/required_missing_variant_bars.csv'
       - '.github/workflows/phase-20w-recover.yml'
 
 permissions:
