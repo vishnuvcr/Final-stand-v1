@@ -122,7 +122,8 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
         raise RuntimeError(f"Spot source missing open/close columns: {idx.columns}")
     dates = idx.select(pl.col("timestamp").dt.date().alias("d")).unique().sort("d")["d"].to_list()
 
-    fallback_path = cache / "technovusin_nifty50_2026_1min.csv"
+    fallback_path = Path(os.path.expanduser(str(cache))) / "technovusin_nifty50_2026_1min.csv"
+    fallback_path.parent.mkdir(parents=True, exist_ok=True)
     fallback_used = False
     fallback_sha256 = None
 
