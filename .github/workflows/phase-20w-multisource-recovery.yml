@@ -26,12 +26,17 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install -q huggingface_hub requests
+      - run: pip install -q huggingface_hub requests polars
       - name: Probe direct HF LFS download
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_CACHE: ~/.cache/huggingface
         run: python research/phase20w_multisource_recovery/probe_direct_download.py
+      - name: Profile Recovery-2 weekly coverage
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_CACHE: ~/.cache/huggingface
+        run: python research/phase20w_multisource_recovery/profile_recovery2.py
       - name: Inventory registered public sources
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
@@ -39,6 +44,12 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: phase20w-source-inventory
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase20w-recovery2-profile
+          path: research/phase20w_multisource_recovery/output/recovery2_profile.json
+          if-no-files-found: error
+      - name: Commit inventory
           path: research/phase20w_multisource_recovery/output/source_inventory.json
       - name: Commit inventory
         run: |
