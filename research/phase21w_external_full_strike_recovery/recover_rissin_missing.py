@@ -15,7 +15,7 @@ from huggingface_hub import HfApi, hf_hub_download
 IST = ZoneInfo("Asia/Kolkata")
 
 RISSIN_REPO = "rissin/nse-options-intraday"
-RISSIN_REVISION = "78b1c5468255d18cf492984bfe6fe4e3ac874d7c"
+RISSIN_REVISION = "8f7739cab3f38abdcbc6332a6d0a83e1341326e3"
 RISSIN_FILE = "upstox_intraday/NIFTY/NIFTY_2026.parquet"
 
 TARGETS = [
