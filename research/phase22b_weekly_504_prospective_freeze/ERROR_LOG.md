@@ -28,3 +28,8 @@
 - Observed: the annual RISSIN file reports timestamps with a +05:30 timezone representation that Polars would not directly compare with an Asia/Kolkata literal inside the lazy scan.
 - Impact: prospective data extraction stopped before cycle construction.
 - Correction: the annual file is now date-filtered using its canonical date field before collection; timestamps are normalized only after materialization.
+
+## E22B-007 — Polars nested timezone literals in coverage check
+- Observed: using `Expr.is_in([timezone-literal, timezone-literal])` produced a nested-object construction error.
+- Impact: the run stopped after loading the weekly option data, before completing cycle admission.
+- Correction: the exact entry/lock coverage check now uses two explicit equality predicates joined with OR.
