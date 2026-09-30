@@ -92,3 +92,11 @@
 - **Observed:** The initially selected 78b1c54 dataset commit contains NIFTY intraday files only through 2025; the NIFTY_2026 parquet is absent at that exact snapshot, so the runner correctly returned 404.
 - **Correction:** The successful live probe had resolved immutable snapshot `8f7739cab3f38abdcbc6332a6d0a83e1341326e3`, which demonstrably contains `upstox_intraday/NIFTY/NIFTY_2026.parquet`. The recovery code is now pinned to that immutable snapshot instead of dataset main.
 - **Admission:** Only the 8f7739 snapshot can be admitted; the earlier main-branch probe remains exploratory evidence only.
+
+
+## E21X-014 — Recovery target manifest included unrelated partial gaps
+
+- **Observed:** the workflow constructed all missing variant-cycle cells (2,410) rather than only the five fully missing expiry cycles (1,120 cells).
+- **Impact:** the recovery script correctly operates only on the five approved external-recovery expiries, so the workflow target manifest and script interface were inconsistent and the run stopped before source recovery.
+- **Correction:** the workflow now filters the target manifest to the five approved expiries and requires exactly 1,120 cells (224 variants × 5 expiries). The recovery script now requires an exact target-cell manifest containing those 1,120 pairs.
+- **Evidence:** failed run 36714007429, job 109882125237, followed by corrective commits on `phase-21w-external-full-strike-recovery`.
