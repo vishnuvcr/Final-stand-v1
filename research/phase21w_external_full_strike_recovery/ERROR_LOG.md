@@ -11,3 +11,9 @@
 ## E21X-003 — 2026-09-30
 - **Issue:** Public dataset presence does not guarantee full-strike coverage or acceptable licensing for later capital use.
 - **Correction:** Probe exact missing expiries, record provenance, and carry the dataset's CC-BY-NC-4.0 / educational-use limitation into admission criteria.
+
+## E21X-004 — 2026-09-30
+- **Issue:** The first public-HF probe reached the downloaded parquet but Polars rejected the dataset's fixed-offset timestamp metadata (+05:30).
+- **Impact:** No source-level probe rows were produced in run 36710896827.
+- **Correction:** Reuse the repository's established fixed-offset timezone compatibility setting by setting POLARS_IGNORE_TIMEZONE_PARSE_ERROR=1 before importing Polars; timestamps remain explicitly treated as IST in the probe.
+- **Prevention:** Third-party parquet ingestion probes must apply the same timezone-compatibility contract already validated in Phase 13W before reading schemas.

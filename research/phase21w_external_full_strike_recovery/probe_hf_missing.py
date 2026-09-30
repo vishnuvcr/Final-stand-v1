@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 
+os.environ.setdefault('POLARS_IGNORE_TIMEZONE_PARSE_ERROR','1')
 import polars as pl
 from huggingface_hub import HfApi, hf_hub_download
 

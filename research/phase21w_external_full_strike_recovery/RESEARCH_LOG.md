@@ -13,3 +13,6 @@
 - Require exact CE contract rows, zero duplicate timestamp/strike groups and non-null OHLC/volume/strike fields.
 - Count distinct CE strikes at exactly 10:00 and 14:00 IST and their intersection.
 - Do not admit the source to the frozen backtest solely from strike counts; exact variant construction and intraday stop-path availability remain downstream gates.
+## 2026-09-30 — E21X-004 timezone compatibility correction
+- The first public-HF probe downloaded the candidate files but failed before reading schema because Polars rejected fixed-offset +05:30 parquet metadata.
+- The fix is limited to the known timezone-parser compatibility setting already used by the Phase-9/13 ingestion path; no source data are transformed or reinterpreted.
