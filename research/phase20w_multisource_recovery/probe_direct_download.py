@@ -3,6 +3,7 @@ from pathlib import Path
 repo=Path("/tmp/hf_stocks")
 if not repo.exists():
     token=os.environ.get("HF_TOKEN","")
+    subprocess.run(["git","config","--global","credential.helper","store"],check=True)
     subprocess.run(["hf","auth","login","--token",token,"--add-to-git-credential"],check=True)
     subprocess.run(["git","clone","--filter=blob:none","--no-checkout","https://huggingface.co/datasets/johnwick3690/stocks",str(repo)],check=True)
 path="nifty historical data/nifty 50 1min options weekly expiries/20240613_WEEK.parquet"
