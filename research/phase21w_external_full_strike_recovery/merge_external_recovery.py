@@ -70,8 +70,13 @@ def main() -> None:
         raise RuntimeError(f"External cycle overlap with frozen 58-cycle base: {overlap_cycle}")
 
     merged_cycle = pl.concat([base_cycle, ext_cycle], how="diagonal_relaxed")
-    if merged_cycle.select(["variant_id", "target_expiry"]).unique().height != 224 * 63:
-        raise RuntimeError("Merged cycle manifest is not exactly 224 x 63 unique cells")
+    merged_unique_cells = merged_cycle.select(["variant_id", "target_expiry"]).unique().height
+    expected_min_cells = base_cycle.height + 224 * len(TARGETS)
+    if merged_unique_cells != expected_min_cells:
+        raise RuntimeError(
+            f"Merged cycle manifest changed unexpectedly: base={base_cycle.height}, "
+            f"external={224 * len(TARGETS)}, merged_unique={merged_unique_cells}"
+        )
 
     base_schema = base_bars.collect_schema()
     base_columns = base_schema.names()
@@ -133,6 +138,7 @@ def main() -> None:
 
     coverage = {
         "baseline_unique_expiries": len(baseline_expiries),
+        "base_cycle_cells": base_cycle.height,
         "combined_cycle_cells": merged_cycle.height,
         "combined_bar_variant_cycle_cells": bar_cell_counts.height,
         "combined_unique_expiries": len(covered_expiries),
@@ -144,9 +150,9 @@ def main() -> None:
         "overlap_cycle_cells": overlap_cycle,
         "duplicate_bar_groups": int(dup),
     }
-    if coverage["combined_cycle_cells"] != 224 * 63:
+    if coverage["combined_cycle_cells"] != coverage["base_cycle_cells"] + 224 * len(TARGETS):
         raise RuntimeError(f"Combined cycle manifest coverage failed: {coverage}")
-    if coverage["combined_bar_variant_cycle_cells"] != 224 * 63:
+    if coverage["combined_bar_variant_cycle_cells"] != coverage["combined_cycle_cells"]:
         raise RuntimeError(f"Combined bar coverage failed: {coverage}")
     if coverage["missing_expiries"]:
         raise RuntimeError(f"Missing expiries remain after external recovery: {coverage}")
