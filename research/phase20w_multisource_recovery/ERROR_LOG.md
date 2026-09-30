@@ -36,3 +36,9 @@ No Phase 20 execution errors yet.
 - **Issue:** Recovery-1 file-existence probes against the LFS `resolve` endpoint returned 404 despite verified files being present in the public commit tree.
 - **Impact:** The inventory incorrectly reported zero matching files.
 - **Correction:** Probe the public `blob/main/...` file pages instead. This validates exact path existence without downloading the underlying LFS object. The verified commit remains recorded as provenance.
+
+
+## E20-006 — 2026-09-30
+- **Issue:** Public Recovery-1 file pages returned HTTP 401 when the runner supplied the configured `HF_TOKEN` header.
+- **Impact:** Anonymous public-file existence was masked as authentication failure.
+- **Correction:** Inventory probes now omit authentication headers for public file pages. The token remains available for subsequent LFS payload downloads where required.
