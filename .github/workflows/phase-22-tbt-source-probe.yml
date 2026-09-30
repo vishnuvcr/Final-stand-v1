@@ -1,0 +1,81 @@
+name: Phase 22W - TBT depth source probe
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - phase-22-execution-aware-validation
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-22-execution-aware-validation
+
+      - name: Download immutable market-depth file
+        env:
+          URL: https://huggingface.co/datasets/antony9952/Nifty_option_TBT/resolve/main/market_depth.csv
+        run: |
+          mkdir -p /tmp/phase22_tbt
+          curl --fail --location --retry 3 --retry-all-errors "$URL" -o /tmp/phase22_tbt/market_depth.csv
+          sha256sum /tmp/phase22_tbt/market_depth.csv | tee /tmp/phase22_tbt/market_depth.sha256
+
+      - name: Validate depth schema and chronology
+        run: |
+          python - <<'PY'
+          import csv, hashlib, pathlib
+          from datetime import datetime
+
+          p = pathlib.Path("/tmp/phase22_tbt/market_depth.csv")
+          expected = ["id","tick_id","instrument_key","timestamp","depth_level","bid_price","bid_qty","ask_price","ask_qty"]
+          with p.open("r", newline="", encoding="utf-8") as f:
+              r = csv.DictReader(f)
+              if r.fieldnames != expected:
+                  raise SystemExit(f"Unexpected schema: {r.fieldnames}")
+              n = 0
+              instruments = set()
+              dates = set()
+              depths = set()
+              bad = 0
+              first = last = None
+              for row in r:
+                  n += 1
+                  instruments.add(row["instrument_key"])
+                  dates.add(row["timestamp"][:10])
+                  depths.add(int(row["depth_level"]))
+                  try:
+                      ts = datetime.fromisoformat(row["timestamp"])
+                      bp = float(row["bid_price"]); ap = float(row["ask_price"])
+                      bq = float(row["bid_qty"]); aq = float(row["ask_qty"])
+                      if bp <= 0 or ap <= 0 or bp > ap or bq < 0 or aq < 0:
+                          bad += 1
+                      first = ts if first is None else min(first, ts)
+                      last = ts if last is None else max(last, ts)
+                  except Exception:
+                      bad += 1
+          print(f"rows={n}")
+          print(f"instruments={len(instruments)}")
+          print(f"dates={len(dates)}")
+          print(f"date_min={min(dates) if dates else None}")
+          print(f"date_max={max(dates) if dates else None}")
+          print(f"depth_levels={sorted(depths)}")
+          print(f"first_timestamp={first}")
+          print(f"last_timestamp={last}")
+          print(f"bad_quote_rows={bad}")
+          if n == 0 or depths != {0,1,2,3,4} or bad:
+              raise SystemExit("Depth contract validation failed")
+          PY
+
+      - name: Upload immutable probe artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase22-tbt-depth-probe
+          path: |
+            /tmp/phase22_tbt/market_depth.sha256
+            /tmp/phase22_tbt/market_depth.csv
+          retention-days: 30

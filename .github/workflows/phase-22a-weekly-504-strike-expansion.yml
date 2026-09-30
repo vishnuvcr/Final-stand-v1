@@ -1,0 +1,165 @@
+name: Phase 22A - Weekly 504-strike expansion
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - phase-22a-weekly-504-strike-expansion
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  validate-registry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-22a-weekly-504-strike-expansion
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install test stack
+        run: |
+          python -m pip install -q --upgrade pip
+          pip install -q 'polars>=1.20,<2' 'pyarrow>=18,<23' 'numpy>=2,<3'
+      - name: Validate 504 registry
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: python research/phase22a_weekly_504_strike_expansion/test_weekly_504.py
+
+  weekly-504-backtest:
+    needs: validate-registry
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: phase-22a-weekly-504-strike-expansion
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: phase22a-504-rissin-8f7739-${{ hashFiles('research/phase22a_weekly_504_strike_expansion/VARIANT_REGISTRY.md') }}
+          restore-keys: |
+            phase22a-504-rissin-
+
+      - name: Install research stack
+        run: |
+          python -m pip install -q --upgrade pip
+          pip install -q 'huggingface_hub>=0.36,<0.37' 'polars>=1.20,<2' 'pyarrow>=18,<23' 'numpy>=2,<3' pandas
+
+
+      - name: Restore frozen Phase-17/11/9 engine sources
+        run: |
+          git fetch origin phase-21w-combined-frozen-rerun --depth=1
+          git checkout origin/phase-21w-combined-frozen-rerun -- \
+            research/phase17w_strike_alternatives/strike_alternatives.py \
+            research/phase11_weekly/weekly_backtest.py \
+            research/phase9_weekly/hf_weekly_ingest.py
+
+      - name: Restore frozen Phase-9 interface from combined branch
+        run: |
+          git fetch origin phase-21w-combined-frozen-rerun --depth=1
+          mkdir -p work/frozen_phase9
+          git show origin/phase-21w-combined-frozen-rerun:research/phase9_weekly/output/weekly_cycle_manifest.csv > work/frozen_phase9/weekly_cycle_manifest.csv
+          git show origin/phase-21w-combined-frozen-rerun:research/phase9_weekly/output/selected_weekly_spot_bars.parquet > work/frozen_phase9/selected_weekly_spot_bars.parquet
+          test -s work/frozen_phase9/weekly_cycle_manifest.csv
+          test -s work/frozen_phase9/selected_weekly_spot_bars.parquet
+          head -n 2 work/frozen_phase9/weekly_cycle_manifest.csv
+
+      - name: Run full 504 weekly configurations
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_HOME: ~/.cache/huggingface
+          THEMARKET_REVISION: main
+          RISSIN_REVISION: 8f7739cab3f38abdcbc6332a6d0a83e1341326e3
+          PYTHONPATH: ${{ github.workspace }}
+          POLARS_IGNORE_TIMEZONE_PARSE_ERROR: '1'
+          HF_HUB_DOWNLOAD_TIMEOUT: '120'
+          HF_HUB_ETAG_TIMEOUT: '30'
+        run: |
+          rm -rf research/phase22a_weekly_504_strike_expansion/output
+          mkdir -p research/phase22a_weekly_504_strike_expansion/output
+          mkdir -p research/phase9_weekly/output
+          cp work/frozen_phase9/weekly_cycle_manifest.csv research/phase9_weekly/output/weekly_cycle_manifest.csv
+          cp work/frozen_phase9/selected_weekly_spot_bars.parquet research/phase9_weekly/output/selected_weekly_spot_bars.parquet
+          python research/phase22a_weekly_504_strike_expansion/weekly_504_backtest.py \
+            --variant-start 0 \
+            --variant-end 504 \
+            --baseline-manifest work/frozen_phase9/weekly_cycle_manifest.csv \
+            --expiry-start 0 \
+            --expiry-end 63 \
+            --start-date 2024-01-01 \
+            --end-date 2026-12-31 \
+            --hf-cache ~/.cache/huggingface \
+            --output-dir research/phase22a_weekly_504_strike_expansion/output
+
+      - name: Validate 504 outputs
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          out=Path('research/phase22a_weekly_504_strike_expansion/output')
+          reg=json.loads((out/'variant_registry.json').read_text())
+          summary=json.loads((out/'variant_summary.json').read_text())
+          ids=reg['variant_ids']
+          assert len(reg['k1_rules']) == 18
+          assert len(ids) == 504
+          assert len(summary) == 504
+          assert {x['variant_id'] for x in summary} == set(ids)
+          rates=[x['valid_rate_all_63'] for x in summary if x['valid_rate_all_63'] is not None]
+          assert rates
+          print(json.dumps({'variant_count':len(summary),'min_valid_rate':min(rates),'mean_valid_rate':sum(rates)/len(rates),'max_valid_rate':max(rates),'promotable':sum(bool(x.get('promotable_to_capital_phase')) for x in summary)}, indent=2))
+          PY
+
+      - name: Create compact analysis tables
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import pandas as pd
+          out=Path('research/phase22a_weekly_504_strike_expansion/output')
+          rows=json.loads((out/'variant_summary.json').read_text())
+          df=pd.json_normalize(rows)
+          df.to_csv(out/'ALL_504_CONFIG_RESULTS.csv', index=False)
+          cols=['variant_id','training.total_net_rupees','validation.total_net_rupees','holdout.total_net_rupees','holdout.annualized_weekly_sharpe','valid_rate_all_63','training_bootstrap_p_value','training_holm_adjusted_p','promotable_to_capital_phase']
+          df[cols].to_csv(out/'ALL_504_CONFIG_RESULTS_COMPACT.csv', index=False)
+          df['k1']=df['variant_id'].str.extract(r'^(OTM\d+|ATM_NEAREST|ATM_UP|ITM\d+)_')[0]
+          df['k2']=df['variant_id'].str.extract(r'_(NEXT\d+|MIRROR_GAP)_K3')[0]
+          df['k3']=df['variant_id'].str.extract(r'_K3M(.+)$')[0].astype(float)
+          df.groupby('k1',as_index=False)['holdout.total_net_rupees'].mean().sort_values('holdout.total_net_rupees',ascending=False).to_csv(out/'K1_SURFACE_MEAN_HOLDOUT.csv',index=False)
+          df.groupby('k2',as_index=False)['holdout.total_net_rupees'].mean().sort_values('holdout.total_net_rupees',ascending=False).to_csv(out/'K2_SURFACE_MEAN_HOLDOUT.csv',index=False)
+          df.groupby('k3',as_index=False)['holdout.total_net_rupees'].mean().sort_values('holdout.total_net_rupees',ascending=False).to_csv(out/'K3_SURFACE_MEAN_HOLDOUT.csv',index=False)
+          PY
+
+      - name: Upload complete 504 results
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase22a-weekly-504-results
+          path: research/phase22a_weekly_504_strike_expansion/output/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Commit compact 504 results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/phase22a_weekly_504_strike_expansion/output/ALL_504_CONFIG_RESULTS.csv \
+                  research/phase22a_weekly_504_strike_expansion/output/ALL_504_CONFIG_RESULTS_COMPACT.csv \
+                  research/phase22a_weekly_504_strike_expansion/output/K1_SURFACE_MEAN_HOLDOUT.csv \
+                  research/phase22a_weekly_504_strike_expansion/output/K2_SURFACE_MEAN_HOLDOUT.csv \
+                  research/phase22a_weekly_504_strike_expansion/output/K3_SURFACE_MEAN_HOLDOUT.csv \
+                  research/phase22a_weekly_504_strike_expansion/output/variant_registry.json \
+                  research/phase22a_weekly_504_strike_expansion/output/variant_summary.json
+          git diff --cached --quiet || git commit -m 'phase22a: publish weekly 504 configuration results'
+          git push origin HEAD:phase-22a-weekly-504-strike-expansion
