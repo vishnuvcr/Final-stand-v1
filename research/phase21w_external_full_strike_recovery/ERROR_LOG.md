@@ -108,3 +108,11 @@
 - **Impact:** the recovered 1,120 cells were produced successfully, but the merge could not start, so no final 63-expiry rerun occurred.
 - **Correction:** the merge script now accepts `--target-cells` and verifies that the external cycle manifest exactly matches the 1,120 approved variant/expiry pairs before merging.
 - **Evidence:** failed run 36714191588, job 109882930922.
+
+
+## E21X-016 — Full merged-bar scan caused repeated runner shutdown during merge
+
+- **Observed:** the corrected recovery reached the merge step, but the runner received a shutdown signal while the full base+external Parquet sink and subsequent full-file duplicate/cell scans were running. A rerun reproduced the cancellation at the same stage.
+- **Impact:** external recovery itself succeeded and verified all 224 variants for all five target expiries, but the final merged input was not produced.
+- **Correction:** merge now streams the frozen base Parquet row groups directly with PyArrow, appends the small external table, validates external duplicates in-memory, and uses a predicate-pushdown target-cell check instead of rescanning the complete merged file. The logical cell-count gate remains tied to the frozen cycle manifest.
+- **Evidence:** run 36714458466, attempts 1 and 2, job IDs 109883850710 and 109885523118.
