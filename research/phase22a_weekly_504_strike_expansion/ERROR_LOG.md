@@ -37,3 +37,7 @@
 - Observed: the annual RISSIN NIFTY parquet contains multiple weekly option expiries sharing the same timestamp and strike. A duplicate check on only `(timestamp, strike)` therefore reported 79,066 false duplicate groups.
 - Impact: the 504 run stopped before reading any per-expiry source.
 - Correction: duplicate identity for the RISSIN annual file now includes `_expiry`; true duplicates within the same expiry/timestamp/strike remain a hard error.
+## E22A-009 — Explicit IST casting required for Polars timestamp literals
+- Observed: normalized option timestamps were `Datetime(..., Asia/Kolkata)`, while Polars converted Python timezone-aware literals to UTC during comparison.
+- Impact: the 504 workflow stopped on the first weekly expiry with an incompatible timestamp comparison.
+- Correction: entry and expiry-end literals are explicitly cast to `Datetime(us, Asia/Kolkata)` before filtering. No trading timestamp changed.
