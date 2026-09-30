@@ -21,3 +21,8 @@
 - **Observed:** TrueData documents historical NSE F&O data with optional Bid/Ask history and a historical tick API supporting bid/ask fields.
 - **Impact:** the technical data contract may be satisfiable, but no authorized credential/subscription is available to the research workflow at present.
 - **Correction:** record TrueData as the primary vendor acquisition candidate; do not claim data admission until a real sample is obtained, hashed and schema-validated. No paid purchase or credential fabrication.
+
+## E22-005 — Default TrueData tick retention is too short for retrospective Phase 22
+- **Observed:** current TrueData documentation says default REST tick history is limited to the last five trading days; extended history is an add-on.
+- **Impact:** default access cannot supply the historical weekly-expiry periods needed for the planned retrospective train/validation/holdout experiment.
+- **Correction:** require verified extended-history entitlement covering the target dates before admission. Do not substitute current ticks for historical periods or alter the experiment dates to fit the data.
