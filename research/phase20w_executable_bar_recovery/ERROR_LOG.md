@@ -60,3 +60,9 @@ No Phase-20 execution errors yet.
 - **Issue:** The Phase-9 calendar restored from the artifact contains 100 weekly expiries, while the frozen Phase-17/19 experiment explicitly used the first 63 cycles.
 - **Impact:** Phase-20 diagnostic initially treated 64 cycles as missing instead of the frozen 27-cycle gap.
 - **Correction:** Restrict recovery to the exact frozen 63-cycle manifest (`expiry_start=0`, `expiry_end=63`). No additional cycles will enter the research sample.
+
+
+## E20-007 — 2026-09-30
+- **Issue:** HF-02 `datetime` values are UTC, while the frozen Phase-19 entry/lock calendar is Asia/Kolkata. Direct string comparison therefore shifted the required 10:00/14:00 observations by +5:30 hours and admitted zero cycles.
+- **Impact:** HF-02 appeared to have no usable missing cycles despite containing intraday observations.
+- **Correction:** Convert HF-02 `datetime` from UTC to Asia/Kolkata before exact entry/lock matching. This is a timestamp interpretation correction supported by the dataset's epoch/timestamp fields; no OHLC values are changed.
