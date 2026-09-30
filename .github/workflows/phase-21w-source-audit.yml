@@ -61,21 +61,6 @@ jobs:
           path: work/combined
           if_no_artifact_found: fail
 
-      - name: Rebuild exact frozen Phase 9 spot interface from pinned index
-        env:
-          HF_TOKEN: ${{ secrets.HF_TOKEN }}
-          HF_HOME: ~/.cache/huggingface
-          HF_HUB_DOWNLOAD_TIMEOUT: "120"
-          HF_HUB_ETAG_TIMEOUT: "30"
-        run: |
-          base="$(find work/combined -path '*/combined_input/baseline_calendar.json' -print -quit)"
-          test -n "$base"
-          rm -rf work/phase9
-          mkdir -p work/phase9/output
-          python research/phase21w_external_full_strike_recovery/build_frozen_spot_interface.py             --baseline-calendar "$base"             --hf-cache ~/.cache/huggingface             --output-dir work/phase9/output
-          test -f work/phase9/output/weekly_cycle_manifest.csv
-          test -f work/phase9/output/selected_weekly_spot_bars.parquet
-
       - name: Compile source-recovery code
         run: |
           python -m py_compile \
@@ -99,7 +84,7 @@ jobs:
           HF_HUB_ETAG_TIMEOUT: "30"
         run: |
           base="$(find work/combined -path '*/combined_input/baseline_calendar.json' -print -quit)"
-          spot="$(find work/phase9 -name selected_weekly_spot_bars.parquet -print -quit)"
+          spot="$(find work/combined -name selected_weekly_spot_bars.parquet -print -quit)"
           test -n "$base"
           test -n "$spot"
           python research/phase21w_external_full_strike_recovery/recover_rissin_missing.py \
@@ -128,6 +113,13 @@ jobs:
           mkdir -p research/phase9_weekly/output
           cp "$baseline" research/phase9_weekly/output/weekly_cycle_manifest.csv
           cp "$spot" research/phase9_weekly/output/selected_weekly_spot_bars.parquet
+
+      - name: Restore exact Phase 9 frozen interface for the engine
+        run: |
+          rm -rf research/phase9_weekly/output
+          mkdir -p research/phase9_weekly/output
+          cp work/final_input/phase9_weekly/output/weekly_cycle_manifest.csv research/phase9_weekly/output/weekly_cycle_manifest.csv
+          cp work/final_input/phase9_weekly/output/selected_weekly_spot_bars.parquet research/phase9_weekly/output/selected_weekly_spot_bars.parquet
 
       - name: Restore the exact frozen engine revision
         run: |
