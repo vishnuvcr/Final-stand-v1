@@ -1,40 +1,7 @@
-# Phase 22W Research Log
+[object Object]
 
-## 2026-09-30 — Initiation
-- Created Phase 22 branch from main.
-- Completed source audit across official NSE documentation and public OHLC/tick/depth candidates.
-- Frozen execution-data contract.
-- Frozen complete 224-configuration prospective registry.
-- Defined manual workflow gates and reproducibility requirements.
-- No new holdout has been inspected or opened.
-## 2026-09-30 — Expanded execution-data audit
-- Audited Upstox live depth/bid-ask and expired-instrument historical endpoints.
-- Audited Dhan historical expired-option data and real-time 20/200-level depth.
-- Audited ICICI Breeze historical option candles.
-- Audited public GitHub repositories advertising bid/ask snapshot schemas.
-- Result: no freely accessible, immutable historical bid/ask/depth archive has yet been admitted.
-- Added a manual GitHub Actions workflow with a hard refusal gate when the execution-data cache is absent.
-- Phase remains blocked at execution-data admission; no new holdout opened and no Phase 21W configuration selected post hoc.
-
-## 2026-09-30 — Strongest vendor route identified
-- TrueData documentation confirms historical NSE F&O data with optional Bid/Ask history and a historical tick interface with bid/ask quantities.
-- TrueData is now the primary acquisition candidate for Phase 22 execution data.
-- No credentials or paid subscription are assumed; no vendor data have been admitted.
-- Admission remains gated on a real sample, exact schema validation, provenance and SHA-256 hashing.
-
-## 2026-09-30 — TrueData retention check
-- Verified current TrueData documentation: default REST tick history is 5 trading days; intraday bars are 6 months; extended history is an add-on.
-- TrueData remains technically suitable for bid/ask schema, but default access is insufficient for the retrospective Phase 22 target periods.
-- No data admission or holdout opening occurred.
-
-## 2026-09-30 — TrueData coverage qualification
-- Confirmed TrueData supports historical Bid/Ask fields suitable for the execution contract.
-- Confirmed default REST tick history is limited to the last 5 trading days; extended history is an add-on.
-- Corrected the earlier assumption that TrueData automatically supplies the required multi-year historical archive.
-- No data admitted and no holdout opened; authorized historical sample remains the next gate.
-
-## 2026-09-30 — Global Datafeeds route identified
-- Found official Global Datafeeds historical NFO tick documentation showing bid/ask prices and quantities in historical tick responses.
-- Added Global Datafeeds as a primary acquisition candidate alongside TrueData.
-- No credentials, purchase or data admission assumed.
-- Full historical retention for the required 2024–2026 NIFTY weekly option sample remains to be verified.
+## 2026-09-30 — Strategy-horizon clarification
+- Reviewed the frozen Phase 21 implementation and manuscript after a user challenge about the phrase “intraday strategy.”
+- Confirmed that 10:00 IST is the entry timestamp and 14:00 IST is the lock timestamp, but these are not same-day open/close boundaries.
+- The first trading day after the prior expiry is the entry day; the trading day before the target expiry is the lock day; remaining position may persist to target expiry unless stopped/exited earlier.
+- Corrected the conversational characterization: **weekly-horizon strategy using intraday execution timestamps**, not an intraday-only strategy.
