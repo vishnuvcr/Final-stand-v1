@@ -1,0 +1,26 @@
+name: Phase 20W - Inspect HF2 Timestamp Schema
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: pip install -q huggingface_hub polars pyarrow
+      - env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_CACHE: ~/.cache/huggingface
+        run: python - <<'PY'
+from huggingface_hub import hf_hub_download
+import polars as pl, os, json
+p=hf_hub_download(repo_id="artist-23/nifty-options-data",filename="NIFTY/WEEK/ATM_CE.parquet",repo_type="dataset",revision="45e0a043f34f3f40f9694e52a944297803c2af8b",token=os.getenv("HF_TOKEN"),cache_dir=os.getenv("HF_CACHE","~/.cache/huggingface"))
+df=pl.read_parquet(p)
+print(df.head(5))
+print(df.select(["timestamp","datetime","date","expiry_type","strike_type","option_type"]).head(20))
+print({"timestamp_min":str(df["timestamp"].min()),"timestamp_max":str(df["timestamp"].max()),"datetime_min":str(df["datetime"].min()),"datetime_max":str(df["datetime"].max()),"date_min":str(df["date"].min()),"date_max":str(df["date"].max())})
+
+PY
