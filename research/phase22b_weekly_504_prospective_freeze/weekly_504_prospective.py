@@ -39,6 +39,8 @@ SPOT_REVISION = os.getenv("SPOT_REVISION", "3420f004d1b4ce56975b06fcd594e0787cd6
 FALLBACK_SPOT_REPO = "technovusin/nifty50-historical-data"
 FALLBACK_SPOT_FILE = "1min/2026/NIFTY50_1min_20260101_to_20260908.csv"
 FALLBACK_SPOT_REVISION = os.getenv("FALLBACK_SPOT_REVISION", "cd169a991ccfc8979e718ae5ebeb1891a788107d")
+TRADEMARKK_REPO = "thetrademarkk/india-index-options-1m"
+TRADEMARKK_REVISION = os.getenv("TRADEMARKK_REVISION", "51ca58c")
 
 
 def choose_k1_extended(strikes, spot, rule):
@@ -126,6 +128,8 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
     fallback_path.parent.mkdir(parents=True, exist_ok=True)
     fallback_used = False
     fallback_sha256 = None
+    option_fallback_expiries = []
+    option_fallback_sha256 = {}
 
     lf = pl.scan_parquet(rpath)
     schema = lf.collect_schema()
@@ -134,8 +138,9 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
     if missing:
         raise RuntimeError(f"RISSIN source missing columns: {missing}")
 
-    # Discover target expiries from the source itself, then exclude the latest
-    # expiry in each month (monthly contract) to retain weekly expiries.
+    # Discover target expiries from the primary RISSIN source and a gap-only
+    # TradeMarkk expiry-file catalog. The latter is used only to recover
+    # expiry files absent from RISSIN; it does not replace RISSIN rows.
     discovery = (
         lf.filter(pl.col("underlying") == "NIFTY")
         .filter(pl.col("granularity") == "1min")
@@ -145,7 +150,15 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
         .unique()
         .collect(engine="streaming")
     )
-    all_expiries = sorted(str(x) for x in discovery["_expiry"].to_list())
+    rissin_expiries = sorted(str(x) for x in discovery["_expiry"].to_list())
+    tm_files = api.list_repo_files(repo_id=TRADEMARKK_REPO, repo_type="dataset", revision=TRADEMARKK_REVISION)
+    tm_expiries = sorted(
+        p.rsplit("/", 1)[-1].removesuffix(".parquet")
+        for p in tm_files
+        if p.startswith("options/NIFTY/") and p.endswith(".parquet")
+        and start_date <= p.rsplit("/", 1)[-1].removesuffix(".parquet") <= end_date
+    )
+    all_expiries = sorted(set(rissin_expiries) | set(tm_expiries))
     latest_by_month = {}
     for e in all_expiries:
         key = e[:7]
@@ -153,7 +166,7 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
     monthly = set(latest_by_month.values())
     targets = [e for e in all_expiries if e not in monthly]
     if len(targets) < 7:
-        raise RuntimeError(f"Only {len(targets)} weekly expiries admitted from RISSIN in {start_date}..{end_date}: {targets}")
+        raise RuntimeError(f"Only {len(targets)} weekly expiries admitted from primary/fallback sources in {start_date}..{end_date}: {targets}")
 
     target_dates = [date.fromisoformat(x) for x in targets]
 
@@ -239,6 +252,36 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
             )
             .filter(pl.col("strike").is_not_null() & pl.col("open").is_not_null())
         )
+        if opt.height == 0 and expiry.isoformat() in tm_expiries:
+            tm_path = Path(hf_hub_download(
+                repo_id=TRADEMARKK_REPO,
+                filename=f"options/NIFTY/{expiry.isoformat()}.parquet",
+                repo_type="dataset",
+                revision=TRADEMARKK_REVISION,
+                token=token,
+                cache_dir=str(cache),
+            ))
+            tm = pl.read_parquet(tm_path)
+            required_tm = {"timestamp", "strike", "open", "volume", "option_type"}
+            missing_tm = sorted(required_tm - set(tm.columns))
+            if missing_tm:
+                raise RuntimeError(f"TradeMarkk fallback missing columns for {expiry}: {missing_tm}")
+            opt = (
+                tm.filter(pl.col("option_type").cast(pl.String).str.to_uppercase().is_in(["CE", "CALL"]))
+                .select(["timestamp", "strike", "open", "volume"])
+                .with_columns(
+                    pl.col("timestamp").cast(pl.Datetime(time_zone="Asia/Kolkata")),
+                    pl.col("strike").cast(pl.Float64, strict=False),
+                    pl.col("open").cast(pl.Float64, strict=False),
+                    pl.col("volume").cast(pl.Float64, strict=False),
+                )
+                .filter(pl.col("timestamp") >= ts_lit(datetime.combine(entry_day, time(9, 0), IST)))
+                .filter(pl.col("timestamp") <= ts_lit(datetime.combine(expiry, time(16, 0), IST)))
+                .filter(pl.col("strike").is_not_null() & pl.col("open").is_not_null())
+            )
+            if opt.height:
+                option_fallback_expiries.append(expiry.isoformat())
+                option_fallback_sha256[expiry.isoformat()] = sha256(tm_path)
 
         entry_calls = opt.filter((pl.col("timestamp") == ts_lit(entry_ts)) & (pl.col("volume") > 0))
         strikes = sorted(float(x) for x in entry_calls["strike"].unique().to_list())
@@ -323,6 +366,10 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
         "fallback_spot_revision": FALLBACK_SPOT_REVISION,
         "fallback_spot_sha256": fallback_sha256,
         "fallback_spot_used": fallback_used,
+        "trademarkk_repo": TRADEMARKK_REPO,
+        "trademarkk_revision": TRADEMARKK_REVISION,
+        "option_fallback_expiries": option_fallback_expiries,
+        "option_fallback_sha256": option_fallback_sha256,
         "requested_start": start_date,
         "requested_end": end_date,
         "weekly_expiries": targets,
