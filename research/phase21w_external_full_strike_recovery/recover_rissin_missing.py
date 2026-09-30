@@ -3,6 +3,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+os.environ.setdefault("POLARS_IGNORE_TIMEZONE_PARSE_ERROR", "1")
 from datetime import date, datetime, time, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
