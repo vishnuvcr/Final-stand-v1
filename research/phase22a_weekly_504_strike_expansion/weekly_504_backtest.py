@@ -21,6 +21,26 @@ base.VARIANT_IDS = [
     for m in base.K3_MULTIPLIERS
 ]
 
+
+def choose_k1_extended(strikes, spot, rule):
+    s = sorted(set(float(x) for x in strikes))
+    if rule.startswith('OTM'):
+        n = int(rule[3:])
+        candidates = [k for k in s if k > spot]
+        return candidates[n - 1] if len(candidates) >= n else None
+    if rule.startswith('ITM'):
+        n = int(rule[3:])
+        candidates = [k for k in s if k < spot]
+        return candidates[-n] if len(candidates) >= n else None
+    if rule == 'ATM_NEAREST':
+        return min(s, key=lambda k: (abs(k - spot), -k)) if s else None
+    if rule == 'ATM_UP':
+        candidates = [k for k in s if k >= spot]
+        return candidates[0] if candidates else None
+    raise ValueError(f'unknown K1 rule: {rule}')
+
+base.choose_k1 = choose_k1_extended
+
 if len(base.VARIANT_IDS) != 504:
     raise RuntimeError(f"Expected 504 variants, found {len(base.VARIANT_IDS)}")
 
