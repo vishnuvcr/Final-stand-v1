@@ -72,3 +72,9 @@ No Phase-20 execution errors yet.
 - **Issue:** HF-02 `datetime` is already a Polars `datetime[ns]`, so applying string parsing was invalid.
 - **Impact:** Recovery stopped before HF-02 cycle matching.
 - **Correction:** Add 5h30 directly to the datetime column and then format to the comparison string. No observation values are changed.
+
+
+## E20-009 — 2026-09-30
+- **Issue:** HF-02 recovery re-read all 21 weekly files inside each missing-expiry loop, causing excessive runtime.
+- **Impact:** The current recovery job became unnecessarily long and was still in progress without producing a result.
+- **Correction:** Cache each pinned HF-02 weekly file once per job and reuse the in-memory frames for all missing expiries. This is a performance-only change; source precedence, timestamps, strike selection and admission rules remain frozen.
