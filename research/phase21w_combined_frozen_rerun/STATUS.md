@@ -16,3 +16,6 @@
 - Run 44 validated the 63/58/5 coverage contract successfully but stopped before the backtest because the restored Phase-9 spot interface was extracted under the wrong directory.
 
 - Workflow run 36708865255 failed at combined-input construction only because the builder still referenced `phase9_weekly/output`; the artifact was correctly restored under `research/phase9_weekly/output`. The builder path is now corrected.
+
+- Workflow run 36709072723 completed the bounded-memory combined build, coverage validation, and exact frozen 224-variant backtest successfully. The only failed step was committing the 346.32 MB combined parquet, which exceeds GitHub's 100 MB single-file limit.
+- Correction: commit the auditable summary/trade outputs and compact coverage/manifest files, while retaining the full combined parquet in the workflow artifact; the parquet remains reproducible from the pinned HF-03 artifact plus admitted HF-02 source.

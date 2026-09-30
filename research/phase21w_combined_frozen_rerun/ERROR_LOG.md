@@ -83,3 +83,9 @@
 - **Impact:** The combined build stopped before any coverage validation or backtest; no empirical result was produced.
 - **Correction:** Point the baseline-manifest read to the restored Phase-9 interface path under `research/`.
 - **Prevention:** Keep all Phase-21 artifact-consumer paths under the same `research/` namespace used by the frozen backtest engine and verify them in a preflight step.
+
+## E21-018 — 2026-09-30
+- **Issue:** Workflow run 36709072723 completed the exact backtest but the result commit was rejected because `variant_option_bars.parquet` is 346.32 MB, above GitHub's 100 MB single-file limit.
+- **Impact:** Backtest results were generated/uploaded but not persisted to the branch.
+- **Correction:** Exclude the large combined parquet from the Git commit. Persist `coverage.json`, `variant_cycle_manifest.csv`, and the complete backtest output directory; keep the full combined parquet in the workflow artifact for reproducibility.
+- **Prevention:** Large generated datasets must use workflow artifacts (or intentionally sharded storage) rather than a single Git blob; repository commits should contain compact provenance and statistical outputs.

@@ -22,3 +22,8 @@
 ## 2026-09-30 — E21-017 Phase-9 baseline path mismatch
 - Workflow run 36708865255 failed before reading any option bars because `build_combined.py` still referenced `phase9_weekly/output/weekly_cycle_manifest.csv` after the workflow was correctly changed to restore the Phase-9 artifact under `research/`.
 - Correction: update the builder's frozen-baseline manifest path to `research/phase9_weekly/output/weekly_cycle_manifest.csv`. No source data or strategy parameter changed.
+
+## 2026-09-30 — E21-018 repository persistence limit
+- Workflow run 36709072723 completed the exact frozen 224-variant backtest and uploaded the results artifact successfully.
+- The final commit/push failed only because `research/phase21w_combined_frozen_rerun/combined_input/variant_option_bars.parquet` is 346.32 MB and GitHub rejects individual files over 100 MB.
+- Correction: commit the compact coverage/manifest files and all backtest output summaries/trades, while retaining the full combined parquet in the successful workflow artifact. The combined parquet is deterministically reproducible from the pinned HF-03 artifact and admitted HF-02 source.

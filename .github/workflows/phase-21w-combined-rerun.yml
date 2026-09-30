@@ -80,8 +80,12 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add research/phase21w_combined_frozen_rerun/output research/phase21w_combined_frozen_rerun/combined_input research/phase9_weekly/output
+          git add research/phase21w_combined_frozen_rerun/output research/phase21w_combined_frozen_rerun/combined_input/coverage.json research/phase21w_combined_frozen_rerun/combined_input/variant_cycle_manifest.csv research/phase9_weekly/output
           git diff --cached --quiet || git commit -m 'phase21w: record combined frozen rerun'
+          # Do not push the ~346 MB combined option parquet; GitHub's file limit is 100 MB.
+          # The exact combined parquet is already captured by the workflow artifact and is reproducible
+          # from the pinned HF-03 artifact plus the admitted HF-02 recovery source.
+
           git fetch origin phase-21w-combined-frozen-rerun
           git rebase origin/phase-21w-combined-frozen-rerun
           git push origin HEAD:phase-21w-combined-frozen-rerun
