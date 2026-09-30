@@ -76,3 +76,9 @@
 - Observed: the producer writes `weekly_expiries`, but the validator attempted to read obsolete key `selected_weekly_expiries`, causing `KeyError` after the complete 504-family computation.
 - Impact: validation/publish/artifact steps were skipped; the research computation itself completed successfully.
 - Correction: validator now reads the producer's canonical `weekly_expiries` field. The pre-specified minimum of 8 weekly expiries remains unchanged.
+
+
+## E22B-016 — RISSIN weekly expiry coverage insufficient for the frozen 8-expiry gate
+- Observed: corrected validation showed only 7 weekly expiries from RISSIN in 2026-05-19..2026-08-04, while the frozen validation requires at least 8.
+- External source review found the current TradeMarkk Hugging Face NIFTY 1-minute options dataset has per-expiry Parquet files and currently advertises coverage through 2026-08-04. citeturn1search0turn0search2
+- Correction: add TradeMarkk as a **gap-only option-data fallback** for expiry files absent from RISSIN. RISSIN remains primary; no strategy, strike grid, entry/lock times, causal spot rule, cost model, or 8-expiry validation threshold is changed.
