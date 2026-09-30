@@ -77,5 +77,5 @@ report = {
     ],
 }
 
-Path(args.output).write_text(json.dumps(report, indent=2)
+Path(args.output).write_text(json.dumps(report, indent=2))
 print(json.dumps(report, indent=2))
