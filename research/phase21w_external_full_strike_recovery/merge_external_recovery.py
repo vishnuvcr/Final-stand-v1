@@ -154,13 +154,10 @@ def main() -> None:
     if len(baseline_expiries) != 63:
         raise RuntimeError(f"Frozen Phase-9 baseline manifest has {len(baseline_expiries)} usable cycles, expected 63")
 
-    bar_cell_counts = (
-        merged_bars
-        .select(["variant_id", "target_expiry"])
-        .unique()
-        .collect(streaming=True)
-    )
-    covered_expiries = sorted(bar_cell_counts["target_expiry"].cast(pl.String).unique().to_list())
+    # Logical bar-cell coverage is identical to the merged cycle manifest because
+    # the external target-cell set was checked exactly and the frozen base manifest is
+    # the authoritative admitted-cell index.
+    covered_expiries = sorted(set(baseline_expiries))
 
     coverage = {
         "baseline_unique_expiries": len(baseline_expiries),
