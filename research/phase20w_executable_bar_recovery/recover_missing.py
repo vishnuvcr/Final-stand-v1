@@ -19,8 +19,8 @@ K2=["NEXT1","NEXT2","NEXT3","MIRROR_GAP"]
 K3=[0.5,1.0,1.5,2.0,2.5,3.0,4.0]
 variants=[f"{a}_{b}_K3M{m:g}" for a in K1 for b in K2 for m in K3]
 
-base=pl.read_csv("research/phase9_weekly/output/weekly_cycle_manifest.csv")
-trade=pl.read_csv("research/phase19w_recovered_rerun/output/trades_ITM3_NEXT1_K3M4.csv")
+base=pl.read_csv("research/phase9_weekly/output/weekly_cycle_manifest.csv").head(63)
+trade=pl.read_csv("research/phase19w_recovered_rerun/output/trades_ITM3_NEXT1_K3M4.csv").filter(pl.col("target_expiry").is_in(base["target_expiry"].cast(pl.String)))
 got=set(trade["target_expiry"].cast(pl.String).to_list())
 missing=[x for x in base["target_expiry"].cast(pl.String).to_list() if x not in got]
 base=base.with_columns(pl.col("target_expiry").cast(pl.String)).sort("target_expiry").head(63)
