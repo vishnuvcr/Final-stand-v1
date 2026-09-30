@@ -1,13 +1,4 @@
-import os, subprocess
-from pathlib import Path
-repo=Path("/tmp/hf_stocks")
-if not repo.exists():
-    token=os.environ.get("HF_TOKEN","")
-    subprocess.run(["git","config","--global","credential.helper","store"],check=True)
-    subprocess.run(["hf","auth","login","--token",token,"--add-to-git-credential"],check=True)
-    subprocess.run(["git","clone","--filter=blob:none","--no-checkout","https://huggingface.co/datasets/johnwick3690/stocks",str(repo)],check=True)
-path="nifty historical data/nifty 50 1min options weekly expiries/20240613_WEEK.parquet"
-subprocess.run(["git","-C",str(repo),"lfs","fetch","origin","main","--include",path],check=True)
-subprocess.run(["git","-C",str(repo),"lfs","checkout",path],check=True)
-p=repo/path
-print({"path":str(p),"exists":p.exists(),"size":p.stat().st_size if p.exists() else None})
+import os
+from huggingface_hub import hf_hub_download
+p=hf_hub_download("artist-23/nifty-options-data",filename="NIFTY/WEEK/ATM+0_CE.parquet",revision="45e0a043f34f3f40f9694e52a944297803c2af8b",repo_type="dataset",token=os.getenv("HF_TOKEN"),cache_dir=os.getenv("HF_CACHE","~/.cache/huggingface"))
+print({"path":p,"size":__import__("os").path.getsize(p)})
