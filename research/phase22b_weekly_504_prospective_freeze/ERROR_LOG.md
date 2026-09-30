@@ -70,3 +70,9 @@
 - Observed: the full 504-family computation completed successfully, producing 7 admitted weekly expiries, 3,528/3,528 expected usable variant-cycle rows, and all 504 variants. The subsequent validation step failed with `ModuleNotFoundError: No module named 'pandas'`.
 - Impact: validation/publish/artifact steps were skipped; this was a workflow dependency failure, not a research-computation failure.
 - Correction: add `pandas` to the workflow's installed Python dependencies. No research data, variant definition, weekly protocol, or statistical rule is changed.
+
+
+## E22B-015 — Validator used obsolete registry field
+- Observed: the producer writes `weekly_expiries`, but the validator attempted to read obsolete key `selected_weekly_expiries`, causing `KeyError` after the complete 504-family computation.
+- Impact: validation/publish/artifact steps were skipped; the research computation itself completed successfully.
+- Correction: validator now reads the producer's canonical `weekly_expiries` field. The pre-specified minimum of 8 weekly expiries remains unchanged.
