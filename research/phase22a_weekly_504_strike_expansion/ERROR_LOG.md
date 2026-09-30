@@ -45,3 +45,7 @@
 - Observed: the first timezone correction fixed the weekly range filter but the separate exact-entry filter still used a Python datetime literal that Polars interpreted as UTC.
 - Impact: the 504 run stopped before K1/K2/K3 selection for the first expiry.
 - Correction: the entry timestamp comparison now uses the same explicit `Datetime(us, Asia/Kolkata)` cast as the range filter.
+## E22A-011 — RISSIN per-expiry filter retained the same UTC-literal mismatch
+- Observed: the generic IST correction was applied to TheTrademarkk filtering and entry selection, but the special five-expiry RISSIN filter still compared an IST series to a UTC-converted Python literal.
+- Impact: the workflow reached the first recovered expiry, then stopped before configuration construction.
+- Correction: RISSIN's external entry/end literals are explicitly cast to `Datetime(us, Asia/Kolkata)`.
