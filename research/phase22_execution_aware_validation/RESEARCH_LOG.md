@@ -26,3 +26,9 @@
 - Verified current TrueData documentation: default REST tick history is 5 trading days; intraday bars are 6 months; extended history is an add-on.
 - TrueData remains technically suitable for bid/ask schema, but default access is insufficient for the retrospective Phase 22 target periods.
 - No data admission or holdout opening occurred.
+
+## 2026-09-30 — TrueData coverage qualification
+- Confirmed TrueData supports historical Bid/Ask fields suitable for the execution contract.
+- Confirmed default REST tick history is limited to the last 5 trading days; extended history is an add-on.
+- Corrected the earlier assumption that TrueData automatically supplies the required multi-year historical archive.
+- No data admitted and no holdout opened; authorized historical sample remains the next gate.
