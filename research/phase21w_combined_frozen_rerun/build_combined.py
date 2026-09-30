@@ -1,6 +1,6 @@
 from pathlib import Path
 import polars as pl, json
-hf03=Path('research/phase19w_recovered_rerun/output')
+hf03=Path('research/phase21w_combined_frozen_rerun/hf03_build')
 hf2=Path('research/phase20w_executable_bar_recovery/output')
 out=Path('research/phase21w_combined_frozen_rerun/combined_input'); out.mkdir(parents=True,exist_ok=True)
 c3=pl.read_csv(hf03/'variant_cycle_manifest.csv'); b3=pl.read_parquet(hf03/'variant_option_bars.parquet')
