@@ -14,3 +14,8 @@
 - **Issue:** The third Phase-21 run was cancelled during a redundant HF-03 interface rebuild.
 - **Impact:** No empirical result was produced.
 - **Correction:** Phase 21 will use the already-persisted Phase-19 HF-03 interface/results as its primary source and the admitted Phase-20 HF-02 recovery overlay, avoiding unnecessary redownload/rebuild. The frozen 63-cycle calendar and strategy parameters remain unchanged.
+
+## E21-004 — 2026-09-30
+- **Issue:** Phase-19 persisted outputs do not include the intermediate `variant_option_bars.parquet` required for exact re-execution.
+- **Impact:** A direct persisted-input overlay cannot reproduce the original OHLC backtest interface.
+- **Correction:** Rebuild the frozen HF-03 interface once from its pinned revision, then overlay admitted HF-02 cycles. The rebuild is data-interface reconstruction, not parameter retuning.
