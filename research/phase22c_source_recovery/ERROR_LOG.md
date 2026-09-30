@@ -30,3 +30,12 @@
 - Claim: 1-minute NIFTY expired options with OHLCV + OI, including weekly/monthly expiries and all strikes.
 - Limitation: exact machine-readable 2026 expiry coverage and provenance are not established from public documentation alone.
 - Action: do not admit candidate data until expiry, schema, duplicate, hash and overlap checks pass.
+
+
+## E22C-002 — Free sample download could not be machine-ingested in this run
+- Date: 2026-10-01
+- Cloud Trader Pro links a free NIFTY sample to Google Drive.
+- Web connector returned HTTP 401 when following the Drive file.
+- Local runtime has no external-network/DNS access, so a second direct download path was unavailable.
+- Impact: candidate schema/coverage could be documented from the public page but the sample bytes could not be hashed or empirically inspected in this run.
+- Resolution: retain candidate as unadmitted; do not use it in Phase 22B/22C calculations.
