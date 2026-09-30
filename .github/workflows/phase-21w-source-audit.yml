@@ -1,18 +1,8 @@
 name: Phase 21W - External Full-Strike Recovery
 
 on:
-  push:
-    branches:
-      - phase-21w-external-full-strike-recovery
-    paths:
-      - 'research/phase21w_external_full_strike_recovery/recover_rissin_missing.py'
-      - 'research/phase21w_external_full_strike_recovery/merge_external_recovery.py'
-      - 'research/phase21w_external_full_strike_recovery/build_frozen_spot_interface.py'
-      - '.github/workflows/phase-21w-source-audit.yml'
   workflow_dispatch:
-  pull_request:
-    branches:
-      - main
+
 permissions:
   actions: read
   contents: write
@@ -74,7 +64,39 @@ jobs:
           python research/phase21w_external_full_strike_recovery/audit_sources.py \
             --output research/phase21w_external_full_strike_recovery/output/source_access_audit.json
 
-      - name: Recover five missing expiries from current RISSIN archive
+      - name: Build exact missing variant-cycle target set
+        run: |
+          python - <<'PY'
+          import csv, json
+          from itertools import product
+          from pathlib import Path
+          base = next(Path('work/combined').rglob('variant_cycle_manifest.csv'))
+          calendar = next(Path('work/combined').rglob('baseline_calendar.json'))
+          K1_RULES = ['OTM1','OTM2','OTM3','ATM_NEAREST','ATM_UP','ITM1','ITM2','ITM3']
+          K2_RULES = ['NEXT1','NEXT2','NEXT3','MIRROR_GAP']
+          K3_MULTIPLIERS = [0.5,1.0,1.5,2.0,2.5,3.0,4.0]
+          variants = [f'{a}_{b}_K3M{m:g}' for a,b,m in product(K1_RULES,K2_RULES,K3_MULTIPLIERS)]
+          expiries = json.load(calendar.open())
+          existing=set()
+          with base.open() as fh:
+              for row in csv.DictReader(fh):
+                  existing.add((row['variant_id'], row['target_expiry']))
+          expected={(v,e) for v in variants for e in expiries}
+          missing=sorted(expected-existing)
+          if len(existing) != 11702:
+              raise SystemExit(f'Unexpected admitted Phase-21 cell count: {len(existing)}')
+          if len(missing) != 2410:
+              raise SystemExit(f'Unexpected missing-cell count: {len(missing)}')
+          out=Path('research/phase21w_external_full_strike_recovery/output')
+          out.mkdir(parents=True,exist_ok=True)
+          with (out/'recovery_target_cells.csv').open('w',newline='') as fh:
+              w=csv.writer(fh)
+              w.writerow(['variant_id','target_expiry'])
+              w.writerows(missing)
+          print(json.dumps({'expected_cells':len(expected),'admitted_cells':len(existing),'missing_cells':len(missing)},indent=2))
+          PY
+
+      - name: Recover exact missing variant-cycle cells from current RISSIN archive
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_HOME: ~/.cache/huggingface
@@ -90,6 +112,7 @@ jobs:
             --hf-cache ~/.cache/huggingface \
             --baseline-calendar "$base" \
             --spot-bars "$spot" \
+            --target-cells research/phase21w_external_full_strike_recovery/output/recovery_target_cells.csv \
             --cycle-output research/phase21w_external_full_strike_recovery/output/rissin_recovered_variant_cycles.csv \
             --bars-output research/phase21w_external_full_strike_recovery/output/rissin_recovered_variant_option_bars.parquet \
             --source-summary research/phase21w_external_full_strike_recovery/output/rissin_source_manifest.json
@@ -98,6 +121,7 @@ jobs:
         run: |
           python research/phase21w_external_full_strike_recovery/merge_external_recovery.py \
             --base-root work/combined \
+            --target-cells research/phase21w_external_full_strike_recovery/output/recovery_target_cells.csv \
             --external-cycle research/phase21w_external_full_strike_recovery/output/rissin_recovered_variant_cycles.csv \
             --external-bars research/phase21w_external_full_strike_recovery/output/rissin_recovered_variant_option_bars.parquet \
             --output-dir work/final_input
@@ -156,6 +180,7 @@ jobs:
           name: phase21w-external-full-strike-recovery-results
           path: |
             research/phase21w_external_full_strike_recovery/output/
+            work/final_input/recovery_target_cells.csv
             work/final_input/coverage.json
             work/final_input/variant_cycle_manifest.csv
           if-no-files-found: error
