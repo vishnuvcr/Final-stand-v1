@@ -1,5 +1,7 @@
 from __future__ import annotations
 import os,json
+import pyarrow.parquet as pq
+import pandas as pd
 from pathlib import Path
 import polars as pl
 from huggingface_hub import hf_hub_download
@@ -19,8 +21,9 @@ def k2(s,k,r):
  return next((x for x in gt if x>=2*k),gt[-1] if gt else None)
 frames=[]; rows=[]
 idx_local=hf_hub_download(repo_id="thetrademarkk/india-index-options-1m",filename="index/NIFTY.parquet",repo_type="dataset",revision="0f4800e43e6f96cec0794369d78eb4d3c4211ef5",token=token,cache_dir=CACHE)
-idx=pl.read_parquet(idx_local).with_columns(pl.col("timestamp").cast(pl.Datetime(time_zone="Asia/Kolkata")))
-idx=idx.with_columns(pl.col("timestamp").dt.strftime("%Y-%m-%dT%H:%M:%S").alias("_its"))
+idx_pdf=pq.read_table(idx_local,columns=["timestamp","open"]).to_pandas()
+idx_pdf["timestamp"]=pd.to_datetime(idx_pdf["timestamp"]).dt.tz_localize(None)
+idx=pl.from_pandas(idx_pdf).with_columns(pl.col("timestamp").dt.strftime("%Y-%m-%dT%H:%M:%S").alias("_its"))
 for off in range(-10,11):
  tag="ATM" if off==0 else f"ATM{off:+d}"
  p=f"NIFTY/WEEK/{tag}_CE.parquet"; local=hf_hub_download(repo_id="artist-23/nifty-options-data",filename=p,repo_type="dataset",revision=REV,token=token,cache_dir=CACHE)
