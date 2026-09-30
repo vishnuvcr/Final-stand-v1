@@ -8,13 +8,11 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import polars as pl
-from huggingface_hub import hf_hub_download
+from huggingface_hub import HfApi, hf_hub_download
 
 IST = ZoneInfo("Asia/Kolkata")
 
 RISSIN_REPO = "rissin/nse-options-intraday"
-RISSIN_REVISION = "78b1c5468255d18cf492984bfe6fe4e3ac874d7c"
-RISSIN_FILE = "upstox_intraday/NIFTY/NIFTY_2026.parquet"
 
 TARGETS = [
     "2026-01-13",
@@ -127,11 +125,21 @@ def main() -> None:
     import os
     token = os.getenv("HF_TOKEN") or None
 
+    api = HfApi(token=token)
+    info = api.dataset_info(RISSIN_REPO, revision="main")
+    rissin_revision = getattr(info, "sha", None)
+    if not rissin_revision:
+        raise RuntimeError("Could not resolve the Rissin dataset main revision")
+    files = api.list_repo_files(repo_id=RISSIN_REPO, repo_type="dataset", revision=rissin_revision)
+    candidates = [f for f in files if f == "upstox_intraday/NIFTY/NIFTY_2026.parquet"]
+    if len(candidates) != 1:
+        raise RuntimeError(f"Expected one Rissin NIFTY_2026 parquet at resolved revision, found {candidates}")
+    rissin_file = candidates[0]
     rissin_local = Path(hf_hub_download(
         repo_id=RISSIN_REPO,
-        filename=RISSIN_FILE,
+        filename=rissin_file,
         repo_type="dataset",
-        revision=RISSIN_REVISION,
+        revision=rissin_revision,
         token=token,
         cache_dir=str(cache),
     ))
@@ -165,9 +173,11 @@ def main() -> None:
         .with_columns(pl.col("expiry").cast(pl.String).str.slice(0, 10).alias("_expiry"))
         .filter(pl.col("_expiry").is_in(TARGETS))
     )
-    source = source.with_columns(
-        pl.col("timestamp").str.to_datetime(strict=False, time_zone="Asia/Kolkata").alias("timestamp")
-    )
+    ts_type = source.collect_schema()["timestamp"]
+    if ts_type == pl.String:
+        source = source.with_columns(pl.col("timestamp").str.to_datetime(strict=False, time_zone="Asia/Kolkata").alias("timestamp"))
+    else:
+        source = source.with_columns(pl.col("timestamp").cast(pl.Datetime(time_zone="Asia/Kolkata")).alias("timestamp"))
     source_df = source.collect(streaming=True)
 
     if source_df.height == 0:
@@ -278,7 +288,7 @@ def main() -> None:
                                     pl.lit(entry_ts.isoformat()).alias("entry_timestamp"),
                                     pl.lit(lock_ts.isoformat()).alias("lock_timestamp"),
                                     pl.lit(float(mult)).alias("k3_multiplier"),
-                                    pl.lit(RISSIN_FILE).alias("source_file"),
+                                    pl.lit(rissin_file).alias("source_file"),
                                     pl.lit(rissin_sha).alias("source_sha256"),
                                 )
                             )
@@ -300,7 +310,7 @@ def main() -> None:
                         "k3_multiplier": mult,
                         "target_error": target_error,
                         "status": status,
-                        "source_file": RISSIN_FILE,
+                        "source_file": rissin_file,
                         "source_sha256": rissin_sha,
                     })
 
@@ -344,7 +354,7 @@ def main() -> None:
 
     summary = {
         "source": RISSIN_REPO,
-        "source_revision": RISSIN_REVISION,
+        "source_revision": rissin_revision,
         "source_file": RISSIN_FILE,
         "source_sha256": rissin_sha,
         "spot_interface": str(args.spot_bars),
