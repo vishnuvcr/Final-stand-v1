@@ -61,18 +61,20 @@ jobs:
           path: work/combined
           if_no_artifact_found: fail
 
-      - name: Download latest successful Phase 9 interface artifact
-        uses: dawidd6/action-download-artifact@v25
-        with:
-          github_token: ${{ github.token }}
-          workflow: phase-9w-hf-data-gate.yml
-          branch: phase-9w-hf-data-gate
-          workflow_conclusion: success
-          name: ^phase-9w-hf-ingest-.*$
-          name_is_regexp: true
-          merge_multiple: true
-          path: work/phase9
-          if_no_artifact_found: fail
+      - name: Rebuild exact frozen Phase 9 spot interface from pinned index
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_HOME: ~/.cache/huggingface
+          HF_HUB_DOWNLOAD_TIMEOUT: "120"
+          HF_HUB_ETAG_TIMEOUT: "30"
+        run: |
+          base="$(find work/combined -path '*/combined_input/baseline_calendar.json' -print -quit)"
+          test -n "$base"
+          rm -rf work/phase9
+          mkdir -p work/phase9/output
+          python research/phase21w_external_full_strike_recovery/build_frozen_spot_interface.py             --baseline-calendar "$base"             --hf-cache ~/.cache/huggingface             --output-dir work/phase9/output
+          test -f work/phase9/output/weekly_cycle_manifest.csv
+          test -f work/phase9/output/selected_weekly_spot_bars.parquet
 
       - name: Compile source-recovery code
         run: |
