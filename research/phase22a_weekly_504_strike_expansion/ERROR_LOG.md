@@ -20,3 +20,7 @@
 - Detection: source inspection before the full 504 backtest completed.
 - Correction: Phase 22A now injects a generalized K1 selector supporting OTM1–OTM8 and ITM1–ITM8 while leaving K2, K3, execution, cost and statistical functions unchanged.
 - The full 504 run is therefore restarted from the corrected wrapper.
+## E22A-005 — Phase-21 recovery artifact did not contain the expected Phase-9 interface
+- Observed: the downloaded Phase-21 external-recovery artifact contained the final rerun/output tree but not `research/phase9_weekly/output/weekly_cycle_manifest.csv` or `selected_weekly_spot_bars.parquet`.
+- Impact: the first corrected 504 workflow stopped at the interface-location step before the backtest.
+- Correction: use the immutable Phase-21 combined branch as the authoritative source for the frozen Phase-9 manifest and spot parquet, while retaining the pinned HF revision for option reconstruction. The workflow no longer depends on the external-recovery artifact for those two interface files.
