@@ -62,3 +62,9 @@
 - **Observed:** The first actual RISSIN recovery attempt stopped before Python execution because the combined artifact stores baseline_calendar.json under the Phase 21 output directory, not combined_input.
 - **Correction:** Updated the workflow lookup to search the artifact output directory.
 - **Prevention:** Artifact paths are now derived from the exact upload manifest of the successful Phase 21 combined workflow.
+
+
+### E21X-010 — RISSIN parquet timezone metadata was rejected by Polars
+- **Observed:** The RISSIN NIFTY 2026 parquet declares a +05:30 timezone that the runner's Polars timezone database did not accept during lazy schema collection.
+- **Correction:** Enabled the same POLARS_IGNORE_TIMEZONE_PARSE_ERROR compatibility setting already used by the frozen Phase 9 ingestion code.
+- **Prevention:** Keep timezone normalization explicit in the recovery script and retain the runner compatibility environment setting.
