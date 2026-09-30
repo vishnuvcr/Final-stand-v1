@@ -55,3 +55,10 @@
 - **Correct interpretation:** the frozen weekly protocol uses **intraday timestamps for entry and lock decisions**, but the trade has a **weekly horizon**. Entry occurs at 10:00 IST on the first trading day after the prior expiry; the lock occurs at 14:00 IST on the trading day before the target expiry; remaining exposure can continue to expiry unless the stop/exit rules terminate it earlier.
 - **Impact:** the prior conversational description incorrectly implied same-day closure and no overnight holding.
 - **Correction:** all future descriptions must call this a **weekly-expiry/weekly-horizon strategy with intraday execution timestamps**, not an intraday-only strategy. No research code or frozen parameters are changed by this clarification.
+
+
+## E22-009 — Public NIFTY TBT dataset has mixed incompatible schemas
+- **Observed:** `antony9952/Nifty_option_TBT` exposes genuine timestamped five-level bid/ask/depth fields in its preview, but Hugging Face reports that `market_ticks.csv` contains mixed row schemas: depth rows with 7 quote/depth fields and other rows with 18 LTP/OHLC/volume/OI fields. The dataset viewer therefore fails schema casting. citeturn3view0
+- **Impact:** the source cannot yet be treated as a clean reproducible execution archive. Blindly loading it could drop or misinterpret quote observations.
+- **Correction:** retain the source as a high-priority acquisition lead. Require immutable revision/file manifest, deterministic quote-row isolation, exact contract mapping, chronological coverage validation and SHA-256 hashing before admission. No holdout opened.
+- **Additional environment issue:** direct container HTTP access to Hugging Face failed because DNS/network resolution is unavailable in the current execution environment; web-source evidence was used instead. This does not establish that the dataset itself is inaccessible to GitHub Actions, so it is not a rejection criterion.
