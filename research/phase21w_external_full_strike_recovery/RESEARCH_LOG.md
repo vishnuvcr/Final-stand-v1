@@ -27,3 +27,9 @@
 ## Next step
 
 Run the external recovery workflow. If all five dates pass the 224-variant admission gate, complete the 63-cycle rerun and update the final statistical report. If any target fails, record the exact missing variant/date cells and continue only with another external source route.
+
+## 2026-09-30 — stale Rissin revision corrected
+- Public-HF probe run 36711279624 confirmed the earlier failure was a true source-pin problem: revision `78b1c54` returned HTTP 404 for the 2026 NIFTY intraday parquet.
+- The current dataset card documents NIFTY 1-minute intraday coverage through 2026, and a later dataset tree contains `upstox_intraday/NIFTY/NIFTY_2026.parquet`. citeturn769528search1turn627359search0
+- The recovery scripts now resolve `main`, discover the exact 2026 NIFTY file, and record the resolved commit SHA plus file SHA-256 before use.
+- Workflow push triggers were narrowed so generated output commits do not recursively launch the large recovery jobs.
