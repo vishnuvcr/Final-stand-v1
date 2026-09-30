@@ -84,3 +84,9 @@ No Phase-20 execution errors yet.
 - **Issue:** Targeted HF-02 probe failed while writing a nested list field to CSV.
 - **Impact:** The probe did not persist its already-computed coverage rows.
 - **Correction:** Flatten the timestamp-list diagnostic to a scalar count/string. Source acquisition and timezone conversion were successful.
+
+
+## E20-009 — 2026-09-30
+- **Issue:** Targeted HF-02 probe successfully reached the data but failed when writing a nested `entry_lock_timestamps` list to CSV.
+- **Impact:** Probe result was not persisted.
+- **Correction:** Serialize nested timestamp lists as JSON strings before CSV output. No data-selection rule changed.
