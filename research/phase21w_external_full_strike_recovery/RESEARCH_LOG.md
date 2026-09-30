@@ -1,23 +1,29 @@
-# Phase 21W External Full-Strike Recovery Research Log
+# Phase 21W External Recovery Research Log
 
-## 2026-09-30 — External-source audit expansion
-- The frozen combined rerun identified five completely missing weekly expiries: 2026-01-13, 2026-02-10, 2026-03-10, 2026-04-13 and 2026-05-12.
-- Independent broker/API documentation was checked for Upstox, ICICI Breeze and Dhan. NSE official historical products were also reviewed.
-- A new public Hugging Face candidate was identified: thetrademarkk/india-index-options-1m. The dataset exposes per-expiry NIFTY 1-minute option parquet files with strike, option_type, expiry, OHLCV and OI fields, but its card explicitly warns that option coverage is partial and its license is CC-BY-NC-4.0.
-- Because source-level dataset presence is not evidence of exact variant coverage, a deterministic five-expiry probe was added before any strategy backtest integration.
+## 2026-09-30 — resumed from Phase 21 combined rerun
 
-## Probe protocol
-- Resolve and record the Hugging Face dataset revision.
-- Download only the five missing expiry files; cache them through the workflow cache.
-- Record SHA-256 hashes and schema.
-- Require exact CE contract rows, zero duplicate timestamp/strike groups and non-null OHLC/volume/strike fields.
-- Count distinct CE strikes at exactly 10:00 and 14:00 IST and their intersection.
-- Do not admit the source to the frozen backtest solely from strike counts; exact variant construction and intraday stop-path availability remain downstream gates.
-## 2026-09-30 — E21X-004 timezone compatibility correction
-- The first public-HF probe downloaded the candidate files but failed before reading schema because Polars rejected fixed-offset +05:30 parquet metadata.
-- The fix is limited to the known timezone-parser compatibility setting already used by the Phase-9/13 ingestion path; no source data are transformed or reinterpreted.
+- Re-read the frozen Phase 21 combined rerun coverage contract.
+- Confirmed the combined input has 58/63 executable expiries, 11,702 combined variant-cycle cells, zero HF-03/HF-02 overlap, and exactly five missing expiries.
+- Confirmed the five missing expiries are all in the holdout segment: 2026-01-13, 2026-02-10, 2026-03-10, 2026-04-13 and 2026-05-12.
+- Confirmed the current 224-variant summary is therefore not a final 63-cycle holdout result.
 
-## 2026-09-30 — Frozen-split correction and Rissin probe activation
-- The external status file had drifted to a 60/20/20 split; this was incorrect for the frozen Phase-21 design. It is restored to the Phase-17/21 chronology of 37/12/14 train/validation/holdout.
-- The public Rissin dataset is now the first empirical external probe because it covers all five missing dates in its documented 2026 NIFTY 1-minute archive window and exposes the fields required by the OHLC backtester.
-- The probe is pinned to the published revision 78b1c5468255d18cf492984bfe6fe4e3ac874d7c and uses the repository HF_TOKEN secret when available.
+## 2026-09-30 — external-source audit expanded
+
+- Reviewed public/external options-data routes and existing source-audit workflow.
+- Added RISSIN/Hugging Face as the first new automated recovery candidate.
+- Pinned RISSIN dataset revision 78b1c5468255d18cf492984bfe6fe4e3ac874d7c.
+- The RISSIN dataset card documents NIFTY 1-minute intraday coverage from October 2024 through 2026 with expiry, strike, option type, OHLC and volume fields.
+- Documented that RISSIN intraday OI is unavailable; OI is not part of the frozen execution-price path.
+- Kept Upstox, ICICI Breeze, Dhan, NSE/BSE and MoneyTicks as fallback/audit routes. No paid data access was initiated.
+
+## 2026-09-30 — implementation
+
+- Added a pinned five-expiry recovery script.
+- Added deterministic merge/coverage validation that rejects overlap and requires exactly 224 x 63 variant-cycle coverage before the final rerun.
+- Extended the source-audit workflow with manual dispatch and push execution.
+- The workflow reuses the latest successful Phase 21 and Phase 9 artifacts and the existing HF cache instead of downloading the already-admitted data again.
+- The final rerun uses the exact Phase 17 frozen engine revision and unchanged cost/slippage/stop parameters.
+
+## Next step
+
+Run the external recovery workflow. If all five dates pass the 224-variant admission gate, complete the 63-cycle rerun and update the final statistical report. If any target fails, record the exact missing variant/date cells and continue only with another external source route.
