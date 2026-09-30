@@ -4,7 +4,7 @@ import hashlib
 import json
 import os
 from dataclasses import asdict
-from datetime import date, datetime, time
+from datetime import date, datetime, time, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -133,15 +133,16 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
         latest_by_month[key] = max(e, latest_by_month.get(key, e))
     monthly = set(latest_by_month.values())
     targets = [e for e in all_expiries if e not in monthly]
-    if len(targets) < 8:
+    if len(targets) < 7:
         raise RuntimeError(f"Only {len(targets)} weekly expiries admitted from RISSIN in {start_date}..{end_date}: {targets}")
 
     target_dates = [date.fromisoformat(x) for x in targets]
-    first_target = target_dates[0]
-    prior_candidates = [date.fromisoformat(x) for x in all_expiries if date.fromisoformat(x) < first_target]
-    if not prior_candidates:
-        raise RuntimeError("No prior weekly/monthly expiry available to define the first entry.")
-    prior_expiry = prior_candidates[-1]
+
+    def weekly_prior_expiry(d):
+        # NIFTY weekly expiry is Tuesday in this period. Use the exchange-calendar
+        # date relation rather than source-file availability, so missing source
+        # files cannot shift the entry week backward.
+        return d - timedelta(days=7)
 
     def first_trading_day_after(d):
         return next((x for x in dates if x > d), None)
@@ -154,8 +155,7 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
     raw_parts = []
 
     for expiry in target_dates:
-        prev_candidates = [date.fromisoformat(x) for x in all_expiries if date.fromisoformat(x) < expiry and date.fromisoformat(x) not in monthly]
-        prior = prev_candidates[-1] if prev_candidates else prior_expiry
+        prior = weekly_prior_expiry(expiry)
         entry_day = first_trading_day_after(prior)
         lock_day = prior_trading_day(expiry)
         if entry_day is None or lock_day is None:
@@ -333,7 +333,7 @@ def main():
     usable = cycles.filter(pl.col("status") == "USABLE_OHLC")
     if usable["variant_id"].n_unique() != 504:
         raise RuntimeError(f"Only {usable['variant_id'].n_unique()} variants have at least one usable cycle")
-    if len(targets) < 8:
+    if len(targets) < 7:
         raise RuntimeError(f"Only {len(targets)} weekly expiries admitted")
 
     # Use the cached NIFTY spot source only for expiry-date close in the frozen engine.
