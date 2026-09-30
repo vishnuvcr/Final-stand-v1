@@ -1,96 +1,140 @@
 from __future__ import annotations
-import json, os
+import json, os, hashlib
 from pathlib import Path
-from datetime import datetime
+from datetime import date, datetime
 from zoneinfo import ZoneInfo
 import polars as pl
 from huggingface_hub import HfApi, hf_hub_download
 
 IST=ZoneInfo("Asia/Kolkata")
 OUT=Path("research/phase20w_executable_bar_recovery/output"); OUT.mkdir(parents=True,exist_ok=True)
-HF_CACHE=Path(os.getenv("HF_CACHE","~/.cache/huggingface")).expanduser()
+CACHE=Path(os.getenv("HF_CACHE","~/.cache/huggingface")).expanduser()
+token=os.getenv("HF_TOKEN") or None
 HF1_PIN="78b1c5468255d18cf492984bfe6fe4e3ac874d7c"
 HF2_PIN="45e0a043f34f3f40f9694e52a944297803c2af8b"
-token=os.getenv("HF_TOKEN") or None
+K1=["OTM1","OTM2","OTM3","ATM_NEAREST","ATM_UP","ITM1","ITM2","ITM3"]
+K2=["NEXT1","NEXT2","NEXT3","MIRROR_GAP"]
+K3=[0.5,1.0,1.5,2.0,2.5,3.0,4.0]
+variants=[f"{a}_{b}_K3M{m:g}" for a in K1 for b in K2 for m in K3]
 
-req=pl.read_csv(OUT/"required_missing_variant_bars.csv")
-# The Phase-19 branch already contains the exact 27-cycle inventory; recovery never alters it.
-if req.height==0:
-    raise RuntimeError("required_missing_variant_bars.csv is empty")
+base=pl.read_csv("research/phase9_weekly/output/weekly_cycle_manifest.csv")
+trade=pl.read_csv("research/phase19w_recovered_rerun/output/trades_ITM3_NEXT1_K3M4.csv")
+got=set(trade["target_expiry"].cast(pl.String).to_list())
+missing=[x for x in base["target_expiry"].cast(pl.String).to_list() if x not in got]
+base=base.with_columns(pl.col("target_expiry").cast(pl.String))
+need=base.filter(pl.col("target_expiry").is_in(missing))
+
+def choose_k1(strikes,spot,rule):
+    s=sorted(set(float(x) for x in strikes))
+    if rule=="OTM1": c=[k for k in s if k>spot]; return c[0] if c else None
+    if rule=="OTM2": c=[k for k in s if k>spot]; return c[1] if len(c)>1 else None
+    if rule=="OTM3": c=[k for k in s if k>spot]; return c[2] if len(c)>2 else None
+    if rule=="ATM_NEAREST": return min(s,key=lambda k:(abs(k-spot),-k)) if s else None
+    if rule=="ATM_UP": c=[k for k in s if k>=spot]; return c[0] if c else None
+    if rule=="ITM1": c=[k for k in s if k<spot]; return c[-1] if c else None
+    if rule=="ITM2": c=[k for k in s if k<spot]; return c[-2] if len(c)>1 else None
+    if rule=="ITM3": c=[k for k in s if k<spot]; return c[-3] if len(c)>2 else None
+
+def choose_k2(strikes,k1,rule):
+    c=sorted(k for k in set(float(x) for x in strikes) if k>k1)
+    if rule in {"NEXT1","NEXT2","NEXT3"}:
+        i={"NEXT1":0,"NEXT2":1,"NEXT3":2}[rule]
+        return c[i] if len(c)>i else None
+    if rule=="MIRROR_GAP":
+        return next((k for k in c if k>=2*k1), c[-1] if c else None)
+    return None
+
+def choose_k3(strikes,opens,k2,target):
+    pairs=[(float(s),float(p)) for s,p in zip(strikes,opens) if float(s)>k2 and p is not None]
+    if not pairs: return None,None
+    return min(pairs,key=lambda x:(abs(x[1]-target),x[0]))
+
+def norm_ts(x):
+    return str(x).replace(" ","T").replace("+05:30","")[:19]
 
 api=HfApi(token=token)
 hf1_main_sha=getattr(api.repo_info("rissin/nse-options-intraday",repo_type="dataset",revision="main"),"sha",None) or "main"
-
-# Cache only source files actually needed for the missing cycles.
-source_frames=[]
-source_prov=[]
-
-def add_hf1(year, revision):
-    p=f"upstox_intraday/NIFTY/NIFTY_{year}.parquet"
-    try:
-        local=hf_hub_download(repo_id="rissin/nse-options-intraday",filename=p,repo_type="dataset",revision=revision,token=token,cache_dir=str(HF_CACHE))
-        df=pl.read_parquet(local)
-        df=df.filter(pl.col("underlying")=="NIFTY").with_columns(
-            pl.col("timestamp").cast(pl.String).str.replace(r" ", "T").str.slice(0,19).alias("_ts")
-        )
-        source_frames.append(("HF1",str(revision),p,df))
-        source_prov.append({"source":"HF1","revision":str(revision),"path":p,"rows":df.height})
-    except Exception as e:
-        source_prov.append({"source":"HF1","revision":str(revision),"path":p,"error":repr(e)})
-
-years=sorted({int(x[:4]) for x in req["target_expiry"].cast(pl.String).unique().to_list()})
-for y in years:
-    if y>=2024:
-        add_hf1(y, HF1_PIN if y<2026 else hf1_main_sha)
-
-# HF2 weekly ATM-relative CE files, used only when a complete variant-cycle cannot be obtained from HF1.
-hf2_frames=[]
-for off in range(-10,11):
-    tag="ATM" if off==0 else f"ATM{off:+d}"
-    p=f"NIFTY/WEEK/{tag}_CE.parquet"
-    try:
-        local=hf_hub_download(repo_id="artist-23/nifty-options-data",filename=p,repo_type="dataset",revision=HF2_PIN,token=token,cache_dir=str(HF_CACHE))
-        df=pl.read_parquet(local).with_columns(pl.col("datetime").cast(pl.String).str.replace(r" ", "T").str.slice(0,19).alias("_ts"))
-        hf2_frames.append((tag,p,df))
-    except Exception as e:
-        source_prov.append({"source":"HF2","revision":HF2_PIN,"path":p,"error":repr(e)})
-
-recovered=[]
-decisions=[]
-for row in req.iter_rows(named=True):
-    exp=str(row["target_expiry"]); entry=str(row["entry_timestamp"]).replace("+05:30","")[:19]; lock=str(row["lock_timestamp"]).replace("+05:30","")[:19]
-    strikes=[float(row["k1"]),float(row["k2"]),float(row["k3"])]
-    chosen=None; bars=[]
-    # A source is admitted only if all three strikes have exact entry and lock observations.
-    for source,rev,path,df in source_frames:
-        q=df.filter((pl.col("expiry").cast(pl.String).str.slice(0,10)==exp)&pl.col("strike").is_in(strikes)&pl.col("_ts").is_in([entry,lock])& (pl.col("option_type").str.to_uppercase().is_in(["CE","CALL"])))
-        keys=set((str(x["strike"]),str(x["_ts"])) for x in q.select(["strike","_ts"]).iter_rows(named=True))
-        if all((str(s),entry) in keys and (str(s),lock) in keys for s in strikes):
-            chosen=(source,rev,path,q)
-            break
-    if chosen is None:
-        # HF2 is keyed by ATM-relative files; combine only within the single HF2 dataset source.
-        qparts=[]
-        for tag,path,df in hf2_frames:
-            q=df.filter((pl.col("date").cast(pl.String).str.slice(0,10).is_in([exp,entry,lock])) & pl.col("strike_price").is_in(strikes))
-            if q.height: qparts.append(q)
-        if qparts:
-            q=pl.concat(qparts,how="diagonal")
-            keys=set((str(x["strike_price"]),str(x["_ts"])) for x in q.select(["strike_price","_ts"]).iter_rows(named=True))
-            if all((str(s),entry) in keys and (str(s),lock) in keys for s in strikes):
-                chosen=("HF2",HF2_PIN,"NIFTY/WEEK/ATM±0..10_CE",q)
-    if chosen is None:
-        decisions.append({"variant_id":row["variant_id"],"target_expiry":exp,"status":"UNRECOVERED","source":None})
+frames=[]; cycles=[]; prov=[]
+for exp in missing:
+    b=need.filter(pl.col("target_expiry")==exp).row(0,named=True)
+    entry=norm_ts(b["entry_timestamp"]); lock=norm_ts(b["lock_timestamp"]); spot=float(b["entry_spot"])
+    source_df=None; source_name=None; source_rev=None; source_path=None
+    year=int(exp[:4])
+    if year>=2024:
+        rev=HF1_PIN if year<2026 else hf1_main_sha
+        path=f"upstox_intraday/NIFTY/NIFTY_{year}.parquet"
+        try:
+            local=hf_hub_download(repo_id="rissin/nse-options-intraday",filename=path,repo_type="dataset",revision=rev,token=token,cache_dir=str(CACHE))
+            source_df=pl.read_parquet(local).filter(pl.col("underlying")=="NIFTY")
+            source_name="HF1"; source_rev=str(rev); source_path=path
+        except Exception as e:
+            prov.append({"expiry":exp,"source":"HF1","error":repr(e)})
+    # For early missing dates, use the weekly ATM-relative HF-02 source.
+    if source_df is None:
+        parts=[]
+        for off in range(-10,11):
+            tag="ATM" if off==0 else f"ATM{off:+d}"
+            path=f"NIFTY/WEEK/{tag}_CE.parquet"
+            try:
+                local=hf_hub_download(repo_id="artist-23/nifty-options-data",filename=path,repo_type="dataset",revision=HF2_PIN,token=token,cache_dir=str(CACHE))
+                parts.append(pl.read_parquet(local))
+            except Exception:
+                pass
+        if parts:
+            source_df=pl.concat(parts,how="diagonal")
+            source_name="HF2"; source_rev=HF2_PIN; source_path="NIFTY/WEEK/ATM±0..10_CE.parquet"
+    if source_df is None:
+        for vid in variants:
+            cycles.append({"variant_id":vid,"target_expiry":exp,"entry_timestamp":b["entry_timestamp"],"lock_timestamp":b["lock_timestamp"],"status":"UNRECOVERED","source":None})
         continue
-    source,rev,path,q=chosen
-    q=q.select([c for c in q.columns if c in ["timestamp","datetime","_ts","strike","strike_price","option_type","open","high","low","close","volume","oi","expiry","date","spot","source","granularity"]])
-    q=q.with_columns(pl.lit(row["variant_id"]).alias("variant_id"),pl.lit(exp).alias("target_expiry"),pl.lit(source).alias("recovery_source"),pl.lit(rev).alias("recovery_revision"))
-    recovered.append(q)
-    decisions.append({"variant_id":row["variant_id"],"target_expiry":exp,"status":"RECOVERED","source":source,"revision":rev,"path":path})
+    if source_name=="HF1":
+        sdf=source_df.with_columns(pl.col("timestamp").cast(pl.String).str.replace(r" ","T").str.slice(0,19).alias("_ts"),pl.col("expiry").cast(pl.String).str.slice(0,10).alias("_exp"))
+        entry_df=sdf.filter((pl.col("_exp")==exp)&(pl.col("_ts")==entry)&pl.col("option_type").str.to_uppercase().is_in(["CE","CALL"])&((pl.col("volume").fill_null(0))>0))
+    else:
+        sdf=source_df.with_columns(pl.col("datetime").cast(pl.String).str.replace(r" ","T").str.slice(0,19).alias("_ts"))
+        entry_df=sdf.filter((pl.col("_ts")==entry)&(pl.col("option_type").str.to_uppercase().is_in(["CE","CALL"])))
+    strikes=entry_df["strike"].to_list() if source_name=="HF1" else entry_df["strike_price"].to_list()
+    opens=entry_df["open"].to_list()
+    bar_rows=[]
+    for k1r in K1:
+        k1=choose_k1(strikes,spot,k1r)
+        for k2r in K2:
+            k2=choose_k2(strikes,k1,k2r) if k1 is not None else None
+            for m in K3:
+                vid=f"{k1r}_{k2r}_K3M{m:g}"
+                p1=None;p2=None;k3=None;p3=None
+                if k1 is not None:
+                    for s,p in zip(strikes,opens):
+                        if float(s)==float(k1): p1=float(p)
+                if k2 is not None:
+                    for s,p in zip(strikes,opens):
+                        if float(s)==float(k2): p2=float(p)
+                target=(p1-p2)*m if p1 is not None and p2 is not None else None
+                if target is not None and target>0:
+                    k3,p3=choose_k3(strikes,opens,k2,target)
+                status="INCOMPLETE"
+                if k3 is not None and p3 is not None:
+                    if source_name=="HF1":
+                        lock_df=sdf.filter((pl.col("_exp")==exp)&(pl.col("_ts")==lock)&pl.col("strike").is_in([k1,k2,k3])&pl.col("option_type").str.to_uppercase().is_in(["CE","CALL"]))
+                    else:
+                        lock_df=sdf.filter((pl.col("_ts")==lock)&pl.col("strike_price").is_in([k1,k2,k3])&pl.col("option_type").str.to_uppercase().is_in(["CE","CALL"]))
+                    lock_strikes=set((lock_df["strike"] if source_name=="HF1" else lock_df["strike_price"]).cast(pl.Float64).to_list())
+                    if all(float(k) in lock_strikes for k in [k1,k2,k3]): status="USABLE_OHLC"
+                cycles.append({"variant_id":vid,"target_expiry":exp,"prior_expiry":b["prior_expiry"],"historical_expiry_regime":b["historical_expiry_regime"],"entry_timestamp":b["entry_timestamp"],"lock_timestamp":b["lock_timestamp"],"source_file":source_path,"source_sha256":"","entry_spot":spot,"k1":k1,"k2":k2,"k3":k3,"p1":p1,"p2":p2,"target_premium":target,"k3_multiplier":m,"p3":p3,"target_error":(abs(p3-target)/target if p3 is not None and target else None),"status":status,"recovery_source":source_name,"recovery_revision":source_rev})
+    # Store only the strikes required by usable recovered variants.
+    usable=[x for x in cycles if x["target_expiry"]==exp and x["status"]=="USABLE_OHLC"]
+    reqstr=sorted({float(k) for x in usable for k in [x["k1"],x["k2"],x["k3"]] if k is not None})
+    if source_name=="HF1":
+        bars=sdf.filter((pl.col("_exp")==exp)&pl.col("strike").is_in(reqstr)&pl.col("option_type").str.to_uppercase().is_in(["CE","CALL"])&(pl.col("_ts")>=entry)&(pl.col("_ts")<=f"{exp}T15:30:00"))
+        bars=bars.select(["timestamp","strike","open","high","low","close","volume","oi"]).with_columns(pl.lit(exp).alias("target_expiry"))
+    else:
+        bars=sdf.filter(pl.col("strike_price").is_in(reqstr)&pl.col("_ts").is_between(entry,f"{exp}T15:30:00"))
+        bars=bars.select([pl.col("datetime").alias("timestamp"),pl.col("strike_price").alias("strike"),"open","high","low","close","volume","oi"]).with_columns(pl.lit(exp).alias("target_expiry"))
+    if bars.height: frames.append(bars)
+    prov.append({"expiry":exp,"source":source_name,"revision":source_rev,"path":source_path,"usable_variants":len(usable)})
 
-if recovered:
-    pl.concat(recovered,how="diagonal").write_parquet(OUT/"recovered_executable_bars.parquet",compression="zstd")
-pl.DataFrame(decisions).write_csv(OUT/"recovery_decisions.csv")
-Path(OUT/"recovery_provenance.json").write_text(json.dumps({"hf1_pinned":HF1_PIN,"hf1_main_resolved":hf1_main_sha,"hf2_pinned":HF2_PIN,"sources":source_prov},indent=2,default=str))
-d=pl.DataFrame(decisions)
-print(json.dumps({"required_variant_cycles":req.height,"recovered":d.filter(pl.col("status")=="RECOVERED").height,"unrecovered":d.filter(pl.col("status")=="UNRECOVERED").height,"sources":d.group_by("source").len().to_dicts()},indent=2))
+cycle_df=pl.DataFrame(cycles)
+cycle_df.write_csv(OUT/"recovered_variant_cycle_manifest.csv")
+if frames: pl.concat(frames,how="diagonal").write_parquet(OUT/"recovered_variant_option_bars.parquet",compression="zstd")
+Path(OUT/"recovery_provenance.json").write_text(json.dumps({"hf1_main_resolved":hf1_main_sha,"hf1_pinned":HF1_PIN,"hf2_pinned":HF2_PIN,"cycles":prov},indent=2,default=str))
+print(json.dumps({"missing_cycles":len(missing),"recovered_usable_variant_cycles":cycle_df.filter(pl.col("status")=="USABLE_OHLC").height,"total_variant_cycles":cycle_df.height,"source_counts":cycle_df.filter(pl.col("status")=="USABLE_OHLC").group_by("recovery_source").len().to_dicts()},indent=2))
