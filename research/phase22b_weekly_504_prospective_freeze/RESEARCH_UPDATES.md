@@ -10,3 +10,13 @@
 - The primary RISSIN option source remains authoritative wherever available; fallback data are used only for missing expiry files.
 - No strategy or statistical design parameters were changed.
 - Current phase remains ACTIVE pending the multi-source recovery rerun.
+
+
+## 2026-09-30 — Phase 22B validation completed
+
+- End-to-end run 36759982136 completed successfully.
+- 504/504 variants were present; 8 weekly expiries and 4,032/4,032 expected variant-cycle rows passed the coverage gate.
+- 376/504 variants had positive total net P&L after the configured cost model.
+- Every result row had n=6 completed trades, so the pre-specified >=8-observation bootstrap was not run and Holm-adjusted p-values remained null.
+- The correct inference is descriptive prospective evidence only; no configuration is promoted and no capital-promotion conclusion is drawn.
+- The next phase must add prospective weekly cycles rather than changing the frozen family or inference threshold.
