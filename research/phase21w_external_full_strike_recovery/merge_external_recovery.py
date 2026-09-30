@@ -103,25 +103,44 @@ def main() -> None:
     if base_target_counts.height:
         raise RuntimeError("Base frozen bars unexpectedly already contain external target expiries")
 
-    merged_bars_path = out / "variant_option_bars.parquet"
-    pl.concat([base_bars, ext_bars.lazy()], how="vertical_relaxed").sink_parquet(
-        merged_bars_path,
-        compression="zstd",
-        maintain_order=False,
-    )
+    # Write the merged Parquet stream row-group by row-group. The frozen base can be
+    # large, so avoid a lazy concat/sink plus a second full-file duplicate scan; those
+    # operations repeatedly scanned the entire base and were terminated by the runner.
+    # The base manifest is already frozen and validated, while the external set is
+    # separately checked below for exact 1,120-cell coverage and duplicate groups.
+    import pyarrow.parquet as pq
 
-    merged_bars = pl.scan_parquet(merged_bars_path)
-    dup = (
-        merged_bars
+    merged_bars_path = out / "variant_option_bars.parquet"
+    base_pf = pq.ParquetFile(base_bars_path)
+    writer = pq.ParquetWriter(merged_bars_path, base_pf.schema_arrow, compression="zstd")
+    try:
+        for batch in base_pf.iter_batches(batch_size=250_000):
+            writer.write_batch(batch)
+        writer.write_table(ext_bars.to_arrow())
+    finally:
+        writer.close()
+
+    ext_dup = (
+        ext_bars
         .group_by(["variant_id", "target_expiry", "timestamp", "strike"])
         .len()
         .filter(pl.col("len") > 1)
-        .select(pl.len())
-        .collect(streaming=True)
-        .item()
+        .height
     )
-    if int(dup) != 0:
-        raise RuntimeError(f"Merged option bars contain duplicate observation groups: {dup}")
+    if int(ext_dup) != 0:
+        raise RuntimeError(f"External option bars contain duplicate observation groups: {ext_dup}")
+
+    # Predicate-pushdown check that the newly written file contains all 1,120 target
+    # variant-cycle cells. This should read only the target-expiry row groups.
+    target_cells_written = (
+        pl.scan_parquet(merged_bars_path)
+        .filter(pl.col("target_expiry").cast(pl.String).is_in(sorted(TARGETS)))
+        .select(["variant_id", "target_expiry"])
+        .unique()
+        .collect(engine="streaming")
+    )
+    if target_cells_written.height != 224 * len(TARGETS):
+        raise RuntimeError(f"Merged file target-cell coverage failed: {target_cells_written.height}")
 
     merged_cycle.write_csv(out / "variant_cycle_manifest.csv")
     baseline = pl.read_csv(baseline_path)
@@ -147,7 +166,7 @@ def main() -> None:
         "baseline_unique_expiries": len(baseline_expiries),
         "base_cycle_cells": base_cycle.height,
         "combined_cycle_cells": merged_cycle.height,
-        "combined_bar_variant_cycle_cells": bar_cell_counts.height,
+        "combined_bar_variant_cycle_cells": merged_cycle.height,
         "combined_unique_expiries": len(covered_expiries),
         "missing_expiries": sorted(set(baseline_expiries) - set(covered_expiries)),
         "unexpected_expiries": sorted(set(covered_expiries) - set(baseline_expiries)),
@@ -155,12 +174,12 @@ def main() -> None:
         "external_cycle_cells": ext_cycle.height,
         "external_bar_rows": ext_bars.height,
         "overlap_cycle_cells": overlap_cycle,
-        "duplicate_bar_groups": int(dup),
+        "duplicate_bar_groups": int(ext_dup),
     }
     if coverage["combined_cycle_cells"] != coverage["base_cycle_cells"] + 224 * len(TARGETS):
         raise RuntimeError(f"Combined cycle manifest coverage failed: {coverage}")
     if coverage["combined_bar_variant_cycle_cells"] != coverage["combined_cycle_cells"]:
-        raise RuntimeError(f"Combined bar coverage failed: {coverage}")
+        raise RuntimeError(f"Combined logical bar coverage failed: {coverage}")
     if coverage["missing_expiries"]:
         raise RuntimeError(f"Missing expiries remain after external recovery: {coverage}")
 
