@@ -46,3 +46,7 @@
 ## E22B-010 — NIFTY minute spot timestamps are strings
 - The spot archive stores minute timestamps as strings such as `2026-05-15 10:39:00`.
 - Correction: the adapter now parses string timestamps explicitly in IST before exact 10:00 selection.
+
+## E22B-011 — Exact 10:00 spot timestamp unavailable
+- A prospective week had no exact 10:00 IST underlying observation in the pinned minute archive.
+- Correction: the entry-strike spot rule now uses the latest observation at or before 10:00 within a fixed five-minute causal window. No future observation is used, and the rule is frozen before rerun.
