@@ -48,7 +48,7 @@ for b in base.iter_rows(named=True):
     if target is not None and target>0 and kk2 is not None:
       cand=[s for s in strikes if s>kk2 and s in prices]; kk3=min(cand,key=lambda s:abs(prices[s]-target)) if cand else None; p3=prices.get(kk3)
     status="USABLE_OHLC" if kk3 is not None and all(x in lockstr for x in [kk1,kk2,kk3]) else "INCOMPLETE"
-    rows.append({"variant_id":vid,"target_expiry":exp,"entry_timestamp":b["entry_timestamp"],"lock_timestamp":b["lock_timestamp"],"entry_spot":spot,"k1":kk1,"k2":kk2,"k3":kk3,"p1":prices.get(kk1),"p2":prices.get(kk2),"target_premium":target,"k3_multiplier":m,"p3":p3,"status":status,"recovery_source":"HF2","recovery_revision":REV})
+    rows.append({"variant_id":vid,"target_expiry":exp,"entry_timestamp":entry,"lock_timestamp":lock,"entry_spot":spot,"k1":kk1,"k2":kk2,"k3":kk3,"p1":prices.get(kk1),"p2":prices.get(kk2),"target_premium":target,"k3_multiplier":m,"p3":p3,"status":status,"recovery_source":"HF2","recovery_revision":REV})
 # Save cycle manifest and exact option bars for required recovered strikes.
 r=pl.DataFrame(rows); r.write_csv(OUT/"hf2_recovered_variant_cycles.csv")
 req=sorted(set(x for row in rows if row["status"]=="USABLE_OHLC" for x in [row["k1"],row["k2"],row["k3"]] if x is not None))
