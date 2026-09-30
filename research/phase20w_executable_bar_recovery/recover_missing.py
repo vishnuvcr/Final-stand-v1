@@ -65,7 +65,7 @@ for exp in missing:
         path=f"upstox_intraday/NIFTY/NIFTY_{year}.parquet"
         try:
             local=hf_hub_download(repo_id="rissin/nse-options-intraday",filename=path,repo_type="dataset",revision=rev,token=token,cache_dir=str(CACHE))
-            source_df=pl.read_parquet(local).filter(pl.col("underlying")=="NIFTY")
+            source_df=pl.read_parquet(local,use_pyarrow=True).filter(pl.col("underlying")=="NIFTY")
             source_name="HF1"; source_rev=str(rev); source_path=path
         except Exception as e:
             prov.append({"expiry":exp,"source":"HF1","error":repr(e)})
