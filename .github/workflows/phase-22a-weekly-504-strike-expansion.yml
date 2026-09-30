@@ -81,7 +81,8 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_HOME: ~/.cache/huggingface
-          HF_REVISION: 8f7739cab3f38abdcbc6332a6d0a83e1341326e3
+          THEMARKET_REVISION: main
+          RISSIN_REVISION: 8f7739cab3f38abdcbc6332a6d0a83e1341326e3
           PYTHONPATH: ${{ github.workspace }}
           POLARS_IGNORE_TIMEZONE_PARSE_ERROR: '1'
           HF_HUB_DOWNLOAD_TIMEOUT: '120'
