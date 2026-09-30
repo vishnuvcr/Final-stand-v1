@@ -16,3 +16,8 @@
 ## 2026-09-30 — E21X-004 timezone compatibility correction
 - The first public-HF probe downloaded the candidate files but failed before reading schema because Polars rejected fixed-offset +05:30 parquet metadata.
 - The fix is limited to the known timezone-parser compatibility setting already used by the Phase-9/13 ingestion path; no source data are transformed or reinterpreted.
+
+## 2026-09-30 — Frozen-split correction and Rissin probe activation
+- The external status file had drifted to a 60/20/20 split; this was incorrect for the frozen Phase-21 design. It is restored to the Phase-17/21 chronology of 37/12/14 train/validation/holdout.
+- The public Rissin dataset is now the first empirical external probe because it covers all five missing dates in its documented 2026 NIFTY 1-minute archive window and exposes the fields required by the OHLC backtester.
+- The probe is pinned to the published revision 78b1c5468255d18cf492984bfe6fe4e3ac874d7c and uses the repository HF_TOKEN secret when available.

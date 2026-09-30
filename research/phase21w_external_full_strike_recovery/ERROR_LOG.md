@@ -17,3 +17,9 @@
 - **Impact:** No source-level probe rows were produced in run 36710896827.
 - **Correction:** Reuse the repository's established fixed-offset timezone compatibility setting by setting POLARS_IGNORE_TIMEZONE_PARSE_ERROR=1 before importing Polars; timestamps remain explicitly treated as IST in the probe.
 - **Prevention:** Third-party parquet ingestion probes must apply the same timezone-compatibility contract already validated in Phase 13W before reading schemas.
+
+## E21X-006 — 2026-09-30
+- **Issue:** The external recovery status had drifted from the frozen 37/12/14 chronological split to 60/20/20.
+- **Impact:** This could have contaminated the definition of training, validation and untouched holdout during recovery.
+- **Correction:** Restore 37/12/14 everywhere and add an explicit frozen-split check before external backtest integration.
+- **Prevention:** Recovery branches may fill missing observations but may not redefine experimental chronology; validate the split before every downstream rerun.

@@ -6,8 +6,8 @@
 | ICICI Breeze | Historical NIFTY options by expiry, right and strike at 1-minute interval | Breeze API key/session required; max 1,000 candles per historical V2 request | Documentary qualification; empirical admission pending credentials |
 | Dhan rolling expired options | Minute-level expired index options, OHLC/IV/volume/OI/spot | Index selection documented as ATM through ATM±10; credentials required | Candidate; exact frozen strike coverage pending probe |
 | NSE official | Current option-chain CSV plus paid historical order/trade/F&O data | Public option-chain is not a historical intraday archive; historical products are controlled/paid | Supplementary source, not yet an admitted 1-minute source |
-| thetrademarkk/india-index-options-1m | Per-expiry NIFTY 1-minute OHLCV(+OI), strike/option_type/expiry | CC-BY-NC-4.0; educational use; partial/far-strike coverage caveat | **Probe queued** for the five missing expiries |
-| rissin/nse-options-intraday | NIFTY 1-minute intraday track from Oct 2024 through 2026, plus daily history | License listed as other; intraday source is Upstox and redistribution follows source terms | Candidate secondary mirror; probe later if needed |
+| thetrademarkk/india-index-options-1m | Per-expiry NIFTY 1-minute OHLCV(+OI), strike/option_type/expiry | CC-BY-NC-4.0; educational use; partial/far-strike coverage caveat | Secondary candidate; not yet admitted |
+| rissin/nse-options-intraday | NIFTY 1-minute intraday track from Oct 2024 through 2026, plus daily history | License listed as other; intraday source is Upstox and redistribution follows source terms | **Active probe** — pinned revision 78b1c5468255d18cf492984bfe6fe4e3ac874d7c |
 
 ## External evidence
 - Upstox expired option contracts: https://upstox.com/developer/api-documentation/get-expired-option-contracts/
