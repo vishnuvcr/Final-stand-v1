@@ -14,3 +14,5 @@
 - Workflow run 36708232073 built the combined input successfully: 11,702 cells, 58 executable expiries, 5 missing baseline expiries, zero overlap and zero duplicate groups; its validator failed only because it expected 63 executable expiries.
 
 - Run 44 validated the 63/58/5 coverage contract successfully but stopped before the backtest because the restored Phase-9 spot interface was extracted under the wrong directory.
+
+- Workflow run 36708865255 failed at combined-input construction only because the builder still referenced `phase9_weekly/output`; the artifact was correctly restored under `research/phase9_weekly/output`. The builder path is now corrected.

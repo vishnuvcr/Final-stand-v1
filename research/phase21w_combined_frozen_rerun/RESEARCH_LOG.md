@@ -18,3 +18,7 @@
 - Coverage validation passed in workflow run 36708651392 with the expected 63 baseline expiries, 11,702 combined variant-cycle cells, 58 covered expiries and 5 missing expiries.
 - The frozen backtest then failed before any trades because the downloaded Phase-9 artifact was extracted to `phase9_weekly/output`, while the frozen engine searches `research/phase9_weekly/output` (or `prepared/phase9`) for the selected spot interface.
 - Correction: extract the prepared artifact under `research/`, preserving its original internal paths. This restores the exact Phase-9 interface expected by the frozen backtester without changing data or strategy parameters.
+
+## 2026-09-30 — E21-017 Phase-9 baseline path mismatch
+- Workflow run 36708865255 failed before reading any option bars because `build_combined.py` still referenced `phase9_weekly/output/weekly_cycle_manifest.csv` after the workflow was correctly changed to restore the Phase-9 artifact under `research/`.
+- Correction: update the builder's frozen-baseline manifest path to `research/phase9_weekly/output/weekly_cycle_manifest.csv`. No source data or strategy parameter changed.

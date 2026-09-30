@@ -14,7 +14,7 @@ out.mkdir(parents=True,exist_ok=True)
 
 c3=pl.read_csv(hf03/'variant_cycle_manifest.csv')
 c2=pl.read_csv(hf2/'hf2_recovered_variant_cycles.csv').filter(pl.col('status')=='USABLE_OHLC')
-baseline=pl.read_csv('phase9_weekly/output/weekly_cycle_manifest.csv').filter(pl.col('status')=='USABLE_OHLC').head(63)
+baseline=pl.read_csv('research/phase9_weekly/output/weekly_cycle_manifest.csv').filter(pl.col('status')=='USABLE_OHLC').head(63)
 baseline_expiries=sorted(baseline['target_expiry'].cast(pl.String).to_list())
 key=['variant_id','target_expiry']
 overlap=c2.join(c3.select(key),on=key,how='inner').height

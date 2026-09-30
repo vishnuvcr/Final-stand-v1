@@ -77,3 +77,9 @@
 - **Root cause:** The prepared Phase-9 artifact was extracted under `phase9_weekly/output`; the frozen engine resolves its restored interface under `research/phase9_weekly/output` or `prepared/phase9`.
 - **Correction:** Change the artifact download destination from repository root to `research/`, so `research/phase9_weekly/output/` and `research/phase21w_combined_frozen_rerun/` are restored in the expected paths.
 - **Prevention:** Artifact transport paths must preserve the directory contract of the consuming phase; validate both manifest and spot-interface existence before invoking the backtester.
+
+## E21-017 — 2026-09-30
+- **Issue:** Workflow run 36708865255 failed in `build_combined.py` because it still referenced `phase9_weekly/output/weekly_cycle_manifest.csv`, while the corrected artifact transport restores the file at `research/phase9_weekly/output/weekly_cycle_manifest.csv`.
+- **Impact:** The combined build stopped before any coverage validation or backtest; no empirical result was produced.
+- **Correction:** Point the baseline-manifest read to the restored Phase-9 interface path under `research/`.
+- **Prevention:** Keep all Phase-21 artifact-consumer paths under the same `research/` namespace used by the frozen backtest engine and verify them in a preflight step.
