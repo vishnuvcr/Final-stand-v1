@@ -52,3 +52,16 @@ Run the external recovery workflow. If all five dates pass the 224-variant admis
 - The Rissin source parquet loaded successfully after the parser-compatibility fix.
 - The next failure was a strict timezone mismatch between Asia/Kolkata Polars timestamps and Python datetime literals normalized as UTC.
 - The recovery path now preserves the source timestamps but introduces a temporary UTC comparison column for entry/lock/range filters.
+
+
+## 2026-09-30 — Phase 21W final recovery completed
+
+- End-to-end workflow 36717226605 completed successfully.
+- Immutable RISSIN revision 8f7739cab3f38abdcbc6332a6d0a83e1341326e3 and file SHA-256 bae9943b2fa99ee9c1214fb7c695b84f9f661a050a5cd04d9c5c2ffc7bc59f73 were admitted.
+- All five missing holdout expiries recovered with 224/224 usable variants each.
+- Final merged coverage: 63/63 expiries and 12,822 admitted variant-cycle cells; 1,120 external cells added with zero overlap and zero duplicate bar groups.
+- The exact frozen Phase 17 engine reran all 224 variants over all 63 expiries.
+- Final coverage validation passed and the complete artifact was uploaded and committed to the recovery branch.
+- Final result: 0/224 variants passed the preregistered capital-promotion gate. Minimum Holm-adjusted training p-value was 0.07464.
+- The phase is therefore closed with a completed data-recovery result but no promoted capital-phase strategy.
+- Full manuscript and results are now in FINAL_MANUSCRIPT.md and RESULTS.md.
