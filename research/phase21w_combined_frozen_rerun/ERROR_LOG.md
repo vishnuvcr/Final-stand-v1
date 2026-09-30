@@ -64,3 +64,8 @@
 - **Issue:** HF-02 recovered bars expose the weekly contract expiry as `expiry`, while the frozen HF-03 interface expects the same value under `target_expiry`.
 - **Impact:** Overlay construction stopped at schema validation.
 - **Correction:** Map `expiry` to `target_expiry` for recovered rows; no value transformation or contract selection is changed.
+
+## E21-009 — 2026-09-30
+- **Issue:** The prior `expiry` normalization was inserted after the HF-02 bar-schema validation path, so the intended mapping was not applied.
+- **Impact:** The same `expiry` error recurred.
+- **Correction:** Normalize `expiry -> target_expiry` immediately after reading the HF-02 bar parquet, before any required-column validation.
