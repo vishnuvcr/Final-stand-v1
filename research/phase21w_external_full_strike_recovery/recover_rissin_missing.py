@@ -16,10 +16,6 @@ RISSIN_REPO = "rissin/nse-options-intraday"
 RISSIN_REVISION = "78b1c5468255d18cf492984bfe6fe4e3ac874d7c"
 RISSIN_FILE = "upstox_intraday/NIFTY/NIFTY_2026.parquet"
 
-SPOT_REPO = "thetrademarkk/india-index-options-1m"
-SPOT_REVISION = "0f4800e43e6f96cec0794369d78eb4d3c4211ef5"
-SPOT_FILE = "index/NIFTY.parquet"
-
 TARGETS = [
     "2026-01-13",
     "2026-02-10",
@@ -110,7 +106,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--hf-cache", default="~/.cache/huggingface")
     ap.add_argument("--baseline-calendar", required=True)
-    ap.add_argument("--spot-output", required=True)
+    ap.add_argument("--spot-bars", required=True)
     ap.add_argument("--cycle-output", required=True)
     ap.add_argument("--bars-output", required=True)
     ap.add_argument("--source-summary", required=True)
@@ -157,7 +153,6 @@ def main() -> None:
     if not required_spot_cols.issubset(set(spot.columns)):
         raise RuntimeError(f"Spot interface missing columns: {sorted(required_spot_cols - set(spot.columns))}")
 
-    trading_days = sorted(set(ts.date() for ts in spot["timestamp"].to_list()))
     source = pl.scan_parquet(rissin_local)
     source_schema = source.collect_schema().names()
     required_source = {"timestamp", "expiry", "strike", "option_type", "open", "volume"}
@@ -209,19 +204,15 @@ def main() -> None:
     for expiry in TARGETS:
         idx = calendar.index(expiry)
         prior_expiry = calendar[idx - 1] if idx > 0 else None
+        cycle_spot = spot.filter(pl.col("target_expiry").cast(pl.String) == expiry)
+        if cycle_spot.height == 0:
+            raise RuntimeError(f"Frozen Phase-9 spot artifact has no rows for {expiry}")
+        entry_ts = datetime.fromisoformat(str(cycle_spot["entry_timestamp"][0]))
+        lock_ts = datetime.fromisoformat(str(cycle_spot["lock_timestamp"][0]))
         expiry_date = date.fromisoformat(expiry)
-        prior_date = date.fromisoformat(prior_expiry) if prior_expiry else date.min
-        entry_day = next((d for d in trading_days if d > prior_date), None)
-        lock_candidates = [d for d in trading_days if d < expiry_date]
-        lock_day = lock_candidates[-1] if lock_candidates else None
-        if entry_day is None or lock_day is None:
-            raise RuntimeError(f"Could not resolve entry/lock trading days for {expiry}")
-
-        entry_ts = datetime.combine(entry_day, time(10, 0), IST)
-        lock_ts = datetime.combine(lock_day, time(14, 0), IST)
         expiry_end = datetime.combine(expiry_date, time(16, 0), IST)
 
-        spot_row = spot.filter(pl.col("timestamp") == entry_ts)
+        spot_row = cycle_spot.filter(pl.col("timestamp") == entry_ts)
         if spot_row.height != 1:
             raise RuntimeError(f"Expected exactly one NIFTY spot row at {entry_ts}, got {spot_row.height}")
         spot_value = float(spot_row["open"][0])
@@ -355,16 +346,13 @@ def main() -> None:
 
     cycle_df.write_csv(args.cycle_output)
     bars.write_parquet(args.bars_output, compression="zstd")
-    spot.write_parquet(args.spot_output, compression="zstd")
 
     summary = {
         "source": RISSIN_REPO,
         "source_revision": RISSIN_REVISION,
         "source_file": RISSIN_FILE,
         "source_sha256": rissin_sha,
-        "spot_source": SPOT_REPO,
-        "spot_revision": SPOT_REVISION,
-        "spot_file": SPOT_FILE,
+        "spot_interface": str(args.spot_bars),
         "spot_sha256": spot_sha,
         "targets": target_reports,
         "variant_count": 224,
