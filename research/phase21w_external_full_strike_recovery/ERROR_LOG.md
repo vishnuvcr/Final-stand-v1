@@ -86,3 +86,9 @@
 - **Observed:** The live recovery script resolved the RISSIN dataset current main revision instead of the preregistered pinned revision. The five-date probe therefore established data availability but was not admitted as the reproducible frozen-source result.
 - **Correction:** Restored the explicit pinned revision `78b1c5468255d18cf492984bfe6fe4e3ac874d7c` and fixed the parquet path.
 - **Admission rule:** The next run must report that exact revision and its SHA-256 before any recovered bars are admitted.
+
+
+### E21X-013 — Initial RISSIN pin was an incomplete parent snapshot
+- **Observed:** The initially selected 78b1c54 dataset commit contains NIFTY intraday files only through 2025; the NIFTY_2026 parquet is absent at that exact snapshot, so the runner correctly returned 404.
+- **Correction:** The successful live probe had resolved immutable snapshot `8f7739cab3f38abdcbc6332a6d0a83e1341326e3`, which demonstrably contains `upstox_intraday/NIFTY/NIFTY_2026.parquet`. The recovery code is now pinned to that immutable snapshot instead of dataset main.
+- **Admission:** Only the 8f7739 snapshot can be admitted; the earlier main-branch probe remains exploratory evidence only.
