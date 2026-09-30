@@ -50,67 +50,29 @@ jobs:
           python -m pip install -q --upgrade pip
           pip install -q 'huggingface_hub>=0.36,<0.37' 'polars>=1.20,<2' 'pyarrow>=18,<23' 'numpy>=2,<3' pandas
 
-      - name: Locate latest successful Phase 21 combined artifact
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          run_id=$(gh run list \
-            --repo "$GITHUB_REPOSITORY" \
-            --workflow phase-21w-combined-rerun.yml \
-            --branch phase-21w-combined-frozen-rerun \
-            --status success \
-            --limit 1 \
-            --json databaseId \
-            --jq '.[0].databaseId')
-          test -n "$run_id"
-          echo "PHASE21_RUN_ID=$run_id" >> "$GITHUB_ENV"
+      - name: Download latest successful Phase 21 combined artifact
+        uses: dawidd6/action-download-artifact@v25
+        with:
+          github_token: ${{ github.token }}
+          workflow: phase-21w-combined-rerun.yml
+          branch: phase-21w-combined-frozen-rerun
+          workflow_conclusion: success
+          name: phase21w-combined-frozen-results
+          path: work/combined
+          if_no_artifact_found: fail
 
-      - name: Download frozen Phase 21 combined artifact
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          rm -rf work/combined
-          mkdir -p work/combined
-          gh run download "$PHASE21_RUN_ID" \
-            --repo "$GITHUB_REPOSITORY" \
-            --name phase21w-combined-frozen-results \
-            --dir work/combined
-          test -f "$(find work/combined -path '*/combined_input/coverage.json' -print -quit)"
-
-      - name: Locate latest successful Phase 9 interface artifact
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          run_id=$(gh run list \
-            --repo "$GITHUB_REPOSITORY" \
-            --workflow phase-9w-hf-data-gate.yml \
-            --branch phase-9w-hf-data-gate \
-            --status success \
-            --limit 1 \
-            --json databaseId \
-            --jq '.[0].databaseId')
-          test -n "$run_id"
-          artifact=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id/artifacts" \
-            --paginate \
-            --jq '.artifacts[] | select(.name | startswith("phase-9w-hf-ingest-")) | .name' | head -n 1)
-          test -n "$artifact"
-          echo "PHASE9_RUN_ID=$run_id" >> "$GITHUB_ENV"
-          echo "PHASE9_ARTIFACT=$artifact" >> "$GITHUB_ENV"
-
-      - name: Download frozen Phase 9 interface
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          rm -rf work/phase9
-          mkdir -p work/phase9
-          gh run download "$PHASE9_RUN_ID" \
-            --repo "$GITHUB_REPOSITORY" \
-            --name "$PHASE9_ARTIFACT" \
-            --dir work/phase9
-          test -f "$(find work/phase9 -name weekly_cycle_manifest.csv -print -quit)"
-          test -f "$(find work/phase9 -name selected_weekly_spot_bars.parquet -print -quit)"
+      - name: Download latest successful Phase 9 interface artifact
+        uses: dawidd6/action-download-artifact@v25
+        with:
+          github_token: ${{ github.token }}
+          workflow: phase-9w-hf-data-gate.yml
+          branch: phase-9w-hf-data-gate
+          workflow_conclusion: success
+          name: ^phase-9w-hf-ingest-.*$
+          name_is_regexp: true
+          merge_multiple: true
+          path: work/phase9
+          if_no_artifact_found: fail
 
       - name: Compile source-recovery code
         run: |
