@@ -20,7 +20,6 @@ if 'oi' in b2.columns: b2=b2.rename({'oi':'open_interest'})
 if 'trading_day' not in b2.columns: b2=b2.with_columns(pl.col('timestamp').str.slice(0,10).alias('trading_day'))
 if 'symbol' not in b2.columns: b2=b2.with_columns(pl.lit('NIFTY').alias('symbol'))
 if 'option_type' not in b2.columns: b2=b2.with_columns(pl.lit('CALL').alias('option_type'))
-if 'option_type' not in b2.columns: b2=b2.with_columns(pl.lit('CE').alias('option_type'))
 missing=[x for x in b3.columns if x not in b2.columns]
 if missing: raise RuntimeError(f'Unmapped HF2 schema columns: {missing}')
 b2=b2.select(b3.columns,strict=False)
