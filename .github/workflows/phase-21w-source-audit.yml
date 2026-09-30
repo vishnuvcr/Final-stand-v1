@@ -10,6 +10,9 @@ on:
       - 'research/phase21w_external_full_strike_recovery/build_frozen_spot_interface.py'
       - '.github/workflows/phase-21w-source-audit.yml'
   workflow_dispatch:
+  pull_request:
+    branches:
+      - main
 permissions:
   actions: read
   contents: write
