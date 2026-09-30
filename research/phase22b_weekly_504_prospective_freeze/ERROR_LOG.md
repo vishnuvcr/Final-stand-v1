@@ -50,3 +50,10 @@
 ## E22B-011 — Exact 10:00 spot timestamp unavailable
 - A prospective week had no exact 10:00 IST underlying observation in the pinned minute archive.
 - Correction: the entry-strike spot rule now uses the latest observation at or before 10:00 within a fixed five-minute causal window. No future observation is used, and the rule is frozen before rerun.
+
+
+## E22B-012 — Primary spot archive gap on 2026-07-08
+- Observed: the pinned independent NIFTY minute archive has no causal observation within five minutes before the frozen 10:00 IST entry for the 2026-07-14 target expiry.
+- Impact: the prospective builder aborted before any 504-family results were generated.
+- Correction: added a separately pinned public NIFTY 1-minute archive as a **gap-only causal fallback**. It is consulted only when the primary archive lacks the required observation; the same ≤5-minute causal rule is retained. Fallback source: `technovusin/nifty50-historical-data`, revision `cd169a991ccfc8979e718ae5ebeb1891a788107d`.
+- No option source, strike rule, weekly protocol, stop, slippage, cost model, or holdout boundary was changed.
