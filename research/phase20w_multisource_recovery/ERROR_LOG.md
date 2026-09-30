@@ -72,3 +72,9 @@ No Phase 20 execution errors yet.
 - **Issue:** HF token validation succeeded, but `hf auth login --add-to-git-credential` could not save credentials because Git had no credential helper.
 - **Impact:** The subsequent Git clone still prompted for credentials and failed non-interactively.
 - **Correction:** Configure the ephemeral runner's Git credential helper (`store`) before the HF login. Credentials remain outside the repository and are discarded with the runner.
+
+
+## E20-012 — 2026-09-30
+- **Issue:** Recovery-1 remains inaccessible through the runner's Hub/Git transports despite public-source verification.
+- **Impact:** Recovery-1 cannot currently supply bytes from this runner.
+- **Correction:** Pivoted the active acquisition probe to Recovery-2, whose public schema and weekly-file layout are independently verified. Recovery-1 remains registered for later retry; no source is silently removed.
