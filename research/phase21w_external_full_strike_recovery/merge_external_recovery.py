@@ -35,6 +35,7 @@ def align_to_schema(df: pl.DataFrame, columns: list[str], schema: dict[str, pl.D
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--base-root", required=True)
+    ap.add_argument("--target-cells", required=True)
     ap.add_argument("--external-cycle", required=True)
     ap.add_argument("--external-bars", required=True)
     ap.add_argument("--output-dir", required=True)
@@ -53,6 +54,12 @@ def main() -> None:
     base_bars = pl.scan_parquet(base_bars_path)
     ext_cycle = pl.read_csv(args.external_cycle)
     ext_bars = pl.read_parquet(args.external_bars)
+    import csv
+    with Path(args.target_cells).open() as fh:
+        target_cells = {(row["variant_id"], row["target_expiry"]) for row in csv.DictReader(fh)}
+    ext_cells = set(zip(ext_cycle["variant_id"].to_list(), ext_cycle["target_expiry"].cast(pl.String).to_list()))
+    if target_cells != ext_cells:
+        raise RuntimeError(f"External cycle cells do not exactly match target manifest: target={len(target_cells)} external={len(ext_cells)}")
 
     if ext_cycle["variant_id"].n_unique() != 224:
         raise RuntimeError("External cycle manifest does not contain all 224 variants")
@@ -138,7 +145,6 @@ def main() -> None:
 
     coverage = {
         "baseline_unique_expiries": len(baseline_expiries),
-        "base_cycle_cells": base_cycle.height,
         "base_cycle_cells": base_cycle.height,
         "combined_cycle_cells": merged_cycle.height,
         "combined_bar_variant_cycle_cells": bar_cell_counts.height,
