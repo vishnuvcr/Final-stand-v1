@@ -137,21 +137,16 @@ def main() -> None:
     ))
     rissin_sha = sha256_file(rissin_local)
 
-    spot_local = Path(hf_hub_download(
-        repo_id=SPOT_REPO,
-        filename=SPOT_FILE,
-        repo_type="dataset",
-        revision=SPOT_REVISION,
-        token=token,
-        cache_dir=str(cache),
-    ))
+    spot_local = Path(args.spot_bars)
+    if not spot_local.exists():
+        raise FileNotFoundError(f"Frozen Phase-9 spot artifact not found: {spot_local}")
     spot_sha = sha256_file(spot_local)
 
     spot = pl.read_parquet(spot_local)
     spot = parse_timestamp(spot)
-    required_spot_cols = {"timestamp", "open", "close"}
+    required_spot_cols = {"timestamp", "open", "close", "target_expiry", "entry_timestamp", "lock_timestamp"}
     if not required_spot_cols.issubset(set(spot.columns)):
-        raise RuntimeError(f"Spot interface missing columns: {sorted(required_spot_cols - set(spot.columns))}")
+        raise RuntimeError(f"Frozen spot interface missing columns: {sorted(required_spot_cols - set(spot.columns))}")
 
     source = pl.scan_parquet(rissin_local)
     source_schema = source.collect_schema().names()
