@@ -3,7 +3,7 @@ from pathlib import Path
 from huggingface_hub import HfApi
 
 SOURCES=[
- {"id":"RECOVERY-1","repo":"johnwick3690/stocks","revision":"f90f7ac","kind":"dataset"},
+ {"id":"RECOVERY-1","repo":"johnwick3690/stocks","revision":"f90f7acad633ba5a803f25cf431fb5f13ce3d162","kind":"dataset"},
  {"id":"RECOVERY-2","repo":"artist-23/nifty-options-data","revision":"45e0a043f34f3f40f9694e52a944297803c2af8b","kind":"dataset"},
  {"id":"RECOVERY-3","repo":"rissin/nse-options-intraday","revision":"8f7739cab3f38abdcbc6332a6d0a83e1341326e3","kind":"dataset"},
 ]
