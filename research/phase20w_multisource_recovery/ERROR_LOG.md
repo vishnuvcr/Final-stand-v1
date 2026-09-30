@@ -48,3 +48,9 @@ No Phase 20 execution errors yet.
 - **Issue:** GitHub-runner HTTP page probes remain 401 despite the public Hugging Face archive being externally verified.
 - **Impact:** HTML status cannot be used as an inventory signal from the runner.
 - **Correction:** Added a direct `hf_hub_download` probe against a verified weekly parquet at the pinned Recovery-1 commit. This is the correct acquisition path for the subsequent recovery step.
+
+
+## E20-008 — 2026-09-30
+- **Issue:** Direct `hf_hub_download` also returned 404 for the verified public LFS file.
+- **Impact:** Hub REST acquisition cannot currently be used from the GitHub runner for Recovery-1.
+- **Correction:** Test the underlying Git/LFS transport with a sparse clone and path-specific LFS fetch. This still retrieves the original pinned parquet without synthetic transformation.
