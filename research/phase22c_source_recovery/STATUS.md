@@ -50,3 +50,10 @@ Before another prospective rerun, continue source-recovery work using approved p
 
 ## 2026-10-01 update
 Phase 22C source-recovery work opened. Empirical qualification of public expired-option archives is the next gate.
+
+
+## 2026-10-01 — Candidate download gate
+- Public page verified: 1-minute NIFTY expired-option OHLCV+OI sample and schema are documented.
+- Machine ingestion: **blocked** by Google Drive HTTP 401 in the web connector and unavailable external network in the local runtime.
+- Candidate admission: **NOT PASSED**.
+- Phase 22B authoritative result remains unchanged.
