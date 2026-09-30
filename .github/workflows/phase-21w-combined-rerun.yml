@@ -1,0 +1,83 @@
+name: Phase 21W - Combined Frozen 224 Variant Rerun
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [phase-21w-combined-frozen-rerun]
+    paths:
+      - 'research/phase21w_combined_frozen_rerun/**'
+      - '.github/workflows/phase-21w-combined-rerun.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  rerun:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    concurrency:
+      group: phase21w-combined-rerun
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-21w-combined-frozen-rerun
+      - name: Bring admitted Phase 20 recovery inputs
+        run: |
+          git fetch origin phase-20w-executable-bar-recovery --depth=1
+          git checkout origin/phase-20w-executable-bar-recovery -- research/phase20w_executable_bar_recovery/output/hf2_recovered_variant_cycles.csv
+          git checkout origin/phase-20w-executable-bar-recovery -- research/phase20w_executable_bar_recovery/output/hf2_recovered_variant_option_bars.parquet
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: phase21w-hf03-hf2-${{hashFiles('research/phase17w_strike_alternatives/VARIANT_REGISTRY.md')}}
+      - run: pip install -q 'huggingface_hub>=0.36,<0.37' 'polars>=1.20,<2' 'pyarrow>=18,<23' 'numpy>=2,<3' pandas
+      - name: Rebuild frozen Phase 9 interface
+        env:
+          HF_TOKEN: ${{secrets.HF_TOKEN}}
+          HF_REVISION: 0f4800e43e6f96cec0794369d78eb4d3c4211ef5
+          HF_HOME: ~/.cache/huggingface
+          PYTHONPATH: ${{github.workspace}}
+        run: |
+          rm -rf research/phase9_weekly/output research/phase21w_combined_frozen_rerun/hf03_build
+          python research/phase9_weekly/hf_weekly_ingest.py --max-expiries 104 --start-date 2024-01-01 --end-date 2026-12-31 --output-dir research/phase9_weekly/output --hf-cache ~/.cache/huggingface
+          python research/phase17w_strike_alternatives/strike_alternatives.py --variant-start 0 --variant-end 224 --hf-cache ~/.cache/huggingface --baseline-manifest research/phase9_weekly/output/weekly_cycle_manifest.csv --expiry-start 0 --expiry-end 63 --build-only --output-dir research/phase21w_combined_frozen_rerun/hf03_build
+      - name: Build deterministic combined input
+        run: python research/phase21w_combined_frozen_rerun/build_combined.py
+      - name: Validate coverage
+        run: |
+          python - <<'PY'
+          import json,polars as pl
+          x=json.load(open('research/phase21w_combined_frozen_rerun/combined_input/coverage.json'))
+          assert x['combined_unique_expiries']==63
+          assert x['combined_cycle_cells']>=11702
+          assert x['overlap_cells']==0
+          c=pl.read_csv('research/phase21w_combined_frozen_rerun/combined_input/variant_cycle_manifest.csv')
+          assert c['variant_id'].n_unique()==224
+          print(x)
+          PY
+      - name: Run exact frozen backtest and statistics
+        env:
+          PYTHONPATH: ${{github.workspace}}
+        run: |
+          python research/phase17w_strike_alternatives/strike_alternatives.py --variant-start 0 --variant-end 224 --baseline-manifest research/phase9_weekly/output/weekly_cycle_manifest.csv --expiry-start 0 --expiry-end 63 --built-input-dir research/phase21w_combined_frozen_rerun/combined_input --hf-cache ~/.cache/huggingface --output-dir research/phase21w_combined_frozen_rerun/output
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase21w-combined-frozen-results
+          path: |
+            research/phase21w_combined_frozen_rerun/combined_input/
+            research/phase21w_combined_frozen_rerun/output/
+            research/phase9_weekly/output/
+          if-no-files-found: error
+      - name: Commit results
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/phase21w_combined_frozen_rerun/output research/phase21w_combined_frozen_rerun/combined_input research/phase9_weekly/output
+          git diff --cached --quiet || git commit -m 'phase21w: record combined frozen rerun'
+          git fetch origin phase-21w-combined-frozen-rerun
+          git rebase origin/phase-21w-combined-frozen-rerun
+          git push origin HEAD:phase-21w-combined-frozen-rerun
