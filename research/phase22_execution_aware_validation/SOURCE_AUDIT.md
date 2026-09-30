@@ -91,3 +91,14 @@ No source is admitted until an actual sample for the required target dates/contr
 - TrueData also documents historical Bid/Ask through its WebSocket services and says its historical data are available with and without Bid/Ask history. citeturn0search5turn0search12
 - Therefore, TrueData is a **technically suitable acquisition route**, but it is not yet evidence that the complete 2024–2026 Phase 22 historical sample is accessible under a free/default account.
 - The required next acquisition test is a vendor-authorized sample covering at least one historical NIFTY weekly-expiry session. The sample must demonstrate actual historical bid/ask timestamps and contract identifiers before any bulk acquisition or holdout opening.
+
+
+## 22.1E — Global Datafeeds historical tick route (2026-09-30)
+
+- Global Datafeeds documents historical NFO data with tick, minute and other periodicities. Its historical tick examples explicitly return **BuyPrice (Bid), BuyQty, SellPrice (Ask), SellQty, LastTradeTime, TradedQty and OpenInterest**. citeturn2search0turn2search15
+- Its documentation gives NFO historical-data support and explicitly shows option/futures instrument identifiers; the tick response therefore matches the core executable-quote fields required by Phase 22. citeturn2search1turn2search14
+- The remaining unknown is **historical retention for the exact 2024–2026 NIFTY weekly option contracts** and whether the required backfill is available under an authorized trial/subscription. The public documentation does not establish that full multi-year tick retention is freely accessible.
+- Global Datafeeds is therefore promoted to **primary acquisition candidate alongside TrueData**, not admitted data.
+
+### Acquisition test
+The first authorized sample must contain at least one historical weekly NIFTY expiry session and verify: exact option symbol/expiry/strike/type, timestamp, bid, bid quantity, ask, ask quantity, trade price/quantity and OI. The sample will be hashed and stored as provenance evidence before any bulk acquisition.
