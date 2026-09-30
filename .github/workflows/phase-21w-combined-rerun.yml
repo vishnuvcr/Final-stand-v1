@@ -1,4 +1,5 @@
 name: Phase 21W - Combined Frozen 224 Variant Rerun
+# Resume trigger: E21-017 baseline manifest path correction.
 # Resume trigger: E21-016 Phase-9 artifact path correction.
 # Resume trigger: E21-015 coverage-contract correction.
 
