@@ -58,16 +58,6 @@ jobs:
           python -m pip install -q --upgrade pip
           pip install -q 'huggingface_hub>=0.36,<0.37' 'polars>=1.20,<2' 'pyarrow>=18,<23' 'numpy>=2,<3' pandas
 
-      - name: Download completed Phase-21 recovery artifact
-        uses: dawidd6/action-download-artifact@v25
-        with:
-          github_token: ${{ github.token }}
-          workflow: phase-21w-source-audit.yml
-          branch: phase-21w-external-full-strike-recovery
-          workflow_conclusion: success
-          name: phase21w-external-full-strike-recovery-results
-          path: work/phase21
-          if_no_artifact_found: fail
 
       - name: Restore frozen Phase-17/11/9 engine sources
         run: |
@@ -77,16 +67,15 @@ jobs:
             research/phase11_weekly/weekly_backtest.py \
             research/phase9_weekly/hf_weekly_ingest.py
 
-      - name: Locate frozen Phase-9 interface
+      - name: Restore frozen Phase-9 interface from combined branch
         run: |
-          find work/phase21 -type f | sort | sed -n '1,80p'
-          baseline=$(find work/phase21 -path '*/phase9_weekly/output/weekly_cycle_manifest.csv' -print -quit)
-          spot=$(find work/phase21 -path '*/phase9_weekly/output/selected_weekly_spot_bars.parquet' -print -quit)
-          test -n "$baseline"
-          test -n "$spot"
+          git fetch origin phase-21w-combined-frozen-rerun --depth=1
           mkdir -p work/frozen_phase9
-          cp "$baseline" work/frozen_phase9/weekly_cycle_manifest.csv
-          cp "$spot" work/frozen_phase9/selected_weekly_spot_bars.parquet
+          git show origin/phase-21w-combined-frozen-rerun:research/phase9_weekly/output/weekly_cycle_manifest.csv > work/frozen_phase9/weekly_cycle_manifest.csv
+          git show origin/phase-21w-combined-frozen-rerun:research/phase9_weekly/output/selected_weekly_spot_bars.parquet > work/frozen_phase9/selected_weekly_spot_bars.parquet
+          test -s work/frozen_phase9/weekly_cycle_manifest.csv
+          test -s work/frozen_phase9/selected_weekly_spot_bars.parquet
+          head -n 2 work/frozen_phase9/weekly_cycle_manifest.csv
 
       - name: Run full 504 weekly configurations
         env:
