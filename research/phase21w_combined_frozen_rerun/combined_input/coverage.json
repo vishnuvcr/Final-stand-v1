@@ -1,0 +1,20 @@
+{
+  "baseline_unique_expiries": 63,
+  "hf03_cycle_cells": 8064,
+  "hf2_usable_cycle_cells": 3638,
+  "combined_cycle_cells": 11702,
+  "combined_unique_expiries": 58,
+  "missing_expiry_count": 5,
+  "missing_expiries": [
+    "2026-01-13",
+    "2026-02-10",
+    "2026-03-10",
+    "2026-04-13",
+    "2026-05-12"
+  ],
+  "unexpected_expiry_count": 0,
+  "combined_coverage_fraction": 0.8292233560090703,
+  "overlap_cells": 0,
+  "hf03_duplicate_groups": 0,
+  "hf2_duplicate_groups": 0
+}
