@@ -43,3 +43,14 @@ No Phase-20 execution errors yet.
 - **Issue:** HF-02 final-bar extraction passed timestamp bounds to Polars `is_between` as expressions instead of literals.
 - **Impact:** Recovery stopped after source loading and strike-selection, before writing recovered bars.
 - **Correction:** Wrap the entry/expiry bounds with `pl.lit(...)`. No source, timestamp, strike-selection, or admission rule changes.
+
+
+## E20-006 — 2026-09-30
+- **Issue:** The restored Phase-9 calendar contains 100 weekly expiries, while the frozen Phase-17 experiment used exactly the first 63 chronological `USABLE_OHLC` cycles.
+- **Impact:** Phase-20 initially classified 64 extra expiries as missing and generated 14,336 (64×224) out-of-scope rows.
+- **Correction:** Restrict Phase-20 to the exact frozen 63-cycle universe (`sort(target_expiry).head(63)`) before calculating missing cycles. No strategy rule or gate changes.
+
+## E20-007 — 2026-09-30
+- **Issue:** Recovery persistence attempted rebase after committing while an intentionally excluded parquet artifact remained unstaged.
+- **Impact:** The computation succeeded but repository persistence failed.
+- **Correction:** Use `git pull --rebase --autostash` after committing, then push. The recovery artifact remains available through the workflow artifact and the compact manifest is committed to the branch.
