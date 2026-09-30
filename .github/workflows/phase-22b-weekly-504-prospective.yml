@@ -1,0 +1,96 @@
+name: Phase 22B — Weekly 504 Prospective Validation
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_date:
+        description: "First new weekly expiry"
+        required: true
+        default: "2026-05-19"
+      end_date:
+        description: "Last available new weekly expiry"
+        required: true
+        default: "2026-08-04"
+      max_expiries:
+        description: "Maximum weekly expiries to admit"
+        required: true
+        default: "32"
+
+permissions:
+  contents: write
+
+jobs:
+  prospective-504:
+    runs-on: ubuntu-latest
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      HF_HOME: ~/.cache/huggingface
+      THEMARKET_REVISION: main
+      PROSPECTIVE_START: ${{ inputs.start_date }}
+      PROSPECTIVE_END: ${{ inputs.end_date }}
+      MAX_EXPIRIES: ${{ inputs.max_expiries }}
+      PYTHONPATH: ${{ github.workspace }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-22b-weekly-504-prospective-freeze
+          fetch-depth: 1
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install polars pyarrow numpy huggingface_hub
+
+      - name: Restore frozen Phase-9 spot interface
+        run: |
+          git fetch origin phase-21w-combined-frozen-rerun --depth=1
+          mkdir -p research/phase9_weekly/output
+          git show origin/phase-21w-combined-frozen-rerun:research/phase9_weekly/output/selected_weekly_spot_bars.parquet > research/phase9_weekly/output/selected_weekly_spot_bars.parquet
+          test -s research/phase9_weekly/output/selected_weekly_spot_bars.parquet
+
+      - name: Validate frozen 504 registry
+        run: |
+          python - <<'PY'
+          import importlib.util
+          spec = importlib.util.spec_from_file_location("m", "research/phase22b_weekly_504_prospective_freeze/weekly_504_prospective.py")
+          m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+          assert len(m.VARIANT_IDS) == 504
+          assert len(set(m.VARIANT_IDS)) == 504
+          print("frozen_variants=504")
+          PY
+
+      - name: Run all 504 prospective weekly configurations
+        run: |
+          rm -rf research/phase22b_weekly_504_prospective_freeze/output
+          python research/phase22b_weekly_504_prospective_freeze/weekly_504_prospective.py
+
+      - name: Validate prospective outputs
+        run: |
+          python - <<'PY'
+          import json, pandas as pd
+          from pathlib import Path
+          out=Path("research/phase22b_weekly_504_prospective_freeze/output")
+          reg=json.loads((out/"prospective_registry.json").read_text())
+          cov=json.loads((out/"coverage.json").read_text())
+          df=pd.read_csv(out/"ALL_504_PROSPECTIVE_RESULTS.csv")
+          assert reg["family_size"]==504
+          assert len(reg["selected_weekly_expiries"])>=8
+          assert len(df)==504
+          assert cov["all_504_present"] is True
+          print(json.dumps({"expiries":len(reg["selected_weekly_expiries"]),"rows":len(df),"coverage":cov},indent=2))
+          PY
+
+      - name: Publish research outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/phase22b_weekly_504_prospective_freeze/output
+          git commit -m "phase22b: publish 504 prospective weekly results" || echo "no output changes"
+          git push origin HEAD:phase-22b-weekly-504-prospective-freeze
+
+      - name: Upload result artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase22b-weekly-504-prospective-results
+          path: research/phase22b_weekly_504_prospective_freeze/output
+          retention-days: 90
