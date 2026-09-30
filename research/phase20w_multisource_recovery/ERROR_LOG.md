@@ -66,3 +66,9 @@ No Phase 20 execution errors yet.
 - **Issue:** Supplying the HF token directly in the Git clone URL still produced `Repository not found`.
 - **Impact:** Git LFS could not start the sparse fetch.
 - **Correction:** Switched to Hugging Face's documented `hf auth login --token ... --add-to-git-credential` flow, then clone the public dataset normally. The token is not embedded in source or command arguments visible to GitHub logs.
+
+
+## E20-011 — 2026-09-30
+- **Issue:** HF token validation succeeded, but `hf auth login --add-to-git-credential` could not save credentials because Git had no credential helper.
+- **Impact:** The subsequent Git clone still prompted for credentials and failed non-interactively.
+- **Correction:** Configure the ephemeral runner's Git credential helper (`store`) before the HF login. Credentials remain outside the repository and are discarded with the runner.
