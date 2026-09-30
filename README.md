@@ -6,6 +6,8 @@
 
 ### Phase status
 
+- Phase 21W — final five-expiry external recovery and 63-expiry frozen rerun: ✅ complete; 224 variants rerun, 0 promoted
+
 - Phase 8W — weekly strategy definition: ✅
 - Phase 9W — HF weekly data gate: ✅ 63 usable weekly cycles
 - Phase 10W — mechanics / margin / costs: ✅
