@@ -37,3 +37,12 @@ The 376/504 positive count is descriptive only. It is not evidence of robustness
 
 ## Next gate
 Before another prospective rerun, continue source-recovery work using approved public/free sources first. If no qualifying free source can provide the missing weekly cycles, record the limitation and separately evaluate whether the paid archive is admissible under the project's data-acquisition rules. Do not change the strategy family or statistical gates to compensate for missing data.
+
+
+## 2026-10-01 — Robustness envelope prospective freeze
+
+- Frozen envelope: **ITM3–ITM7 × NEXT2/NEXT3 × K3 2.5/3/4** (30 configurations)
+- Preliminary prospective sample: 30/30 positive; minimum win rate 83.33%; maximum recorded cumulative DD ₹0; n=6
+- Statistical confirmation: **not available** at n=6
+- Capital promotion: **none**
+- Continue source recovery and append qualifying weekly cycles without changing the frozen envelope.

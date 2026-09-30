@@ -49,3 +49,11 @@ The 2026-10-01 extension requested 2026-05-19 through 2026-09-08 but admitted on
 
 ## Stop rule
 Do not tune, rank, or select a configuration from the current six-trade prospective sample. Continue only through the planned source-recovery and prospective-validation path until the pre-specified phase gates are either satisfied or a documented data limitation prevents further progress.
+
+
+## 2026-10-01 — Frozen robustness-envelope prospective sub-analysis
+The retrospective Phase 22A robustness surface identified the 30-member envelope ITM3–ITM7 × NEXT2/NEXT3 × K3 2.5/3/4. This sub-analysis freezes that entire region without selecting an individual member and evaluates it alongside the full 504-family.
+
+Preliminary existing Phase 22B result (8 admitted expiries; n=6 completed observations/configuration): all 30 envelope members have positive cumulative net P&L, win rate >=83.33%, and zero recorded cumulative drawdown. Mean cumulative net P&L is approximately ₹94,845 and median approximately ₹90,885. These figures are **not confirmatory** because n=6 is below the frozen bootstrap minimum and far below the 30-cycle capital gate.
+
+The next qualifying prospective cycles must be appended without changing the envelope. Every member will be reported separately and as an aggregate region. No member will be selected from this preliminary result.
