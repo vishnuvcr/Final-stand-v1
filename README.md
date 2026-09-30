@@ -117,10 +117,17 @@ Capital/margin reconstruction is a separate evidence layer from execution valida
 - [Phase 21W recovery targets](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-21w-external-full-strike-recovery/research/phase21w_external_full_strike_recovery/RECOVERY_TARGETS.md)
 - [Phase 21W external recovery workflow](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-21w-external-full-strike-recovery/.github/workflows/phase-21w-source-audit.yml)
 
-## Phase 22W — Execution-aware prospective validation — proposed
+## Phase 22W — Execution-aware prospective validation — active
 
-- **Status: PROPOSED — not executed.**
-- Goal: test whether the Phase 21W K3/ITM/NEXT surface persists on a new unseen period using executable bid/ask or order-book data.
-- The Phase 21W holdout will not be used to select a Phase 22W configuration after the fact.
+- **Status: ACTIVE — protocol and 224-configuration freeze complete; execution-data admission pending.**
+- Goal: test the frozen 224-configuration family on genuinely new data using executable bid/ask/depth evidence, realistic slippage and the registered Paytm Money/NSE transaction-cost model.
+- Source audit expanded to NSE historical order/trade products plus Upstox, Dhan, ICICI Breeze and public GitHub archive routes. No freely accessible immutable historical bid/ask/depth archive has yet been admitted.
+- Broker APIs inspected provide current/live bid/ask/depth or historical OHLC, but do not provide the required historical executable quote archive in the documented endpoints.
+- **No new holdout has been opened and no Phase 21W configuration has been selected post hoc.**
+- A manual Phase 22 workflow now contains a hard gate that refuses an execution-aware run when no admitted quote/depth cache exists.
 - [Phase 22W branch](https://github.com/vishnuvcr/Final-stand-v1/tree/phase-22-execution-aware-validation)
 - [Phase 22W plan](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-22-execution-aware-validation/research/phase22_execution_aware_validation/PHASE_PLAN.md)
+- [Phase 22W source audit](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-22-execution-aware-validation/research/phase22_execution_aware_validation/SOURCE_AUDIT.md)
+- [Phase 22W execution contract](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-22-execution-aware-validation/research/phase22_execution_aware_validation/EXECUTION_DATA_CONTRACT.md)
+- [Phase 22W error log](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-22-execution-aware-validation/research/phase22_execution_aware_validation/ERROR_LOG.md)
+- [Phase 22W manual workflow](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-22-execution-aware-validation/.github/workflows/phase-22-execution-aware.yml)
