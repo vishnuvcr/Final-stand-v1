@@ -1,6 +1,6 @@
 # Phase 22B Status
 
-State: **ACTIVE — multi-source recovery rerun**
+State: **VALIDATION COMPLETE — descriptive prospective evidence; statistical confirmation pending more cycles**
 
 ## Freeze gate
 - 504-configuration family frozen: ✅
@@ -11,24 +11,31 @@ State: **ACTIVE — multi-source recovery rerun**
 ## Data and source gate
 - Primary option source: RISSIN NIFTY 1-minute archive: ✅
 - Primary spot source: pinned independent NIFTY minute archive: ✅
-- Gap-only causal spot fallback: ✅
-- Gap-only option fallback: TradeMarkk Hugging Face expiry files: 🔄
+- Gap-only causal spot fallback: used: ✅
+- TradeMarkk option fallback: available but not needed in the successful run: ✅
 - Historical bid/ask/depth: unavailable at this validation layer
 - Execution-aware evidence: separate downstream gate
 
-## Validation state
-- Full 504-family computation completed successfully on prior corrected runs: ✅
-- Latest completed computation admitted 7 weekly expiries, 3,528/3,528 expected variant-cycle rows, and all 504 variants.
-- E22B-014 and E22B-015 were workflow-only validator defects and are corrected.
-- The frozen >=8 weekly-expiry validation threshold remains unchanged.
-- Multi-source recovery is now attempting to recover missing weekly expiry files rather than weakening the threshold.
-- Statistical inference and publication remain pending successful validation.
+## Validation result
+- End-to-end workflow run **36759982136**: SUCCESS
+- Frozen family size: **504**
+- Weekly expiries admitted: **8**
+- Expected variant-cycle rows: **4,032**
+- Usable variant-cycle rows: **4,032**
+- All 504 variants present: **yes**
+- Variants with positive total net P&L: **376/504**
+- Every variant has **n=6** completed trades in the result table.
+- Holm-adjusted p-values: **none computed / none <0.05**, because the pre-specified bootstrap requires at least 8 observations per variant.
+- Therefore the current phase provides **descriptive prospective evidence only**, not statistically validated confirmation.
 
-## Promotion boundary
-This is an external prospective validation layer. Even after recovery, it remains subject to the existing 30-cycle capital-promotion minimum and the separate execution-aware gate. No capital deployment conclusion is drawn from the current short OHLC-only sample.
+## Interpretation boundary
+The positive P&L count and large descriptive Sharpe values must not be interpreted as proof of robustness. The sample is only six completed trades per variant, and the phase remains below the existing 30-cycle capital-promotion minimum. No strategy configuration is promoted from this phase.
 
-## Latest execution state
-- E22B-014: validator lacked pandas — corrected.
-- E22B-015: validator used obsolete registry key — corrected.
-- E22B-016: RISSIN supplied only 7 weekly expiries for the current window — gap-only TradeMarkk recovery added.
-- No strategy parameter, holdout boundary, entry/lock timestamp, causal spot rule, stop-loss, slippage/cost model, or 504-family definition was changed.
+## Errors/recovery
+- E22B-014: validator dependency failure — corrected.
+- E22B-015: validator registry-field mismatch — corrected.
+- E22B-016: RISSIN-only expiry coverage initially below the frozen 8-expiry gate — multi-source discovery added; successful run admitted 8 expiries without needing TradeMarkk option fallback.
+- No strategy parameter, holdout boundary, entry/lock time, causal spot rule, stop-loss, slippage/cost model, or 504-family definition was changed.
+
+## Next research boundary
+Proceed only to the next pre-planned phase: extend the prospective window when additional weekly cycles become available, while retaining the frozen 504 family. Do not select a winner from this six-trade-per-variant sample.
