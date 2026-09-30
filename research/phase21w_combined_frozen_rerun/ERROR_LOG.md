@@ -54,3 +54,8 @@
 - **Issue:** HF-02 recovered bars expose `expiry` while the HF-03 interface expects the same field under the frozen target-expiry schema.
 - **Impact:** Overlay stopped at schema validation.
 - **Correction:** Map `expiry` from `target_expiry` for HF-02 rows; no date values are changed.
+
+## E21-007 — 2026-09-30
+- **Issue:** HF-02 recovered bars lack the `option_type` interface field.
+- **Impact:** Overlay construction stopped before coverage validation.
+- **Correction:** Set `option_type='CE'` because the recovered HF-02 source files are explicitly the weekly NIFTY `*_CE` files. No price/timestamp data is changed.
