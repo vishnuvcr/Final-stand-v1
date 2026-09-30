@@ -15,3 +15,9 @@
 - **Observed:** a public NIFTY options analytics repository documents snapshot files with bid/ask fields, but explicitly says the data directory is not tracked in Git.
 - **Impact:** schema evidence is not data evidence; the source cannot be admitted without an accessible immutable dataset.
 - **Correction:** treat as source lead only; require actual files, provenance and hash before admission.
+
+
+## E22-004 — Strong execution-data vendor identified but access is not provisioned
+- **Observed:** TrueData documents historical NSE F&O data with optional Bid/Ask history and a historical tick API supporting bid/ask fields.
+- **Impact:** the technical data contract may be satisfiable, but no authorized credential/subscription is available to the research workflow at present.
+- **Correction:** record TrueData as the primary vendor acquisition candidate; do not claim data admission until a real sample is obtained, hashed and schema-validated. No paid purchase or credential fabrication.
