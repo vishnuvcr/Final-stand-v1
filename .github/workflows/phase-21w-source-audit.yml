@@ -5,15 +5,13 @@ on:
     branches:
       - phase-21w-external-full-strike-recovery
     paths:
-      - 'research/phase21w_external_full_strike_recovery/PHASE_PLAN.md'
-      - 'research/phase21w_external_full_strike_recovery/STATUS.md'
       - 'research/phase21w_external_full_strike_recovery/RECOVERY_TARGETS.md'
-      - 'research/phase21w_external_full_strike_recovery/RESEARCH_LOG.md'
-      - 'research/phase21w_external_full_strike_recovery/ERROR_LOG.md'
-      - 'research/phase21w_external_full_strike_recovery/probe_hf_missing.py'
+      - 'research/phase21w_external_full_strike_recovery/audit_sources.py'
+      - 'research/phase21w_external_full_strike_recovery/build_frozen_spot_interface.py'
       - 'research/phase21w_external_full_strike_recovery/recover_rissin_missing.py'
       - 'research/phase21w_external_full_strike_recovery/merge_external_recovery.py'
       - '.github/workflows/phase-21w-source-audit.yml'
+
   workflow_dispatch:
 
 permissions:
