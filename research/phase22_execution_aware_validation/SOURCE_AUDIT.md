@@ -119,3 +119,18 @@ The first authorized sample must contain at least one historical weekly NIFTY ex
 4. Measure date/session coverage against the preregistered weekly chronology.
 5. Hash the admitted raw subset and cache it in the Phase 22 workflow if—and only if—it passes the execution contract.
 6. Reject the source if coverage is incomplete or contract identity cannot be reconstructed reproducibly.
+
+
+## 22.1G — Licensed execution-data sources re-checked (2026-09-30)
+
+### TrueData — technically suitable, access-gated
+TrueData documentation explicitly states that its historical Market Data API can provide historical NSE Futures & Options data with Level-1 best bid/ask, and its historical REST interface supports tick history with bid/ask. Its support documentation also states that historical bid/ask data is available through its WebSocket API services. This is the strongest technically documented candidate found in the current audit, but no active TrueData credentials/subscription are available to this research workflow, so no data is admitted.
+
+### Global Datafeeds — technically suitable, access-gated
+Global Datafeeds documents NFO historical tick data and fields including BUYPRICE/BUYQTY and SELLPRICE/SELLQTY, and supports contract-specific NIFTY option identifiers. Its published backfill policy currently states only one calendar week of tick history for NFO, while minute history has shorter rolling windows. This makes it unsuitable for directly retrieving a multi-year historical sample unless an extended archive/custom extract is separately provisioned.
+
+### TickBytes / OptionVault — coverage claims strong, archive access-gated
+Public GitHub documentation describes daily NIFTY option-chain Level-2/top-5 depth archives and OptionVault describes historical NIFTY index-option tick/1-second and Level-2 data. However, the full datasets are licensed/private; public repositories expose samples/schema rather than the required chronological archive. They remain candidates for a licensed/custom extract, not admitted public sources.
+
+### Public GitHub bid/ask schema projects
+ayyararyan/nse-options-pipeline documents per-snapshot NIFTY option rows with bid/ask and quantities, but the underlying NSEI-Data archive is explicitly not tracked in Git. Therefore schema existence is verified, historical coverage is not.
