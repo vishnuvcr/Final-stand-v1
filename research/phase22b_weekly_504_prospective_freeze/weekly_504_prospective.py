@@ -361,6 +361,8 @@ def main():
         cache_dir=str(cache),
     ))
     spot = pl.read_parquet(spath)
+    if "timestamp" not in spot.columns and "date" in spot.columns:
+        spot = spot.rename({"date": "timestamp"})
     if "symbol" in spot.columns:
         spot = spot.filter(pl.col("symbol").cast(pl.String).str.to_uppercase().is_in(["NIFTY", "NIFTY_50", "NIFTY50"]))
     ts_dtype = spot.schema["timestamp"]
