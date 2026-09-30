@@ -1,26 +1,24 @@
 # Phase 20W Status
 
-**State:** CLOSED — alternate-source executable recovery exhausted for the frozen 63-cycle sample.
+**State:** COMPLETE — alternate executable-bar recovery exhausted for the public HF routes used in this phase.
 
-## Result
-- Frozen Phase-17/19 sample: **63 weekly expiries**.
-- Phase-19 executable reconstruction: **36/63 cycles** available.
-- Remaining gap: **40 expiries**.
-- HF-01: annual 1-minute option files cover **2024-10-01 onward** in the pinned source; the 2026 pinned revision has no 2026 file.
-- HF-02: weekly ATM-relative CE files contain exact **10:00 and 14:00 IST observations for all 40 missing expiries**, after correcting the dataset's UTC timestamp representation.
-- However, the targeted HF-02 probe shows only **1–2 strikes per expiry** at the required timestamps. It therefore cannot supply the multiple distinct strikes needed by the frozen K1/K2/K3 construction.
-- Full Phase-20 alternate recovery admitted **0 additional executable variant-cycles**.
+## Recovery result
+- Frozen sample: 63 weekly expiry cycles.
+- Phase-19 executable source coverage: 36/63 cycles.
+- Missing at Phase-20 start: 40/63 cycles.
+- HF-02 supplied intraday observations for 27/40 missing cycles.
+- Fully recovered HF-02 cycles: **19/27** (224/224 variant-cycles).
+- Partially recovered HF-02 cycles: **3/27** (159, 161, and 126 usable variants respectively).
+- HF-02 cycles with zero executable variant-cycles: **5/27**, all in 2026.
+- Additional usable variant-cycles recovered: **3,638 / 8,960** missing cells.
+- Combined Phase-19 + Phase-20 executable variant-cycle coverage: **11,702 / 14,112 = 82.93%**.
+- Equivalent fully covered cycles: 55/63, plus 3 partial cycles; 5 cycles remain entirely unrecovered.
 
-## Admission decision
-No synthetic bars, strike substitution, cross-source leg mixing, or reduced-strike rerun is permitted. Phase 19 remains limited to the 36/63 executable cycles unless a new full-strike source is obtained.
+## Source provenance
+- HF-03 pinned: `0f4800e43e6f96cec0794369d78eb4d3c4211ef5`
+- HF-02 pinned: `45e0a043f34f3f40f9694e52a944297803c2af8b`
+- HF-01 2024/2025 inventory verified, but HF-01 begins 2024-10 and has no frozen-source file for the 2026 missing cycles at the pinned HF-01 revision.
+- No synthetic bars were created and no conflicting sources were blended.
 
-## Next phase
-Proceed to **Phase 21W — external full-strike source recovery**, targeting broker/API/public historical option sources (Upstox, ICICI/Breeze, Dhan, NSE/BSE where available) with deterministic source precedence and exact entry/lock validation.
-
-## Files
-- `PHASE_PLAN.md`
-- `ERROR_LOG.md`
-- `RESEARCH_LOG.md`
-- `output/source_inventory.json`
-- `output/hf2_exact_entry_lock_summary.csv`
-- `output/recovered_variant_cycle_manifest.csv`
+## Phase conclusion
+Public-source recovery materially improves the frozen sample from 36/63 executable cycles to 55 fully covered cycles plus 3 partial, but **does not yet reach the original 50/63 promotion gate for every variant**. The next phase reruns the exact 224 variants using deterministic HF-03 → HF-02 source precedence for each variant-cycle, preserves missing cells as missing, and applies the unchanged statistical gate.
