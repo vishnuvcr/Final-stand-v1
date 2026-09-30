@@ -14,6 +14,8 @@ out.mkdir(parents=True,exist_ok=True)
 
 c3=pl.read_csv(hf03/'variant_cycle_manifest.csv')
 c2=pl.read_csv(hf2/'hf2_recovered_variant_cycles.csv').filter(pl.col('status')=='USABLE_OHLC')
+baseline=pl.read_csv('phase9_weekly/output/weekly_cycle_manifest.csv').filter(pl.col('status')=='USABLE_OHLC').head(63)
+baseline_expiries=sorted(baseline['target_expiry'].cast(pl.String).to_list())
 key=['variant_id','target_expiry']
 overlap=c2.join(c3.select(key),on=key,how='inner').height
 if overlap:
@@ -23,6 +25,11 @@ for col in c3.columns:
         c2=c2.with_columns(pl.lit(None).alias(col))
 c2=c2.select(c3.columns)
 c=pl.concat([c3,c2],how='diagonal_relaxed').unique(subset=key,keep='first')
+covered_expiries=sorted(c['target_expiry'].cast(pl.String).unique().to_list())
+unexpected_expiries=sorted(set(covered_expiries)-set(baseline_expiries))
+missing_expiries=sorted(set(baseline_expiries)-set(covered_expiries))
+if unexpected_expiries:
+    raise RuntimeError(f'Combined input contains non-baseline expiries: {unexpected_expiries}')
 
 # Keep the large option tables lazy/streaming. Eagerly loading both source
 # parquets caused runner shutdowns during schema adaptation.
@@ -92,7 +99,7 @@ pl.concat([b3_lf,pl.scan_parquet(norm_path)],how='vertical_relaxed').sink_parque
 norm_path.unlink(missing_ok=True)
 
 c.write_csv(out/'variant_cycle_manifest.csv')
-coverage={'hf03_cycle_cells':c3.height,'hf2_usable_cycle_cells':c2.height,'combined_cycle_cells':c.height,'combined_unique_expiries':c['target_expiry'].n_unique(),'combined_coverage_fraction':c.height/(224*63),'overlap_cells':overlap,'hf03_duplicate_groups':dups3,'hf2_duplicate_groups':dups2}
+coverage={'baseline_unique_expiries':len(baseline_expiries),'hf03_cycle_cells':c3.height,'hf2_usable_cycle_cells':c2.height,'combined_cycle_cells':c.height,'combined_unique_expiries':len(covered_expiries),'missing_expiry_count':len(missing_expiries),'missing_expiries':missing_expiries,'unexpected_expiry_count':len(unexpected_expiries),'combined_coverage_fraction':c.height/(224*63),'overlap_cells':overlap,'hf03_duplicate_groups':dups3,'hf2_duplicate_groups':dups2}
 (out/'coverage.json').write_text(json.dumps(coverage,indent=2))
 print(json.dumps(coverage,indent=2))
 # Phase 21 execution trigger: frozen adapter logic unchanged.

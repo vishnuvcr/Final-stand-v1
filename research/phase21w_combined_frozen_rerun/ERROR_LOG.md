@@ -63,3 +63,10 @@
 - **Diagnosis:** Most consistent with runner/resource termination during large-table construction; this is an execution diagnosis, not a proven root cause.
 - **Correction:** Replace eager `read_parquet`/in-memory concatenation with Polars lazy `scan_parquet`, streaming source-local duplicate queries, a streamed normalized HF-02 parquet, and streamed vertical concatenation.
 - **Prevention:** Phase-21 large-file adapters must remain streaming/bounded-memory end-to-end; do not materialize both frozen and recovered bar tables simultaneously.
+
+## E21-015 — 2026-09-30
+- **Issue:** Workflow run 36708232073 built the combined input successfully but the coverage validator asserted that the executable combined set must contain all 63 expiries.
+- **Impact:** The exact frozen backtest was skipped even though the admitted combined dataset met the planned 11,702-cell threshold.
+- **Root cause:** The validator conflated the frozen 63-expiry experimental denominator with the subset of expiries for which executable bars have been recovered. Five baseline expiries remain completely unrecovered.
+- **Correction:** Validate 63 baseline expiries plus exactly five missing expiries, while requiring at least 11,702 combined variant-cycle cells and zero unexpected-expiry/overlap conditions.
+- **Prevention:** Coverage validators must distinguish baseline chronology, executable observations, and missing observations as separate fields.

@@ -50,8 +50,11 @@ jobs:
           python - <<'PY'
           import json,polars as pl
           x=json.load(open('research/phase21w_combined_frozen_rerun/combined_input/coverage.json'))
-          assert x['combined_unique_expiries']==63
+          assert x['baseline_unique_expiries']==63
           assert x['combined_cycle_cells']>=11702
+          assert x['combined_unique_expiries']+x['missing_expiry_count']==63
+          assert x['missing_expiry_count']==5
+          assert x['unexpected_expiry_count']==0
           assert x['overlap_cells']==0
           c=pl.read_csv('research/phase21w_combined_frozen_rerun/combined_input/variant_cycle_manifest.csv')
           assert c['variant_id'].n_unique()==224
