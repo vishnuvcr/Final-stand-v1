@@ -5,9 +5,17 @@ on:
   push:
     branches:
       - phase-21w-external-full-strike-recovery
+    paths:
+      - '.github/workflows/phase-21w-source-audit.yml'
+      - 'research/phase21w_external_full_strike_recovery/*.py'
+      - 'research/phase21w_external_full_strike_recovery/RECOVERY_TARGETS.md'
   pull_request:
     branches:
       - main
+    paths:
+      - '.github/workflows/phase-21w-source-audit.yml'
+      - 'research/phase21w_external_full_strike_recovery/*.py'
+      - 'research/phase21w_external_full_strike_recovery/RECOVERY_TARGETS.md'
 
 permissions:
   actions: read
