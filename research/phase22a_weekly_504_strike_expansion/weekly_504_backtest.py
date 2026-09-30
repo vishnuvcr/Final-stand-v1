@@ -306,8 +306,11 @@ def build_variants_504(
                 & (pl.col("timestamp") <= expiry_end_lit)
             )
 
+        entry_lit = pl.lit(entry_ts).cast(
+            pl.Datetime(time_unit="us", time_zone="Asia/Kolkata")
+        )
         entry_calls = opt.filter(
-            (pl.col("timestamp") == pl.lit(entry_ts))
+            (pl.col("timestamp") == entry_lit)
             & (pl.col("volume") > 0)
         )
         strikes = (
