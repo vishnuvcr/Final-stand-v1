@@ -29,6 +29,8 @@ def align_to_schema(df: pl.DataFrame, columns: list[str], schema: dict[str, pl.D
     for col in columns:
         if col not in df.columns:
             df = df.with_columns(pl.lit(None, dtype=schema[col]).alias(col))
+        elif df.schema[col] != schema[col]:
+            df = df.with_columns(pl.col(col).cast(schema[col], strict=False).alias(col))
     return df.select(columns)
 
 
