@@ -185,6 +185,17 @@ Mean historical-holdout P&L increased monotonically across the registered K3 val
 
 This ordering is informative for hypothesis formation but is not a prospective parameter-selection rule.
 
+### 6.7 Figures and visual diagnostics
+
+The parameter surfaces are also published as static SVG figures:
+
+- charts/K1_MEAN_HOLDOUT_PNL.svg — K1 mean historical-holdout P&L surface.
+- charts/K2_MEAN_HOLDOUT_PNL.svg — K2 mean historical-holdout P&L surface.
+- charts/K3_MEAN_HOLDOUT_PNL.svg — K3 mean historical-holdout P&L surface.
+- charts/HOLDOUT_PNL_QUANTILES.svg — historical-holdout P&L distribution markers.
+
+The figures are descriptive visualizations of the complete 504-family and do not constitute additional statistical tests.
+
 ## 7. Inferences
 
 ### 7.1 What the run establishes
@@ -259,6 +270,12 @@ The next phase should preserve the complete 504-family audit trail and move to a
 5. Re-run statistical inference on the untouched new period.
 6. Add NSE margin/peak-capital reconstruction before any capital-normalized interpretation.
 7. Only after those gates, prepare a deployment specification.
+
+## 14. Appendices and supplementary material
+
+The complete research appendices, provenance summary, error-resolution index, and supplement list are in APPENDICES_AND_SUPPLEMENTS.md.
+
+This includes the exact configuration registry, weekly protocol, statistical procedure, source hashes, workflow artifact evidence, the full error-correction record, complete row-level CSVs, and all static figures.
 
 ## 13. Reproducibility and supplements
 
