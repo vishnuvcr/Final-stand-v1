@@ -11,6 +11,7 @@ jobs:
   recover:
     runs-on: ubuntu-latest
     timeout-minutes: 240
+    # Phase-21W recovery is intentionally rerunnable after any source/parser correction.
     concurrency:
       group: phase21w-external-recovery
       cancel-in-progress: true
