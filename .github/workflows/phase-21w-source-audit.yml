@@ -199,7 +199,7 @@ jobs:
       - name: Commit compact recovery metadata and results
         run: |
           git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot].com'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add research/phase21w_external_full_strike_recovery/output
           git diff --cached --quiet || git commit -m 'phase21w: record final external recovery and 63-cycle rerun'
           git fetch origin phase-21w-external-full-strike-recovery
