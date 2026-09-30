@@ -1,8 +1,8 @@
 # Phase 19W Status
 
-**State:** EXECUTING — recovered-data empirical rerun admitted.
+**State:** COMPLETE — recovered-data empirical rerun completed and audited.
 
-**Execution status:** 224 variants / frozen 63-cycle chronology submitted to GitHub Actions.
+**Execution status:** 224/224 variants completed successfully in authoritative run 36642638097; repository-safe outputs committed and full derived parquet retained as workflow artifact.
 
 **Recovered data:** HF-03 pinned revision `0f4800e43e6f96cec0794369d78eb4d3c4211ef5`; 13,956/14,112 variant-cycle cells available (98.895%); 59 fully covered cycles and 4 partial cycles.
 
@@ -12,7 +12,7 @@
 
 **Missing-data rule:** unavailable contract observations are omitted as missing; no synthetic bars or source blending is introduced in this frozen rerun.
 
-**Next:** complete all 224 empirical backtests, inspect outputs, validate controls, apply promotion gate, then close the phase with manuscript-ready results and limitations.
+**Phase decision:** 0/224 variants promoted. All variants had 36/63 usable cycles (57.143%), 21 training observations and 7 validation observations, below the frozen promotion-gate thresholds. See `PHASE_RESULT.md`.
 
 
 **Execution trigger correction:** A normal repository commit is being used to trigger the admitted workflow after workflow-file-only push events produced no jobs.
