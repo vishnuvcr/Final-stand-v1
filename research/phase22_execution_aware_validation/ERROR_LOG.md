@@ -36,3 +36,9 @@
 - **Observed:** NSE documents complete historical order-book events and trades with timestamps, prices, volumes and identifiers, but access is provided as a subscribed historical data product.
 - **Impact:** the strongest authoritative reconstruction route is not currently accessible to the workflow.
 - **Correction:** do not infer access or fabricate downloads; keep the route first priority for authorized acquisition.
+
+
+## E22-005 — TrueData historical-depth availability is access-dependent
+- **Observed:** TrueData documents historical Bid/Ask support, but its default REST tick-history window is only the last 5 trading days; extended history is an add-on. Historical Bid/Ask is also documented through its WebSocket service.
+- **Impact:** TrueData cannot yet be treated as an automatically available multi-year source for the Phase 22 holdout.
+- **Correction:** require an authorized historical sample and explicit coverage confirmation before admission; no assumption of multi-year access.
