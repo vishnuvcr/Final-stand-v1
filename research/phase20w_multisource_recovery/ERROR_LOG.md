@@ -18,3 +18,9 @@ No Phase 20 execution errors yet.
 - **Issue:** Hugging Face recursive tree listing returned 404 even for the verified full Recovery-1 commit SHA because the repository is LFS-backed and the tree endpoint is rejecting the revision path.
 - **Impact:** Inventory could not enumerate files through `list_repo_files(..., revision=...)`.
 - **Correction:** Resolve the immutable current `main` commit via `repo_info`, then enumerate files from the default branch and record the resolved SHA in the inventory. The public commit history shows that `main` resolves to the verified upload commit. No strategy or source-selection rule changes.
+
+
+## E20-003 — 2026-09-30
+- **Issue:** The Hugging Face Python API returned 404 for the public `johnwick3690/stocks` dataset even at `main`, preventing recursive inventory.
+- **Impact:** No source files were enumerated through the API.
+- **Correction:** Recovery-1 inventory now uses lightweight HTTPS probes against the verified weekly-expiry parquet path exposed by the public dataset tree. Recovery-2 and Recovery-3 remain registered and will receive separate schema discovery before download. No large file is downloaded during inventory.
