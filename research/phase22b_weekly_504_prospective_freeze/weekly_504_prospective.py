@@ -226,7 +226,10 @@ def build_prospective_data(out: Path, cache: Path, start_date: str, end_date: st
                                     target_error = abs(p3 - target) / target if target > 0 else None
                                     present = opt.filter(
                                         pl.col("strike").is_in([k1, k2, k3])
-                                        & pl.col("timestamp").is_in([ts_lit(entry_ts), ts_lit(lock_ts)])
+                                        & (
+                                            (pl.col("timestamp") == ts_lit(entry_ts))
+                                            | (pl.col("timestamp") == ts_lit(lock_ts))
+                                        )
                                     )["strike"].n_unique()
                                     if int(present) != 3:
                                         status = "INCOMPLETE"
