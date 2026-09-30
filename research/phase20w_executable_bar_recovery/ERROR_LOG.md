@@ -78,3 +78,9 @@ No Phase-20 execution errors yet.
 - **Issue:** HF-02 recovery re-read all 21 weekly files inside each missing-expiry loop, causing excessive runtime.
 - **Impact:** The current recovery job became unnecessarily long and was still in progress without producing a result.
 - **Correction:** Cache each pinned HF-02 weekly file once per job and reuse the in-memory frames for all missing expiries. This is a performance-only change; source precedence, timestamps, strike selection and admission rules remain frozen.
+
+
+## E20-009 — 2026-09-30
+- **Issue:** Targeted HF-02 probe failed while writing a nested list field to CSV.
+- **Impact:** The probe did not persist its already-computed coverage rows.
+- **Correction:** Flatten the timestamp-list diagnostic to a scalar count/string. Source acquisition and timezone conversion were successful.
