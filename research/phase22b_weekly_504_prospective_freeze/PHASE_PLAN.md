@@ -1,62 +1,51 @@
-# Phase 22B — Weekly 504 Prospective Validation
+# Phase 22B — Weekly 504 Prospective Validation Plan
 
-## Status
-**ACTIVE — protocol and 504 family frozen; new chronological OHLC holdout opened only after freeze.**
+## Purpose
+Prospectively validate the frozen weekly-options strategy family on a genuinely unseen period without selecting or tuning a configuration from the holdout.
 
-## Research question
-Does the complete 504-configuration weekly strategy family retain its historical behavior on a genuinely new chronological period after the Phase-21/22A sample?
+## Frozen research family
+- K1: OTM1–OTM8, ATM_NEAREST, ATM_UP, ITM1–ITM8 (18 rules)
+- K2: NEXT1, NEXT2, NEXT3, MIRROR_GAP (4 rules)
+- K3 multipliers: 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 4.0 (7 values)
+- Total: 18 × 4 × 7 = 504 configurations
 
-## Frozen family
-- K1: OTM1–OTM8, ATM_NEAREST, ATM_UP, ITM1–ITM8
-- K2: NEXT1, NEXT2, NEXT3, MIRROR_GAP
-- K3: 0.5, 1, 1.5, 2, 2.5, 3, 4
-- Total: **504 configurations**
-
-No configuration is selected from the new period before the family-level results are computed.
-
-## Weekly protocol
-- Entry: 10:00 IST on the first trading day after the prior weekly expiry; entry-strike spot uses the latest underlying observation at or before 10:00 within a fixed 5-minute causal tolerance if exact 10:00 is absent.
-- Lock/exit decision: 14:00 IST on the trading day before the target weekly expiry.
-- Remaining exposure may continue to target expiry unless stopped/exited.
+## Frozen weekly protocol
+- Entry: 10:00 IST on the first trading day after the prior weekly expiry.
+- Lock/exit decision: 14:00 IST on the trading day before target expiry.
+- Remaining exposure may continue to target expiry unless the hard stop is triggered.
 - Hard stop: 50 NIFTY points.
 - Baseline slippage: 0.50 NIFTY points per leg.
-- Paytm Money/NSE transaction-cost model: unchanged.
+- Transaction-cost/brokerage model: frozen Paytm Money/NSE model used by the preceding phases.
+- Causal entry spot: latest observation at or before 10:00 IST, within the frozen five-minute tolerance.
+- No post-hoc configuration selection.
 
-## New-data boundary
-The new validation starts after the last Phase-21 target expiry (2026-05-12). The admitted public archive currently reaches 2026-08-04, so the requested new period is 2026-05-19 through 2026-08-04, subject to the source's weekly-expiry catalog and data-quality checks. The source documents 1-minute NIFTY option OHLCV(+OI) bars and notes partial coverage for illiquid/far strikes. citeturn7search2turn8search0
+## Data methodology
+1. Use the pinned independent spot archive and the primary NIFTY intraday option archive.
+2. Use approved secondary sources only for gap recovery when the primary source cannot cover an eligible expiry.
+3. Record source revisions, hashes, admitted expiries and fallback usage in the run manifest.
+4. Cache/reuse retrieved data rather than redownloading unnecessarily.
+5. Treat OHLC-derived fills as a separate execution-evidence layer; do not call them historical bid/ask execution.
 
-This is a genuinely chronological external period relative to the Phase-21 sample, but it is **OHLC-based**, not bid/ask/depth executable.
+## Statistical methodology
+- Evaluate all 504 configurations on the same admitted weekly cycles.
+- Report net rupee P&L, mean/median, win rate, drawdown, expected shortfall, Sharpe and costs.
+- Compute the frozen centered block bootstrap only when each configuration has at least 8 completed observations.
+- Use the frozen block length and replication count from the implementation.
+- Apply Holm correction across all 504 configurations.
+- Capital promotion remains gated by the pre-specified minimum 30 completed cycles and all existing risk/cost checks.
+- No configuration is promoted solely from descriptive positive P&L.
 
-## Statistical analysis
-For every configuration:
-- valid cycle count;
-- total/mean/median net P&L;
-- win rate;
-- max drawdown;
-- expected shortfall;
-- annualized weekly Sharpe;
-- mean transaction cost;
-- centered block-bootstrap p-value where sample size permits;
-- Holm correction across all 504 configurations.
+## Phase gates
+- Gate A: frozen registry and protocol validated.
+- Gate B: prospective period begins after freeze.
+- Gate C: source coverage and causal data checks pass.
+- Gate D: all 504 configurations are evaluated on every admitted cycle.
+- Gate E: statistical inference runs only when its pre-specified sample-size gate is met.
+- Gate F: capital promotion requires the existing 30-cycle evidence gate.
+- If data coverage prevents later cycles, record the limitation and search approved external archives before changing the strategy.
 
-Because the new period is short, no configuration is promoted solely from this phase. The existing 30-cycle capital-promotion minimum remains a separate gate.
+## Current execution status
+The 2026-10-01 extension requested 2026-05-19 through 2026-09-08 but admitted only eight qualifying weekly expiries ending 2026-07-21. All 504 configurations were evaluated, but each has n=6, so statistical confirmation and capital promotion remain pending additional qualifying cycles.
 
-## Required outputs
-- complete 504 registry;
-- selected weekly-expiry manifest;
-- source SHA/revision manifest;
-- full row-level prospective results;
-- Holm-adjusted statistics;
-- coverage report;
-- error log;
-- research log;
-- final manuscript and README update.
-
-## Exit criteria
-Phase 22B closes only after:
-1. every admitted new weekly expiry is tested;
-2. all 504 configurations are evaluated;
-3. data-quality/coverage is reported;
-4. family-level statistical inference is complete;
-5. no result is selected post hoc;
-6. manuscript and README are updated.
+## Stop rule
+Do not tune, rank, or select a configuration from the current six-trade prospective sample. Continue only through the planned source-recovery and prospective-validation path until the pre-specified phase gates are either satisfied or a documented data limitation prevents further progress.
