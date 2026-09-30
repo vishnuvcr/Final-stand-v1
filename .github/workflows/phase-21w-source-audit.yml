@@ -81,7 +81,7 @@ jobs:
           HF_HUB_DOWNLOAD_TIMEOUT: "120"
           HF_HUB_ETAG_TIMEOUT: "30"
         run: |
-          base="$(find work/combined -path '*/combined_input/baseline_calendar.json' -print -quit)"
+          base="$(find work/combined -path '*/output/baseline_calendar.json' -print -quit)"
           spot="$(find work/combined -name selected_weekly_spot_bars.parquet -print -quit)"
           test -n "$base"
           test -n "$spot"
