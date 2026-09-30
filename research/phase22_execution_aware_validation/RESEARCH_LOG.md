@@ -20,3 +20,11 @@
 - Its published preview demonstrates a clean nine-column five-level depth schema: id, tick_id, instrument_key, timestamp, depth_level, bid_price, bid_qty, ask_price, ask_qty. The preview shows timestamped levels 0–4 with positive bid/ask quantities. citeturn3view0
 - This resolves the earlier concern that the **entire repository** was unusable because of the mixed `market_ticks.csv`; the separate depth file is a materially better candidate. However, the public evidence currently exposes a sample beginning 2025-10-27 and does not establish the complete weekly-expiry coverage required by Phase 22. The source therefore remains **candidate, not admitted**.
 - Added manual GitHub Actions workflow `.github/workflows/phase-22-tbt-source-probe.yml` to download the depth file, verify the exact schema, scan timestamps/date coverage, validate bid<=ask and positive prices/quantities, verify all five depth levels, and preserve the immutable file/hash as an artifact.
+
+
+## 2026-09-30 — Phase 22 TBT source probe actually executed
+- Re-established GitHub Actions visibility through the repository Actions REST endpoint.
+- Workflow run 36737538413 downloaded `market_depth.csv` successfully and verified SHA-256 `50c92a9c1ab2070224885392a7bd7e4ff94f046eeeef3e9af3289935343c6a05`.
+- Exact schema and depth levels 0–4 passed; chronology scan found 681,055 rows across only 2025-10-27 and 2025-10-28, with 57 invalid quote rows.
+- Admission failed. The candidate is not sufficient for Phase 22's weekly-horizon multi-expiry execution-aware validation.
+- Holdout remains locked.
