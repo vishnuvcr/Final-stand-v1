@@ -58,3 +58,13 @@ No new holdout is opened until an admissible historical execution dataset exists
 ### Route status
 
 **Strong candidate — access pending.** If an authorized trial/subscription or existing credential becomes available, the first acquisition test should use a small historical NIFTY weekly-expiry sample and verify exact timestamp, expiry, strike, CE/PE, bid/ask, bid/ask quantity, and source provenance before any full acquisition.
+
+## 22.1D — TrueData retention constraint verified (2026-09-30)
+
+- Current TrueData documentation states default REST history is **5 trading days for tick data**, **6 months for intraday bars**, and **10+ years for daily bars**; extended history is described as an add-on. citeturn0search1turn0search3
+- TrueData separately confirms historical data can include Bid/Ask history and real-time tick fields include timestamp, tick sequence, bid, bid quantity, ask and ask quantity. citeturn0search4turn0search6
+- Therefore TrueData is technically compatible with the execution contract, but default REST retention is insufficient for the historical weekly-expiry sample required by Phase 22 unless an extended-history entitlement covers the target dates.
+- No credentials, subscription, or paid add-on is assumed. No TrueData data are admitted.
+
+### Acquisition gate
+A future acquisition attempt must first obtain a small sample covering at least one target historical expiry and verify that the account actually returns timestamped bid/ask/quantity observations for the exact option contracts. If only the default five-day tick window is available, the source cannot satisfy the retrospective Phase 22 experiment.
