@@ -43,7 +43,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install polars pyarrow numpy huggingface_hub
+          pip install polars pyarrow numpy pandas huggingface_hub
 
       - name: Restore frozen Phase-9 spot interface
         run: |
