@@ -9,3 +9,8 @@
 - **Issue:** HF-02 recovered bars use `oi` while the HF-03 frozen bar interface uses `open_interest`.
 - **Impact:** Combined-input construction stopped before coverage validation.
 - **Correction:** Rename `oi` to the frozen interface field `open_interest` at the adapter boundary; values are unchanged.
+
+## E21-003 — 2026-09-30
+- **Issue:** The third Phase-21 run was cancelled during a redundant HF-03 interface rebuild.
+- **Impact:** No empirical result was produced.
+- **Correction:** Phase 21 will use the already-persisted Phase-19 HF-03 interface/results as its primary source and the admitted Phase-20 HF-02 recovery overlay, avoiding unnecessary redownload/rebuild. The frozen 63-cycle calendar and strategy parameters remain unchanged.
