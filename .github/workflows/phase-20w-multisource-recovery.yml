@@ -1,0 +1,44 @@
+name: Phase 20W - Multi-Source Recovery
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [phase-20w-multisource-recovery]
+    paths:
+      - research/phase20w_multisource_recovery/**
+      - .github/workflows/phase-20w-multisource-recovery.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: phase20w-multisource-recovery
+  cancel-in-progress: true
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: phase-20w-multisource-recovery
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -q huggingface_hub
+      - name: Inventory registered public sources
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: python research/phase20w_multisource_recovery/inventory_sources.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase20w-source-inventory
+          path: research/phase20w_multisource_recovery/output/source_inventory.json
+      - name: Commit inventory
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/phase20w_multisource_recovery/output/source_inventory.json
+          git diff --cached --quiet || git commit -m 'phase20w: record source inventory'
+          git push origin HEAD:phase-20w-multisource-recovery
