@@ -77,3 +77,8 @@
 ## E21-011 — 2026-09-30
 - **Issue:** The target HF-03 bar schema legitimately contains `expiry`; dropping HF-02's redundant `expiry` caused the validator to report it as missing.
 - **Correction:** Preserve/add `expiry` as the same frozen weekly contract date represented by `target_expiry`.
+
+## E21-012 — 2026-09-30
+- **Issue:** The corrected overlay builder became excessively slow in the combined-bar stage because it joined every HF-02 bar to cycle metadata and then grouped the full HF-03+HF-02 bar table for duplicate detection.
+- **Impact:** No empirical result was produced; the job remained in the build step for an extended period.
+- **Correction:** Remove the unnecessary HF-02 metadata join (the recovered bars already carry the needed identifiers) and perform duplicate checks separately on each source before concatenation. This preserves validation while reducing memory/runtime.
