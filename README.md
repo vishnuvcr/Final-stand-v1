@@ -81,7 +81,7 @@ Capital/margin reconstruction is a separate evidence layer from execution valida
 
 
 ### Phase 17W — K1/K2/K3 strike-definition validation — 2026-09-30
-- **Phase 17W — K1/K2/K3 alternatives: 🔄 active** on a separate branch.
+- **Phase 17W — K1/K2/K3 alternatives: completed as the frozen 224-configuration family; superseded by the final Phase 21W rerun.**
 - The experiment now tests **224 preregistered configurations**: 8 K1 rules × 4 K2 rules × 7 K3 premium multipliers.
 - K3 target is `M × (P1 − P2)` with M ∈ {0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 4.0}; the historical frozen control is OTM1 + NEXT1 + M=2.0.
 - Phase 13W's untouched holdout and all previous results remain locked and unchanged.
@@ -104,14 +104,23 @@ Capital/margin reconstruction is a separate evidence layer from execution valida
 
 ## Phase 21W — Frozen 224-variant combined rerun and final five-cycle recovery — 2026-09-30
 
-- **Combined rerun status:** complete for 58/63 frozen weekly expiries.
-- Combined input coverage: **11,702 / 14,112** variant-cycle cells, with zero overlap between the admitted HF-03 and HF-02 sources.
-- The five unresolved expiries are **2026-01-13, 2026-02-10, 2026-03-10, 2026-04-13 and 2026-05-12**. All five are in the holdout segment, so the current 224-variant results are not yet the final 63-cycle holdout evidence.
-- Current 224-variant rerun: 193/224 positive training means, 136/224 positive validation means, 185/224 positive holdout means on the currently executable cycles; **0/224 passed the frozen promotion gate** and the minimum Holm-adjusted training p-value was 0.07464.
-- A new public recovery candidate has been qualified for automated testing: rissin/nse-options-intraday, pinned to revision 78b1c5468255d18cf492984bfe6fe4e3ac874d7c. Its dataset card documents NIFTY 1-minute intraday coverage from October 2024 through 2026 with expiry, strike, option type, OHLC and volume fields.
-- The Phase 21 external-recovery workflow now tests all five missing expiries, requires all 224 variants to pass exact entry/lock coverage, merges only the missing cells, and then reruns the unchanged frozen engine.
-- No commercial data access has been purchased and no strategy parameter, split, stop, slippage or cost assumption has been changed.
+- **Final status:** complete. The initial 58/63 combined input was extended with the five missing holdout expiries.
+- Final input coverage: **63/63 weekly expiries and 12,822 / 14,112 possible variant-cycle cells**, with 1,120 cells externally recovered and zero cycle overlap.
+- The five recovered expiries are **2026-01-13, 2026-02-10, 2026-03-10, 2026-04-13 and 2026-05-12**.
+- Final 224-variant rerun: 193/224 positive training total P&L, 136/224 positive validation total P&L, 163/224 positive holdout total P&L; **0/224 passed the frozen promotion gate** and the minimum Holm-adjusted training p-value was 0.07464.
+- External recovery used the immutable RISSIN revision **8f7739cab3f38abdcbc6332a6d0a83e1341326e3**, not the earlier incomplete 78b1 revision.
+- No strategy parameter, split, stop, slippage or transaction-cost assumption was changed during recovery.
+- [Phase 21W final manuscript](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-21w-external-full-strike-recovery/research/phase21w_external_full_strike_recovery/FINAL_MANUSCRIPT.md)
+- [Phase 21W final results](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-21w-external-full-strike-recovery/research/phase21w_external_full_strike_recovery/RESULTS.md)
 - [Phase 21W combined rerun branch](https://github.com/vishnuvcr/Final-stand-v1/tree/phase-21w-combined-frozen-rerun)
 - [Phase 21W external recovery branch](https://github.com/vishnuvcr/Final-stand-v1/tree/phase-21w-external-full-strike-recovery)
 - [Phase 21W recovery targets](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-21w-external-full-strike-recovery/research/phase21w_external_full_strike_recovery/RECOVERY_TARGETS.md)
 - [Phase 21W external recovery workflow](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-21w-external-full-strike-recovery/.github/workflows/phase-21w-source-audit.yml)
+
+## Phase 22W — Execution-aware prospective validation — proposed
+
+- **Status: PROPOSED — not executed.**
+- Goal: test whether the Phase 21W K3/ITM/NEXT surface persists on a new unseen period using executable bid/ask or order-book data.
+- The Phase 21W holdout will not be used to select a Phase 22W configuration after the fact.
+- [Phase 22W branch](https://github.com/vishnuvcr/Final-stand-v1/tree/phase-22-execution-aware-validation)
+- [Phase 22W plan](https://github.com/vishnuvcr/Final-stand-v1/blob/phase-22-execution-aware-validation/research/phase22_execution_aware_validation/PHASE_PLAN.md)
