@@ -26,3 +26,13 @@
 - **Observed:** current TrueData documentation says default REST tick history is limited to the last five trading days; extended history is an add-on.
 - **Impact:** default access cannot supply the historical weekly-expiry periods needed for the planned retrospective train/validation/holdout experiment.
 - **Correction:** require verified extended-history entitlement covering the target dates before admission. Do not substitute current ticks for historical periods or alter the experiment dates to fit the data.
+
+## E22-006 — GFDL default tick retention is too short
+- **Observed:** GFDL documents NFO historical tick data with bid/ask fields, but its documented backfill is one calendar week.
+- **Impact:** default history cannot cover the retrospective Phase 22 target periods.
+- **Correction:** treat GFDL as a prospective/short-window execution-data route unless an archival entitlement is verified.
+
+## E22-007 — NSE full-order reconstruction requires exchange-data access
+- **Observed:** NSE documents complete historical order-book events and trades with timestamps, prices, volumes and identifiers, but access is provided as a subscribed historical data product.
+- **Impact:** the strongest authoritative reconstruction route is not currently accessible to the workflow.
+- **Correction:** do not infer access or fabricate downloads; keep the route first priority for authorized acquisition.
