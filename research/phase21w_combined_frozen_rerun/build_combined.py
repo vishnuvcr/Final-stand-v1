@@ -1,6 +1,10 @@
 from pathlib import Path
 import polars as pl, json
-hf03=Path('research/phase21w_combined_frozen_rerun/hf03_build')
+hf03=Path('phase21w_combined_frozen_rerun/hf03_build')
+if not (hf03/'variant_cycle_manifest.csv').exists():
+    candidates=list(Path('.').glob('**/hf03_build/variant_cycle_manifest.csv'))
+    if not candidates: raise FileNotFoundError('Prepared HF03 interface not found after artifact extraction')
+    hf03=candidates[0].parent
 hf2=Path('research/phase20w_executable_bar_recovery/output')
 out=Path('research/phase21w_combined_frozen_rerun/combined_input'); out.mkdir(parents=True,exist_ok=True)
 c3=pl.read_csv(hf03/'variant_cycle_manifest.csv'); b3=pl.read_parquet(hf03/'variant_option_bars.parquet')
