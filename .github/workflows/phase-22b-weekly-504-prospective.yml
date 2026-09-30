@@ -78,10 +78,10 @@ jobs:
           cov=json.loads((out/"coverage.json").read_text())
           df=pd.read_csv(out/"ALL_504_PROSPECTIVE_RESULTS.csv")
           assert reg["family_size"]==504
-          assert len(reg["selected_weekly_expiries"])>=8
+          assert len(reg["weekly_expiries"])>=8
           assert len(df)==504
           assert cov["all_504_present"] is True
-          print(json.dumps({"expiries":len(reg["selected_weekly_expiries"]),"rows":len(df),"coverage":cov},indent=2))
+          print(json.dumps({"expiries":len(reg["weekly_expiries"]),"rows":len(df),"coverage":cov},indent=2))
           PY
 
       - name: Publish research outputs
