@@ -139,6 +139,7 @@ def main() -> None:
     coverage = {
         "baseline_unique_expiries": len(baseline_expiries),
         "base_cycle_cells": base_cycle.height,
+        "base_cycle_cells": base_cycle.height,
         "combined_cycle_cells": merged_cycle.height,
         "combined_bar_variant_cycle_cells": bar_cell_counts.height,
         "combined_unique_expiries": len(covered_expiries),
