@@ -44,3 +44,8 @@
 - **Issue:** GitHub cancelled two Phase-21 runs during the expensive HF-03 interface rebuild before the overlay stage.
 - **Impact:** No combined empirical result from those runs.
 - **Correction:** Split Phase 21 into a one-time HF-03 interface preparation job and a lightweight combined rerun job that reuses the persisted interface. This removes repeated long rebuilds while preserving the pinned source and frozen inputs.
+
+## E21-009 — 2026-09-30
+- **Issue:** The prepared HF-03 interface built successfully, but persisting its large files into the branch failed.
+- **Impact:** The preparation workflow ended without a reusable branch copy.
+- **Correction:** Use the successful preparation run artifact as the transport layer and consume it from Phase 21. No source or strategy change.
