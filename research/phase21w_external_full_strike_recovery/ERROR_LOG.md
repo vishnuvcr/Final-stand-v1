@@ -44,3 +44,9 @@
 - **Impact:** Several runs were cancelled by concurrency before reaching the data-recovery step.
 - **Correction:** Restrict push triggers to source-code/configuration paths; output commits no longer self-trigger the research workflows. Manual dispatch remains enabled.
 - **Prevention:** All large-data workflows must be event-filtered to exclude generated outputs from push triggers.
+
+
+### E21X-007 — Cross-workflow GitHub CLI artifact lookup rejected
+- **Observed:** The first external-recovery workflow used gh run list with the workflow-scoped token and received HTTP 401 Bad credentials.
+- **Correction:** Removed direct gh API lookup and replaced it with dawidd6/action-download-artifact@v25, which resolves the latest successful workflow artifact by workflow, branch and artifact name.
+- **Prevention:** Cross-workflow artifact transfer now uses a dedicated artifact action and explicit actions:read permission rather than a shell API lookup.
