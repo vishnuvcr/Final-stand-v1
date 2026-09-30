@@ -90,3 +90,9 @@ No Phase-20 execution errors yet.
 - **Issue:** Targeted HF-02 probe successfully reached the data but failed when writing a nested `entry_lock_timestamps` list to CSV.
 - **Impact:** Probe result was not persisted.
 - **Correction:** Serialize nested timestamp lists as JSON strings before CSV output. No data-selection rule changed.
+
+
+## E20-010 — 2026-09-30
+- **Issue:** HF-02 reconstruction referenced `entry_timestamp`/`lock_timestamp` fields that are not present in the restored Phase-9 calendar schema.
+- **Impact:** Reconstruction stopped before processing any missing expiry.
+- **Correction:** Use the actual Phase-9 calendar fields after schema inspection, mapping the frozen entry/lock times without changing their values.
