@@ -68,3 +68,9 @@
 - **Observed:** The RISSIN NIFTY 2026 parquet declares a +05:30 timezone that the runner's Polars timezone database did not accept during lazy schema collection.
 - **Correction:** Enabled the same POLARS_IGNORE_TIMEZONE_PARSE_ERROR compatibility setting already used by the frozen Phase 9 ingestion code.
 - **Prevention:** Keep timezone normalization explicit in the recovery script and retain the runner compatibility environment setting.
+
+## E21X-011 — 2026-09-30
+- **Issue:** Rissin recovery reached source loading after the timezone parser fix, but Polars compared Asia/Kolkata timestamp columns with Python datetimes interpreted as UTC.
+- **Impact:** Recovery stopped before variant construction; no external data were admitted.
+- **Correction:** Keep source and frozen spot timestamps in the original Asia/Kolkata representation for output, but add a temporary UTC comparison column and perform all equality/range filters against UTC-normalized instants.
+- **Prevention:** External timezone handling must distinguish display/source timezone from comparison timezone; never compare timezone-aware Polars columns with fixed-offset Python literals directly.

@@ -5,7 +5,7 @@ import hashlib
 import json
 import os
 os.environ.setdefault("POLARS_IGNORE_TIMEZONE_PARSE_ERROR", "1")
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -153,7 +153,9 @@ def main() -> None:
     spot_sha = sha256_file(spot_local)
 
     spot = pl.read_parquet(spot_local)
-    spot = parse_timestamp(spot)
+    spot = parse_timestamp(spot).with_columns(
+        pl.col("timestamp").dt.convert_time_zone("UTC").alias("_timestamp_utc")
+    )
     required_spot_cols = {"timestamp", "open", "close", "target_expiry", "entry_timestamp", "lock_timestamp"}
     if not required_spot_cols.issubset(set(spot.columns)):
         raise RuntimeError(f"Frozen spot interface missing columns: {sorted(required_spot_cols - set(spot.columns))}")
@@ -180,7 +182,9 @@ def main() -> None:
         source = source.with_columns(pl.col("timestamp").str.to_datetime(strict=False, time_zone="Asia/Kolkata").alias("timestamp"))
     else:
         source = source.with_columns(pl.col("timestamp").cast(pl.Datetime(time_zone="Asia/Kolkata")).alias("timestamp"))
-    source_df = source.collect(streaming=True)
+    source_df = source.collect(streaming=True).with_columns(
+        pl.col("timestamp").dt.convert_time_zone("UTC").alias("_timestamp_utc")
+    )
 
     if source_df.height == 0:
         raise RuntimeError("No RISSIN NIFTY 1-minute CE rows were found for the five targets")
@@ -216,21 +220,23 @@ def main() -> None:
             raise RuntimeError(f"Frozen Phase-9 spot artifact has no rows for {expiry}")
         entry_ts = datetime.fromisoformat(str(cycle_spot["entry_timestamp"][0]))
         lock_ts = datetime.fromisoformat(str(cycle_spot["lock_timestamp"][0]))
+        entry_ts_utc = entry_ts.astimezone(timezone.utc)
+        lock_ts_utc = lock_ts.astimezone(timezone.utc)
         expiry_date = date.fromisoformat(expiry)
-        expiry_end = datetime.combine(expiry_date, time(16, 0), IST)
+        expiry_end_utc = datetime.combine(expiry_date, time(16, 0), IST).astimezone(timezone.utc)
 
-        spot_row = cycle_spot.filter(pl.col("timestamp") == entry_ts)
+        spot_row = cycle_spot.filter(pl.col("_timestamp_utc") == pl.lit(entry_ts_utc))
         if spot_row.height != 1:
             raise RuntimeError(f"Expected exactly one NIFTY spot row at {entry_ts}, got {spot_row.height}")
         spot_value = float(spot_row["open"][0])
 
         opt = source_df.filter(
             (pl.col("_expiry") == expiry)
-            & (pl.col("timestamp") >= entry_ts)
-            & (pl.col("timestamp") <= expiry_end)
+            & (pl.col("_timestamp_utc") >= pl.lit(entry_ts_utc))
+            & (pl.col("_timestamp_utc") <= pl.lit(expiry_end_utc))
         )
         entry_calls = opt.filter(
-            (pl.col("timestamp") == entry_ts) & (pl.col("volume") > 0)
+            (pl.col("_timestamp_utc") == pl.lit(entry_ts_utc)) & (pl.col("volume") > 0)
         )
         if entry_calls.height == 0:
             raise RuntimeError(f"No positive-volume CE entry rows for {expiry} at {entry_ts}")
@@ -274,7 +280,8 @@ def main() -> None:
                         bars = opt.filter(pl.col("strike").is_in(required_strikes))
                         # All three legs must have exact entry and lock observations.
                         for ts in (entry_ts, lock_ts):
-                            check = bars.filter(pl.col("timestamp") == ts).select(
+                            ts_utc = entry_ts_utc if ts == entry_ts else lock_ts_utc
+                            check = bars.filter(pl.col("_timestamp_utc") == pl.lit(ts_utc)).select(
                                 pl.col("strike").n_unique().alias("n")
                             )
                             n = int(check["n"][0]) if check.height else 0

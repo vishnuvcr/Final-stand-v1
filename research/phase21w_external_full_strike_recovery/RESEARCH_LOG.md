@@ -47,3 +47,8 @@ Run the external recovery workflow. If all five dates pass the 224-variant admis
 - The Rissin recovery script was audited after the timezone failure and found one remaining stale reference to the old fixed filename constant.
 - The source manifest now records the exact dynamically resolved file path used for the download.
 - The external workflow was simplified to retain only the valid post-merge Phase-9 restore step; the obsolete pre-merge restore step was removed.
+
+## 2026-09-30 — E21X-011 timezone comparison correction
+- The Rissin source parquet loaded successfully after the parser-compatibility fix.
+- The next failure was a strict timezone mismatch between Asia/Kolkata Polars timestamps and Python datetime literals normalized as UTC.
+- The recovery path now preserves the source timestamps but introduces a temporary UTC comparison column for entry/lock/range filters.
