@@ -88,11 +88,13 @@ jobs:
               for row in csv.DictReader(fh):
                   existing.add((row['variant_id'], row['target_expiry']))
           expected={(v,e) for v in variants for e in expiries}
-          missing=sorted(expected-existing)
+          missing_all=expected-existing
+          target_expiries={'2026-01-13','2026-02-10','2026-03-10','2026-04-13','2026-05-12'}
+          missing=sorted((v,e) for (v,e) in missing_all if e in target_expiries)
           if len(existing) != 11702:
               raise SystemExit(f'Unexpected admitted Phase-21 cell count: {len(existing)}')
-          if len(missing) != 2410:
-              raise SystemExit(f'Unexpected missing-cell count: {len(missing)}')
+          if len(missing) != 1120:
+              raise SystemExit(f'Unexpected five-expiry missing-cell count: {len(missing)}')
           out=Path('research/phase21w_external_full_strike_recovery/output')
           out.mkdir(parents=True,exist_ok=True)
           with (out/'recovery_target_cells.csv').open('w',newline='') as fh:
