@@ -27,6 +27,11 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install -q huggingface_hub requests
+      - name: Probe direct HF LFS download
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_CACHE: ~/.cache/huggingface
+        run: python research/phase20w_multisource_recovery/probe_direct_download.py
       - name: Inventory registered public sources
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
